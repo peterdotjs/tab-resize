@@ -1,7 +1,7 @@
 Tab-Resize
 ==========
 
-Automate resizing tab windows to predefined and user defined layouts.
+Automate resizing tab windows to predefined and user defined layouts. Chrome Web Store: http://bit.ly/NzVwNv
 
 What
 --------
