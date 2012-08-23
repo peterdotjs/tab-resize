@@ -1,0 +1,61 @@
+<html>
+	<head>
+		<title>Resize</title>
+		<link rel="stylesheet" href="style.min.css" type="text/css">
+		<script type="text/javascript" src="js/lib/jquery.min.js"></script>		
+		<script type="text/javascript" src="js/javascript.bundle.js"></script>
+	</head>
+	<body>
+	
+		<div class="main-view">
+			<div class="resize-container">
+			</div>
+			<div class="resize-footer">
+				<button class="resize-undo primary" id="custom-layout" type="button" title="Custom Configurations">Custom</button>	
+				<button class="resize-undo secondary" id="default-configuration" type="button" title="Default Configurations">Default</button>		
+				<div class="checkbox-container" title="Single Tab Mode">
+					<input type="checkbox" class="checkbox" id="checkbox-single-tab"></input>
+					<label for="checkbox-single-tab" class="label">Single Tab</label>
+				</div>
+				<button class="resize-undo secondary disabled" id="undo-layout" type="button" title="Undo previous resize">Undo</button>
+			</div>
+		</div>
+		<div class="custom-view modal-box hidden">
+			<div class="modal-body">
+				<div class="table-container">
+					<div class="table-label-top">columns</div>
+					<div class="table-label-left">rows</div>
+					<div class="table-cell-container">
+						<canvas id="myCanvas" width="100" height="100">Your browser does not support the HTML5 canvas tag.</canvas>        
+					</div>
+				</div>
+				<div class="input-container">
+					<div class="label-container row">
+						<label>rows:</label>
+						<input type="text" class="custom-value row" id="numRows" maxlength='2'>
+					</div>
+					<div class="label-container cols">		
+						<label>columns:</label>
+						<input type="text" class="custom-value columns" id="numCols" maxlength='2'>    
+					</div>
+				</div>
+			</div>
+			<div class = "input-container-footer modal-footer">
+				<button class="button primary" id="input-save">Save</button>
+				<button class="button" id="input-cancel">Cancel</button>
+			</div>
+		</div>
+		<div class="confirmation-modal modal-box hidden">
+			<div class="modal-body">
+				<div class="warning-sprite"></div>
+				<div class="message">
+					This will revert to <span class="bold">DEFAULT</span> layouts. All custom layouts will be removed.
+				</div>
+			</div>
+			<div class="confirmation-footer modal-footer">
+				<button class="button primary" id="confirmation-apply">Apply</button>
+				<button class="button" id="confirmation-cancel">Cancel</button>
+			</div>
+		</div>
+	</body>
+</html>
