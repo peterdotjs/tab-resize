@@ -39,20 +39,33 @@
 			var tabIndex = resize.lastTab.lastTabIndex;
 			var windowId = resize.lastTab.lastWindowId;
 			var tabsArray = resize.lastTab.lastTabsArray;
+
 			window.chrome.windows.get(windowId, {}, function(window){
 				if(window){
 					that.recombineTabs(tabIndex,windowId,tabsArray);
 				} else {
-					try {
-						window.chrome.windows.create({tabId: tabsArray[0]},function(window){
-							that.recombineTabs(1,window.id,tabsArray.slice(1));
-						});
-					} catch (e){
-						alert("Tab does not exist.");
-						that.disableUndoButton();
-					}
+					chrome.tabs.query({status: "complete"}, function(tabs){
+						var currentExistingTabs = {};
+						var newTabsArray = [];
+						for(var i=0; i< tabs.length; i++){
+							currentExistingTabs[tabs[i].id] = true;
+						}
+						for(var j = 0; j< tabsArray.length; j++){
+							if(currentExistingTabs[tabsArray[j]]){
+								newTabsArray.push(tabsArray[j]);
+							}
+						}
+						if(newTabsArray.length !==0){
+							chrome.windows.create({tabId: newTabsArray[0]},function(window){
+								that.recombineTabs(1,window.id,newTabsArray.slice(1));
+							});
+						} else {
+							alert("Previous tabs were closed.");
+							that.disableUndoButton();
+						}						
+					});
 				}
-			});
+			});			
 		},
 
 		/**
