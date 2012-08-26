@@ -43,9 +43,14 @@
 				if(window){
 					that.recombineTabs(tabIndex,windowId,tabsArray);
 				} else {
-					window.chrome.windows.create({tabId: tabsArray[0]},function(window){
-						that.recombineTabs(1,window.id,tabsArray.slice(1));
-					});
+					try {
+						window.chrome.windows.create({tabId: tabsArray[0]},function(window){
+							that.recombineTabs(1,window.id,tabsArray.slice(1));
+						});
+					} catch (e){
+						alert("Tab does not exist.");
+						that.disableUndoButton();
+					}
 				}
 			});
 		},
