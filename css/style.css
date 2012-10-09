@@ -99,6 +99,7 @@ button.disabled {
   border: 1px solid transparent;
   border-radius: 4px;
   padding: 0 0 15px 15px;
+  float: right;
 }
 .main-view .resize-container .resize-selector-container .close-button {
   width: 18px;
@@ -165,6 +166,7 @@ button.disabled {
   border-top: 1px solid #c0c0c0;
   overflow: hidden;
   background: #E7F3FD;
+  clear: right;
 }
 .main-view .resize-footer .resize-undo {
   float: right;
