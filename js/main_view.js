@@ -93,7 +93,7 @@
 								} else {
 									that._setUndoStorage(resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index));
 								}
-								that._processTabs(resize.tabsArray, resize.currentTab.index, resize.singleTab);
+								that._processTabs(resize.tabsArray, resize.currentTab.index, resize.singleTab, resize.currentTab.incognito);
 							}
 						);
 				}
@@ -106,7 +106,7 @@
 		* @param {number} startIndex index of selected tab in window
 		* @param {boolean} singleTab flag of single tab option
 		*/	
-		_processTabs: function(tabsArray, startIndex, singleTab) {
+		_processTabs: function(tabsArray, startIndex, singleTab, incog) {
 
 			var tabIndex = startIndex;
 			var endOfArray = singleTab;
@@ -119,7 +119,7 @@
 																			width: resize.width,
 																			height: resize.height});
 					} else {
-						resize.util.createNewWindow(tabsArray[tabIndex].id, x*resize.width, y*resize.height );
+						resize.util.createNewWindow(tabsArray[tabIndex].id, x*resize.width, y*resize.height, incog );
 					}
 					tabIndex ++;
 					if(tabIndex === tabsArray.length){
@@ -145,7 +145,8 @@
 									width: window.width,
 									height: window.height,
 									focused: true,
-									state: window.state};
+									state: window.state,
+									incognito: window.incognito};
 				var lastTab = {};
 				lastTab.lastWindowInfo = updateInfo;
 				lastTab.lastTabIndex = tabIndex;

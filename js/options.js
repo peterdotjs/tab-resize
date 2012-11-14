@@ -81,7 +81,9 @@
 				indexCounter++;
 			}
 			var updateInfo = resize.lastTab.lastWindowInfo;
-			window.chrome.windows.update(windowId,updateInfo);
+			var updateInfoForUpdate = $.extend(true, {}, updateInfo);
+			delete updateInfoForUpdate.incognito;
+			window.chrome.windows.update(windowId,updateInfoForUpdate);
 			this.disableUndoButton();
 		},
 

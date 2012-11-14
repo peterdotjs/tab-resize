@@ -69,12 +69,13 @@
 		* @param {Number} startX - horizontal position of window
 		* @param {Number} startY - vertical position of window	
 		*/
-		createNewWindow: function(tabId, startX, startY) {
+		createNewWindow: function(tabId, startX, startY, incog) {
 			window.chrome.windows.create({tabId: tabId, 
 									left: startX, 
 									top: startY,
 									width: this.width,
-									height: this.height}, 
+									height: this.height,
+									incognito: incog}, 
 									function(window){
 										return window;
 									}
