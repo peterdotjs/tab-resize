@@ -13,8 +13,8 @@
 		* @param {string} layoutType Type of layout (ROWxCOL).
 		*/	
 		addLayout: function(layoutType) {
-			var layoutList = resize.currentLayouts.layoutItems;
-			var layoutIndex = layoutList.indexOf(layoutType);
+			var layoutList = resize.currentLayouts.layoutItems,
+				layoutIndex = layoutList.indexOf(layoutType);
 			if(layoutIndex !== -1){
 				layoutList.splice(layoutIndex,1);
 				this._removeLayoutMarkup(layoutType);
@@ -52,8 +52,9 @@
 		* @param {string} layoutType Type of layout (ROWxCOL).
 		*/		
 		removeLayout: function(layoutType){
-			var layoutList = resize.currentLayouts.layoutItems;
-			var layoutIndex = layoutList.indexOf(layoutType);
+			var layoutList = resize.currentLayouts.layoutItems,
+				layoutIndex = layoutList.indexOf(layoutType);
+			
 			layoutList.splice(layoutIndex,1);
 			resize.storage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 			this._removeLayoutMarkup(layoutType);	

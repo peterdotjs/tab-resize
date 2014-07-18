@@ -37,8 +37,8 @@
 		* performs save of new layout
 		*/	
 		handleCustomSave: function(){
-			var customRows = $('#numRows').val();
-			var customCols = $('#numCols').val();
+			var customRows = $('#numRows').val(),
+				customCols = $('#numCols').val();
 			
 			this.clearCustomValues();
 			
