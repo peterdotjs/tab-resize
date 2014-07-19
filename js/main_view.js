@@ -79,6 +79,7 @@
 			* split width of screen equally depending on number of cells
 			* create new window unable to take non integers for width and height
 			*/
+			//TODO: change to check for multiple screen api and for how many screens
 			resize.width = Math.round(window.screen.availWidth/resize.numCols);
 			resize.height  = Math.round(window.screen.availHeight/resize.numRows);	
 			var that = this;
@@ -108,26 +109,33 @@
 		*/	
 		_processTabs: function(tabsArray, startIndex, singleTab, incog) {
 
-			var tabIndex = startIndex;
-			var endOfArray = singleTab;
-			
+			var tabIndex = startIndex,
+				tabId = null,
+				createEmptyTabs = localStorage.getItem('createEmptyTabs');
+
+			//loop through all row and col options
 			for(var y=0; y<resize.numRows; y++){
 				for(var x=0; x<resize.numCols; x++){
+					// base case we update the current window
 					if(x === 0 && y === 0){
 						window.chrome.windows.update(tabsArray[tabIndex].windowId,{ left: x*resize.width, 
 																			top: y*resize.height,
 																			width: resize.width,
 																			height: resize.height});
-					} else {
-						resize.util.createNewWindow(tabsArray[tabIndex].id, x*resize.width, y*resize.height, incog );
+						if(singleTab){
+							return;
+						}
+					} else { //otherwise we create a new window
+						tabId = tabsArray[tabIndex] ? tabsArray[tabIndex].id : null;
+						
+						//when no more tabs avaiable and option to create empty tab is not checked
+						if(!tabId && !createEmptyTabs){
+							return;
+						}
+
+						resize.util.createNewWindow(tabId, x*resize.width, y*resize.height, incog );
 					}
-					tabIndex ++;
-					if(tabIndex === tabsArray.length){
-						endOfArray = true;
-					}
-					if(endOfArray){
-						return;
-					}	
+					tabIndex++;
 				}
 			}			
 		},
