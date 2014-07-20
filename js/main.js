@@ -10,6 +10,7 @@
 		util = resize.util,
 		layout = resize.layout,
 		options = resize.options,
+		displayUtil = resize.displayUtil,
 		$doc = $(document);
 
 	/*
@@ -89,16 +90,21 @@
 			util.drawTable(resize.canvasWidth, resize.canvasHeight, numRows, numCols, context);
 		}
 	}).on('change','#checkbox-single-tab', function(){
-		if($(this).attr('checked')){
-			options.processSingleTabSelection(true);
-		} else {
-			options.processSingleTabSelection(false);
-		}
+		var checked = $(this).attr('checked');
+		options.processSingleTabSelection(checked);
 	}).on('change','#checkbox-empty-tab', function(){
-		if($(this).attr('checked')){
-			options.processEmptyTabSelection(true);
-		} else {
-			options.processEmptyTabSelection(false);
+		var checked = $(this).attr('checked');
+		options.processEmptyTabSelection(checked);
+	}).on('click','#display-setting', function(){
+		var $displayLayer = $('#display-setting-layer'),
+			isDisplayed;
+
+		$displayLayer.toggleClass('hidden');
+		isDisplayed = !$displayLayer.hasClass('hidden');
+		options.processDisplayLayerSelection(isDisplayed);
+
+		if(!isDisplayed){
+			location.reload();
 		}
 	});
 

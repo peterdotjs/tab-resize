@@ -38,6 +38,15 @@ body {
 		font-family: Verdana, Geneva, sans-serif;
 }
 
+.box-shadow(@shadow) {
+	box-shadow: @shadow;
+	-webkit-box-shadow: @shadow;
+}
+
+.border-radius(@radius){
+	border-radius: @radius;
+	-webkit-border-radius: @radius;
+}
 
 input {
 	.font-family();
@@ -202,13 +211,23 @@ button.disabled {
 		border-top: 1px solid #c0c0c0;
 		overflow: hidden;
 		background: #E7F3FD;
-		clear: right;
+		clear:right;
+		.font-family();
+
+		.footer-wrap {
+			display: inline-block;
+			overflow: hidden;
+
+			&.monitor-wrap {
+				float: left;
+				margin: 5px;
+			}
+		}
+
 		.resize-undo{
-			float: right;
 			margin: 6px 10px 6px 0;
 
 			&.secondary {
-				float: left;
 				margin-left: 10px;
 			}
 
@@ -216,33 +235,55 @@ button.disabled {
 
 		#undo-layout{
 			margin-left: 2px;
-			//float: right;
 		}
 
 		#custom-layout{
-			float: left;
 			margin: 6px 0 6px 15px
 		}
 
 		.checkbox-container {
 			.font-family();
 			overflow: hidden;
-			float: right;
 			display: inline-block;
 			border-left: 1px solid silver;
 			background: #F7F7F7;
-
-			input {
-				// position: relative;
-				// top: 11px;
-			}
+			float:right;
 
 			label {
 				font-size: 14px;
 				display: block;
-				padding: 11px 8px 11px 5px;
+				padding: 10px 8px 10px 5px;
+
+				&:hover {
+					.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
+
+					input {
+						.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
+					}
+				}
+
+				input {
+					.border-radius(3px);
+
+					&:focus {
+						.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
+					}
+				}
+
 			}
 		}
+	}
+}
+
+#display-setting-layer {
+	min-height: 250px;
+	position: relative;
+	bottom: 0px;
+	margin: 50px;
+
+	.display-entry {
+		position: absolute;
+		border: 1px solid grey;
 	}
 }
 

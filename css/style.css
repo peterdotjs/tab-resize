@@ -163,34 +163,66 @@ button.disabled {
   overflow: hidden;
   background: #E7F3FD;
   clear: right;
+  font-family: Verdana, Geneva, sans-serif;
+}
+.main-view .resize-footer .footer-wrap {
+  display: inline-block;
+  overflow: hidden;
+}
+.main-view .resize-footer .footer-wrap.monitor-wrap {
+  float: left;
+  margin: 5px;
 }
 .main-view .resize-footer .resize-undo {
-  float: right;
   margin: 6px 10px 6px 0;
 }
 .main-view .resize-footer .resize-undo.secondary {
-  float: left;
   margin-left: 10px;
 }
 .main-view .resize-footer #undo-layout {
   margin-left: 2px;
 }
 .main-view .resize-footer #custom-layout {
-  float: left;
   margin: 6px 0 6px 15px;
 }
 .main-view .resize-footer .checkbox-container {
   font-family: Verdana, Geneva, sans-serif;
   overflow: hidden;
-  float: right;
   display: inline-block;
   border-left: 1px solid silver;
   background: #F7F7F7;
+  float: right;
 }
 .main-view .resize-footer .checkbox-container label {
   font-size: 14px;
   display: block;
-  padding: 11px 8px 11px 5px;
+  padding: 10px 8px 10px 5px;
+}
+.main-view .resize-footer .checkbox-container label:hover {
+  box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+}
+.main-view .resize-footer .checkbox-container label:hover input {
+  box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+}
+.main-view .resize-footer .checkbox-container label input {
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+}
+.main-view .resize-footer .checkbox-container label input:focus {
+  box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+}
+#display-setting-layer {
+  min-height: 250px;
+  position: relative;
+  bottom: 0px;
+  margin: 50px;
+}
+#display-setting-layer .display-entry {
+  position: absolute;
+  border: 1px solid grey;
 }
 .custom-view .table-container {
   display: inline-block;

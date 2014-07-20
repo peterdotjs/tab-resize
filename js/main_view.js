@@ -33,6 +33,14 @@
 				resize.emptyTab = true;
 			}
 
+			var displayLayerValue = localStorage.getItem('displayLayer');
+			if(displayLayerValue && displayLayerValue === 'true'){
+				$('#display-setting-layer').removeClass('hidden');
+				resize.displayLayerValue = true;
+			}
+
+			resize.displayUtil.initialize();
+
 			if(localStorage.getItem('lastTab')){
 				$('#undo-layout').removeClass('disabled');
 			}

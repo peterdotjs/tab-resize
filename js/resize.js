@@ -11,7 +11,6 @@
 
 		tabsArray: [],
 		currentTab: null,
-		newWindow: null,
 		numRows: 0,
 		numCols: 0,
 		width: 0,
