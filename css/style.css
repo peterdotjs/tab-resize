@@ -3,7 +3,7 @@ html {
   overflow: hidden;
 }
 body {
-  min-width: 468px;
+  min-width: 612px;
   padding: 0px;
   background: white;
   overflow: hidden;
@@ -29,9 +29,9 @@ input {
 button {
   outline: none;
   color: black;
-  border-radius: 2px;
   padding: 5px 10px;
   font-size: 13px;
+  border-radius: 3px;
   font-family: Verdana, Geneva, sans-serif;
   background: -webkit-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #f6f6f6 100%);
   border: 1px solid #707070;
@@ -39,17 +39,16 @@ button {
 button:hover {
   background: -webkit-linear-gradient(top, #eeeeee 0%, #cccccc 100%);
   cursor: pointer;
-  box-shadow: 0px 0px 2px #707070;
+  box-shadow: 0px 0px 3px #707070;
 }
 button.primary {
   border: 1px solid #707070;
-  font-weight: bold;
   color: white;
   border: 1px solid #333;
   background: -webkit-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 39%, #2c2c2c 50%, #000000 51%, #111111 60%, #2b2b2b 76%, #1c1c1c 91%, #131313 100%);
 }
 button.primary:hover {
-  box-shadow: 0px 0px 2px #707070;
+  box-shadow: 0px 0px 3px #707070;
   background: -webkit-linear-gradient(top, #4c4c4c 0%, #595959 12%, #666666 25%, #474747 100%, #1c1c1c 100%, #2b2b2b 100%, #111111 100%, #2c2c2c 100%, #000000 100%, #131313 100%);
 }
 button.disabled {
@@ -175,7 +174,6 @@ button.disabled {
 }
 .main-view .resize-footer #undo-layout {
   margin-left: 2px;
-  float: right;
 }
 .main-view .resize-footer #custom-layout {
   float: left;
@@ -186,22 +184,13 @@ button.disabled {
   overflow: hidden;
   float: right;
   display: inline-block;
-  padding-left: 6px;
-  padding-right: 5px;
-  width: 107px;
-  height: 41px;
   border-left: 1px solid silver;
   background: #F7F7F7;
 }
-.main-view .resize-footer .checkbox-container input {
-  position: relative;
-  top: 11px;
-}
 .main-view .resize-footer .checkbox-container label {
-  left: -2px;
-  top: 9.3px;
   font-size: 14px;
-  position: relative;
+  display: block;
+  padding: 11px 8px 11px 5px;
 }
 .custom-view .table-container {
   display: inline-block;

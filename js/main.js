@@ -11,11 +11,11 @@
 		layout = resize.layout,
 		options = resize.options,
 		$doc = $(document);
-	
+
 	/*
 	* events handlers
 	*/
-	
+
 	$doc.ready(function(){
 		main_view.initialize();
 	}).on('click','.resize-selector-container',function(){
@@ -67,32 +67,38 @@
 		custom_view.showCustomMenu();
 	}).on('keyup','#numRows, #numCols',function(evt){
 		evt.stopPropagation();
-		
+
 		var canvas=document.getElementById("myCanvas");
 		var context=canvas.getContext("2d");
-		
+
 		var numRows = Number($('#numRows').attr('value'));
 		var numCols = Number($('#numCols').attr('value'));
-		
+
 		util.clearCanvas();
-		
+
 		if(numRows && numRows > 0 && numCols && numCols > 0){
-		
+
 			if(numRows > resize.canvasHeight/4){
 				numRows = resize.canvasHeight/4;
 			}
-			
+
 			if(numCols > resize.canvasWidth/4){
 				numCols = resize.canvasWidth/4;
 			}
-			
+
 			util.drawTable(resize.canvasWidth, resize.canvasHeight, numRows, numCols, context);
-		}	
+		}
 	}).on('change','#checkbox-single-tab', function(){
 		if($(this).attr('checked')){
 			options.processSingleTabSelection(true);
 		} else {
 			options.processSingleTabSelection(false);
+		}
+	}).on('change','#checkbox-empty-tab', function(){
+		if($(this).attr('checked')){
+			options.processEmptyTabSelection(true);
+		} else {
+			options.processEmptyTabSelection(false);
 		}
 	});
 

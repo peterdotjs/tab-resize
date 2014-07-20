@@ -3,29 +3,47 @@
 * handles resize options (single tab, undo resize, default config)
 */
 (function(){
-	
+
 	var resize = window.resize;
 	var options = {
 
 		/*
 		* single tab option
 		*/
-	
+
 		/**
 		* sets singleTab flag
 		* @param {boolean} The hex ID.
 		*/
 		processSingleTabSelection: function(singleTab) {
 			if(singleTab){
-				resize.storage.setItem('singleTab',true);
-				resize.singleTab = true;	
+				localStorage.setItem('singleTab',true);
+				resize.singleTab = true;
 			} else {
-				resize.storage.setItem('singleTab',false);
-				resize.singleTab = false;				
+				localStorage.setItem('singleTab',false);
+				resize.singleTab = false;
 			}
 		},
-		
-		
+
+				/*
+		* single tab option
+		*/
+
+		/**
+		* sets emptyTab flag
+		* @param {boolean} The hex ID.
+		*/
+		processEmptyTabSelection: function(emptyTab) {
+			if(emptyTab){
+				localStorage.setItem('emptyTab',true);
+				resize.emptyTab = true;
+			} else {
+				localStorage.setItem('emptyTab',false);
+				resize.emptyTab = false;
+			}
+		},
+
+
 		/*
 		* undo previous resize option
 		*/
@@ -62,24 +80,25 @@
 						} else {
 							alert("Previous tabs were closed.");
 							that.disableUndoButton();
-						}						
+						}
 					});
 				}
-			});			
+			});
 		},
 
 		/**
 		* recombine the tabs into one window
-		* @param {number} tabIndex Starting tab index in previous window of first tab 
+		* @param {number} tabIndex Starting tab index in previous window of first tab
 		* @param {number} windowId Id of final window holding recombined tabs
 		* @param {array} tabsArray Array of tab objects to be moved back to the previous window
 		*/
 		recombineTabs: function(tabIndex, windowId, tabsArray) {
 			var indexCounter = tabIndex;
-			for(var index=0; index<tabsArray.length; index++){
-				window.chrome.tabs.move(tabsArray[index],{windowId: windowId, index: indexCounter});
-				indexCounter++;
-			}
+			// for(var index=0; index<tabsArray.length; index++){
+			// 	window.chrome.tabs.move(tabsArray[index],{windowId: windowId, index: indexCounter});
+			// 	indexCounter++;
+			// }
+			window.chrome.tabs.move(tabsArray,{windowId: windowId, index: indexCounter});
 			var updateInfo = resize.lastTab.lastWindowInfo;
 			var updateInfoForUpdate = $.extend(true, {}, updateInfo);
 			delete updateInfoForUpdate.incognito;
@@ -92,33 +111,39 @@
 		*/
 		disableUndoButton: function() {
 			resize.lastTab = null;
-			resize.storage.removeItem('lastTab');	
+			localStorage.removeItem('lastTab');
 			$('#undo-layout').addClass('disabled');
 		},
-		
-		
+
+		/**
+		* disabled undo button from user input
+		*/
+		enableUndoButton: function() {
+			$('#undo-layout').removeClass('disabled');
+		},
+
 		/*
 		* default configuration option
 		*/
-		
+
 		/**
-		* hides the default layout confirmation modal box 
-		*/			
+		* hides the default layout confirmation modal box
+		*/
 		hideConfirmationModal: function() {
 			$('.main-view').removeClass('inactive');
 			$('.confirmation-modal').addClass('hidden');
 		},
-	
+
 		/**
-		* shows the default layout confirmation modal box 
-		*/		
+		* shows the default layout confirmation modal box
+		*/
 		showConfirmationModal: function() {
 			$('.confirmation-modal').removeClass('hidden').trigger('show');
-			$('.main-view').addClass('inactive');	
+			$('.main-view').addClass('inactive');
 		}
-					
+
 	};
-	
+
 	window.resize.options = options;
-	
+
 })();
