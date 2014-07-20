@@ -1,4 +1,4 @@
-/* 
+/*
 * resize.js
 * parent resize object, global variable and object initialization
 */
@@ -8,9 +8,8 @@
 	* @constructor
 	*/
 	var resize = {
-	
+
 		tabsArray: [],
-		storage: window.localStorage,
 		currentTab: null,
 		newWindow: null,
 		numRows: 0,
@@ -24,13 +23,13 @@
 		maxSelectorsPerLine: 5,
 		maxSelectorContainerWidth: 156,
 		maxSelectorContainerHeight: 156,
-		singleTab: false,	
+		singleTab: false,
 		main_view: {},
 		custom_view: {},
 		options: {},
 		util: {}
 	};
-	
+
 	window.resize = resize;
-	
+
 })();
