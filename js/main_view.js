@@ -102,8 +102,20 @@
 			* create new window unable to take non integers for width and height
 			*/
 			//TODO: change to check for multiple screen api and for how many screens
+			
+			debugger;
+
 			resize.width = Math.round(window.screen.availWidth/resize.numCols);
 			resize.height  = Math.round(window.screen.availHeight/resize.numRows);
+
+			var data = $('.display-entry.selected').data();
+
+			resize.width = Math.round(data.width/resize.numCols);
+			resize.height = Math.round(data.height/resize.numRows);
+			resize.offsetX = data.left;
+			resize.offsetY = data.top;
+			debugger;
+			
 			var that = this;
 			window.chrome.tabs.query({currentWindow: true},
 				function (tabs) {

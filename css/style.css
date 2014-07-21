@@ -224,6 +224,9 @@ button.disabled {
   position: absolute;
   border: 1px solid grey;
 }
+#display-setting-layer .display-entry.selected {
+  background: lightblue;
+}
 .custom-view .table-container {
   display: inline-block;
   position: relative;
