@@ -32,8 +32,9 @@
 	}).on('click','.close-button',function(evt){
 		evt.stopPropagation();
 		layout.removeLayout($(this).siblings('.resize-selector').attr('data-selector-type'));
-		main_view.initWindowWidth();
-		main_view.checkWindowHeight();
+		location.reload();
+		// main_view.initWindowWidth();
+		// main_view.checkWindowHeight();
 	}).on('click','#undo-layout',function(){
 		options.undoResize();
 	}).on('click','#custom-layout',function(evt){
@@ -96,9 +97,11 @@
 		var checked = $(this).attr('checked');
 		options.processEmptyTabSelection(checked);
 	}).on('click','#display-setting', function(){
-		var $displayLayer = $('#display-setting-layer'),
+		var $display = $('#display-setting'),
+			$displayLayer = $('#display-setting-layer'),
 			isDisplayed;
 
+		$display.toggleClass('hidden-layer');
 		$displayLayer.toggleClass('hidden');
 		isDisplayed = !$displayLayer.hasClass('hidden');
 		options.processDisplayLayerSelection(isDisplayed);

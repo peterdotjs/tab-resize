@@ -33,7 +33,7 @@
 
 			var defaultSprite = "layout-default";
 
-			if(resize.defaultLayouts.layoutItems.indexOf(layoutType) !== -1 || layoutType === '1x1'){
+			if(resize.layoutSprites.layoutItems.indexOf(layoutType) !== -1 || layoutType === '1x1'){
 				defaultSprite = "layout-" + layoutType;
 			}
 

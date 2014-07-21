@@ -143,13 +143,15 @@
 	}
 
 	function renderDisplayTemplate(info, id, isPrimary){
-		var $template = $('<div class="display-entry"></div>');
+		var $template = $('<div class="display-entry"><div class="display-meta"></div></div>');
 			$template.css({
 				top: info.top*scale + offsetY,
 				left: info.left*scale + offsetX,
 				width: info.width*scale,
 				height: info.height*scale
 			}).data($.extend({id:id},info));
+
+			$template.find('.display-meta').text(info.width + 'x' + info.height);
 
 		if(isPrimary){
 			$template.addClass('selected');
