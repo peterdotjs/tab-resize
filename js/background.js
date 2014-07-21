@@ -45,8 +45,8 @@ var util = {
 			for(var x=0; x<resize.numCols; x++){
 				// base case we update the current window
 				if(x === 0 && y === 0){
-					window.chrome.windows.update(_tabsArray[index].windowId,{ left: x*resize.width,
-																		top: y*resize.height,
+					window.chrome.windows.update(_tabsArray[index].windowId,{ left: (x*resize.width) + resize.offsetX,
+																		top: (y*resize.height) + resize.offsetY,
 																		width: resize.width,
 																		height: resize.height});
 					if(singleTab){
@@ -61,7 +61,7 @@ var util = {
 
 					//check the number of new windows that will be created
 					//store the windowId information
-					that.createNewWindow(tabId, x*resize.width, y*resize.height,resize.width, resize.height, incog, function(_windowCb){
+					that.createNewWindow(tabId, (x*resize.width) + resize.offsetX, (y*resize.height) + resize.offsetY, resize.width, resize.height, incog, function(_windowCb){
 						//only if update storage when tab option is used
 						if(!tabId && resize.emptyTab){
 							_tabsArray.push(_windowCb.tabs[0]);

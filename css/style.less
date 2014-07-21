@@ -4,7 +4,7 @@ html{
 }
 
 body {
-	min-width: 612px;
+	min-width: 630px;
 	padding: 0px;
 	.main-background();
 	margin: 0px;
@@ -27,6 +27,102 @@ body {
 	font-weight: bold;
 }
 
+//** Load fonts from this directory.
+@icon-font-path:          "../fonts/";
+@icon-font-name:          "glyphicons-halflings-regular";
+@icon-font-svg-id:        "glyphicons_halflingsregular";
+
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('@{icon-font-path}@{icon-font-name}.eot');
+  src: url('@{icon-font-path}@{icon-font-name}.eot?#iefix') format('embedded-opentype'),
+       url('@{icon-font-path}@{icon-font-name}.woff') format('woff'),
+       url('@{icon-font-path}@{icon-font-name}.ttf') format('truetype'),
+       url('@{icon-font-path}@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg');
+}
+
+.glyphicon {
+	position: relative;
+	display: inline-block;
+	font-family: 'Glyphicons Halflings';
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	font-size: 18px;
+	box-sizing: border-box;
+
+	&.glyphicon-refresh {
+		&:before {
+			content: "\e031";
+			box-sizing: border-box;
+		}
+	}
+
+	&.glyphicon-plus { 
+		top: -1px;
+		&:before { 
+			content: "\2b";
+			box-sizing: border-box; 
+		} 
+	}
+
+	&.glyphicon-chevron-down { 
+		&:before { 
+			content: "\e113"; 
+		} 
+	}
+}
+
+.hidden-layer {
+	.glyphicon-chevron-down { 
+		&:before { 
+			content: "\e114"; 
+		} 
+	}
+}
+
+.icon {
+    height: 18px;
+    width: 18px;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+
+    &.icon-screen {
+    	width: 32px;
+    	height: 25px;
+    }
+
+	.screen {
+	    width: 28px;
+	    height: 16px;
+	    border: 2px solid #333;
+	    background: #eee;	
+	    
+	    &:before {
+		    position: absolute;
+		    content: '';
+		    width: 10px;
+		    height: 3px;
+		    background: #333;
+		    bottom: 2px;
+		    left: 11px;
+	    }	
+
+	    &:after {
+		    position: absolute;
+		    content: '';
+		    width: 22px;
+		    height: 2px;
+		    background: #333;
+		    bottom: 0;
+		    left: 5px;
+	    }
+	}
+}
+
+
 //mixins
 .main-background(){
 	//background: -webkit-gradient(linear, left top, left bottom, from(white), to(#E7F3FD));
@@ -38,6 +134,15 @@ body {
 		font-family: Verdana, Geneva, sans-serif;
 }
 
+.box-shadow(@shadow) {
+	box-shadow: @shadow;
+	-webkit-box-shadow: @shadow;
+}
+
+.border-radius(@radius){
+	border-radius: @radius;
+	-webkit-border-radius: @radius;
+}
 
 input {
 	.font-family();
@@ -109,9 +214,11 @@ button.disabled {
 
 .main-view {
 	padding-top: 4px;
+	overflow: hidden;
 	.resize-container {
 		padding: 0 5px;
-		min-height: 156px;
+		height: 156px;
+		overflow-y: auto;
 		.resize-selector-container {
 			width: 127px;
 			height: 127px;
@@ -199,16 +306,42 @@ button.disabled {
 	}
 
 	.resize-footer {
-		border-top: 1px solid #c0c0c0;
+		border: 3px solid #c0c0c0;
 		overflow: hidden;
-		background: #E7F3FD;
-		clear: right;
+		background: white;
+		clear:right;
+		.font-family();
+
+		.footer-wrap {
+			display: inline-block;
+			overflow: hidden;
+
+			&.monitor-wrap {
+				float: left;
+				padding: 6px 12px 6px 8px;
+				border-right: 3px solid silver;
+				cursor: pointer;
+
+				.display-setting-title {
+					vertical-align: top;
+					font-size: 15px;
+					position: relative;
+					top: 3px;
+					padding: 0 10px 0 5px;
+					border-right: 1px solid silver;
+				}
+
+				.glyphicon {
+					top: -2px;
+					left: 3px;
+				}
+			}
+		}
+
 		.resize-undo{
-			float: right;
 			margin: 6px 10px 6px 0;
 
 			&.secondary {
-				float: left;
 				margin-left: 10px;
 			}
 
@@ -216,32 +349,76 @@ button.disabled {
 
 		#undo-layout{
 			margin-left: 2px;
-			//float: right;
 		}
 
 		#custom-layout{
+			margin: 6px 0 6px 12px;
+			padding: 4px 5px;
 			float: left;
-			margin: 6px 0 6px 15px
+		}
+
+		#default-configuration {
+			padding: 4px 5px;
+			float: left;
 		}
 
 		.checkbox-container {
 			.font-family();
 			overflow: hidden;
-			float: right;
 			display: inline-block;
-			border-left: 1px solid silver;
-			background: #F7F7F7;
-
-			input {
-				// position: relative;
-				// top: 11px;
-			}
+			border-left: 3px solid silver;
+			float:right;
 
 			label {
 				font-size: 14px;
 				display: block;
-				padding: 11px 8px 11px 5px;
+				padding: 10px 8px 11px 5px;
+				cursor: pointer;
+
+				&:hover {
+					.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
+
+					input {
+						.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
+					}
+				}
+
+				input {
+					.border-radius(3px);
+					vertical-align: top;
+
+					&:focus {
+						.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
+					}
+				}
+
 			}
+		}
+	}
+}
+
+#display-setting-layer {
+	min-height: 250px;
+	position: relative;
+	bottom: 0px;
+	margin: 50px 50px 0px 50px;
+	.font-family();
+
+	.display-entry {
+		position: absolute;
+		border: 1px solid grey;
+		.border-radius(3px);
+		.box-shadow(inset 0px 0px 0px 2px grey);
+		background: white;
+
+		&.selected {
+			background: lightblue;
+		}
+
+		.display-meta {
+			position: relative;
+			top: 10px;
+			left: 10px;
 		}
 	}
 }

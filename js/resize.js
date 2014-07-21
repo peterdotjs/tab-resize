@@ -11,7 +11,6 @@
 
 		tabsArray: [],
 		currentTab: null,
-		newWindow: null,
 		numRows: 0,
 		numCols: 0,
 		width: 0,
@@ -19,7 +18,8 @@
 		canvasHeight: 100,
 		canvasWidth: 100,
 		currentLayouts: null,
-		defaultLayouts: {'layoutItems':["1x1","1x2","2x1","1x3","2x2"]},
+		defaultLayouts: {'layoutItems':["1x1","1x2","2x1","2x2"]},
+		layoutSprites: {'layoutItems':["1x1","1x2","2x1","2x2","1x3","3x1"]},
 		maxSelectorsPerLine: 5,
 		maxSelectorContainerWidth: 156,
 		maxSelectorContainerHeight: 156,

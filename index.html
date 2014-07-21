@@ -9,6 +9,7 @@
 		<script type="text/javascript" src="js/options.js"></script>
 		<script type="text/javascript" src="js/layout.js"></script>
 		<script type="text/javascript" src="js/utility.js"></script>
+		<script type="text/javascript" src="js/display.js"></script>
 		<script type="text/javascript" src="js/main.js"></script>
 	</head>
 	<body>
@@ -17,9 +18,23 @@
 			<div class="resize-container">
 			</div>
 			<div class="resize-footer">
-				<button class="resize-undo primary" id="custom-layout" type="button" title="Custom Configurations">Custom</button>
-				<button class="resize-undo secondary" id="default-configuration" type="button" title="Default Configurations">Default</button>
-				<button class="resize-undo secondary disabled" id="undo-layout" type="button" title="Undo previous resize">Undo</button>
+				<div id="display-setting" class="hidden-layer monitor-wrap footer-wrap">
+					<div class="icon icon-screen">
+						<div class="screen"></div>
+					</div>
+					<span class="display-setting-title">Display Settings</span>
+					<span class="glyphicon glyphicon-chevron-down"></span>
+				</div>
+				<div class="button-wrap footer-wrap">
+					<button class="resize-undo primary" id="custom-layout" type="button" title="Custom Configurations">
+						<span class="glyphicon glyphicon-plus"></span>
+					</button>
+					<button class="resize-undo secondary" id="default-configuration" type="button" title="Default Configurations">
+						<span class="glyphicon glyphicon-refresh"></span>
+					</button>
+					<button class="resize-undo secondary disabled" id="undo-layout" type="button" title="Undo previous resize">Undo</button>
+				</div>
+
 				<div class="checkbox-container" title="Single Tab Mode">
 					<label for="checkbox-single-tab" class="label single-tab">
 						<input type="checkbox" class="checkbox" id="checkbox-single-tab"></input>
@@ -33,6 +48,7 @@
 					</label>
 				</div>
 			</div>
+			<div id="display-setting-layer" class="hidden"></div>
 		</div>
 		<div class="custom-view modal-box hidden">
 			<div class="modal-body">

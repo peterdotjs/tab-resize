@@ -25,8 +25,8 @@
 			}
 		},
 
-				/*
-		* single tab option
+		/*
+		* empty tab option
 		*/
 
 		/**
@@ -43,6 +43,19 @@
 			}
 		},
 
+		/**
+		* sets displayLayer flag
+		* @param {boolean} The hex ID.
+		*/
+		processDisplayLayerSelection: function(displayLayer) {
+			if(displayLayer){
+				localStorage.setItem('displayLayer',true);
+				resize.displayLayer = true;
+			} else {
+				localStorage.setItem('displayLayer',false);
+				resize.displayLayer = false;
+			}
+		},
 
 		/*
 		* undo previous resize option

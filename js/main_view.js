@@ -18,7 +18,7 @@
 				localStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
 				resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
 			}
-			this.initWindowWidth();
+			//this.initWindowWidth();
 			this._populateMainView();
 
 			var singleTabValue = localStorage.getItem('singleTab');
@@ -32,6 +32,15 @@
 				$('#checkbox-empty-tab').attr('checked',true);
 				resize.emptyTab = true;
 			}
+
+			var displayLayerValue = localStorage.getItem('displayLayer');
+			if(displayLayerValue && displayLayerValue === 'true'){
+				$('#display-setting').removeClass('hidden-layer');
+				$('#display-setting-layer').removeClass('hidden');
+				resize.displayLayerValue = true;
+			}
+
+			resize.displayUtil.initialize();
 
 			if(localStorage.getItem('lastTab')){
 				$('#undo-layout').removeClass('disabled');
@@ -68,9 +77,11 @@
 		},
 
 		/**
+		* TODO: Fix for display layer case
 		* adjusts the popup height accordingly as layout elements are removed
 		*/
 		checkWindowHeight: function() {
+			debugger;
 			var numSelectors = resize.currentLayouts.layoutItems.length;
 			var removedRow = numSelectors % resize.maxSelectorsPerLine;
 			if(numSelectors >=5 && removedRow === 0){
@@ -93,9 +104,21 @@
 			* split width of screen equally depending on number of cells
 			* create new window unable to take non integers for width and height
 			*/
-			//TODO: change to check for multiple screen api and for how many screens
-			resize.width = Math.round(window.screen.availWidth/resize.numCols);
-			resize.height  = Math.round(window.screen.availHeight/resize.numRows);
+
+			var data = $('.display-entry.selected').data();
+
+			if(!$.isEmptyObject(data)){
+				resize.width = Math.round(data.width/resize.numCols);
+				resize.height = Math.round(data.height/resize.numRows);
+				resize.offsetX = data.left;
+				resize.offsetY = data.top;
+			} else {
+				resize.width = Math.round(window.screen.availWidth/resize.numCols);
+				resize.height  = Math.round(window.screen.availHeight/resize.numRows);	
+				resize.offsetX = 0;
+				resize.offsetY = 0;			
+			}
+
 			var that = this;
 			window.chrome.tabs.query({currentWindow: true},
 				function (tabs) {

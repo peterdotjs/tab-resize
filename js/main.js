@@ -10,6 +10,7 @@
 		util = resize.util,
 		layout = resize.layout,
 		options = resize.options,
+		displayUtil = resize.displayUtil,
 		$doc = $(document);
 
 	/*
@@ -31,8 +32,9 @@
 	}).on('click','.close-button',function(evt){
 		evt.stopPropagation();
 		layout.removeLayout($(this).siblings('.resize-selector').attr('data-selector-type'));
-		main_view.initWindowWidth();
-		main_view.checkWindowHeight();
+		location.reload();
+		// main_view.initWindowWidth();
+		// main_view.checkWindowHeight();
 	}).on('click','#undo-layout',function(){
 		options.undoResize();
 	}).on('click','#custom-layout',function(evt){
@@ -89,16 +91,23 @@
 			util.drawTable(resize.canvasWidth, resize.canvasHeight, numRows, numCols, context);
 		}
 	}).on('change','#checkbox-single-tab', function(){
-		if($(this).attr('checked')){
-			options.processSingleTabSelection(true);
-		} else {
-			options.processSingleTabSelection(false);
-		}
+		var checked = $(this).attr('checked');
+		options.processSingleTabSelection(checked);
 	}).on('change','#checkbox-empty-tab', function(){
-		if($(this).attr('checked')){
-			options.processEmptyTabSelection(true);
-		} else {
-			options.processEmptyTabSelection(false);
+		var checked = $(this).attr('checked');
+		options.processEmptyTabSelection(checked);
+	}).on('click','#display-setting', function(){
+		var $display = $('#display-setting'),
+			$displayLayer = $('#display-setting-layer'),
+			isDisplayed;
+
+		$display.toggleClass('hidden-layer');
+		$displayLayer.toggleClass('hidden');
+		isDisplayed = !$displayLayer.hasClass('hidden');
+		options.processDisplayLayerSelection(isDisplayed);
+
+		if(!isDisplayed){
+			location.reload();
 		}
 	});
 

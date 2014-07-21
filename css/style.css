@@ -3,7 +3,7 @@ html {
   overflow: hidden;
 }
 body {
-  min-width: 612px;
+  min-width: 630px;
   padding: 0px;
   background: white;
   overflow: hidden;
@@ -21,6 +21,74 @@ body {
 }
 .bold {
   font-weight: bold;
+}
+@font-face {
+  font-family: 'Glyphicons Halflings';
+  src: url('../fonts/glyphicons-halflings-regular.eot');
+  src: url('../fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('../fonts/glyphicons-halflings-regular.woff') format('woff'), url('../fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+.glyphicon {
+  position: relative;
+  display: inline-block;
+  font-family: 'Glyphicons Halflings';
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  font-size: 18px;
+  box-sizing: border-box;
+}
+.glyphicon.glyphicon-refresh:before {
+  content: "\e031";
+  box-sizing: border-box;
+}
+.glyphicon.glyphicon-plus {
+  top: -1px;
+}
+.glyphicon.glyphicon-plus:before {
+  content: "\2b";
+  box-sizing: border-box;
+}
+.glyphicon.glyphicon-chevron-down:before {
+  content: "\e113";
+}
+.hidden-layer .glyphicon-chevron-down:before {
+  content: "\e114";
+}
+.icon {
+  height: 18px;
+  width: 18px;
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+}
+.icon.icon-screen {
+  width: 32px;
+  height: 25px;
+}
+.icon .screen {
+  width: 28px;
+  height: 16px;
+  border: 2px solid #333;
+  background: #eee;
+}
+.icon .screen:before {
+  position: absolute;
+  content: '';
+  width: 10px;
+  height: 3px;
+  background: #333;
+  bottom: 2px;
+  left: 11px;
+}
+.icon .screen:after {
+  position: absolute;
+  content: '';
+  width: 22px;
+  height: 2px;
+  background: #333;
+  bottom: 0;
+  left: 5px;
 }
 input {
   font-family: Verdana, Geneva, sans-serif;
@@ -84,10 +152,12 @@ button.disabled {
 }
 .main-view {
   padding-top: 4px;
+  overflow: hidden;
 }
 .main-view .resize-container {
   padding: 0 5px;
-  min-height: 156px;
+  height: 156px;
+  overflow-y: auto;
 }
 .main-view .resize-container .resize-selector-container {
   width: 127px;
@@ -159,38 +229,105 @@ button.disabled {
   background: url('../images/sprites/close_hover.png');
 }
 .main-view .resize-footer {
-  border-top: 1px solid #c0c0c0;
+  border: 3px solid #c0c0c0;
   overflow: hidden;
-  background: #E7F3FD;
+  background: white;
   clear: right;
+  font-family: Verdana, Geneva, sans-serif;
+}
+.main-view .resize-footer .footer-wrap {
+  display: inline-block;
+  overflow: hidden;
+}
+.main-view .resize-footer .footer-wrap.monitor-wrap {
+  float: left;
+  padding: 6px 12px 6px 8px;
+  border-right: 3px solid silver;
+  cursor: pointer;
+}
+.main-view .resize-footer .footer-wrap.monitor-wrap .display-setting-title {
+  vertical-align: top;
+  font-size: 15px;
+  position: relative;
+  top: 3px;
+  padding: 0 10px 0 5px;
+  border-right: 1px solid silver;
+}
+.main-view .resize-footer .footer-wrap.monitor-wrap .glyphicon {
+  top: -2px;
+  left: 3px;
 }
 .main-view .resize-footer .resize-undo {
-  float: right;
   margin: 6px 10px 6px 0;
 }
 .main-view .resize-footer .resize-undo.secondary {
-  float: left;
   margin-left: 10px;
 }
 .main-view .resize-footer #undo-layout {
   margin-left: 2px;
 }
 .main-view .resize-footer #custom-layout {
+  margin: 6px 0 6px 12px;
+  padding: 4px 5px;
   float: left;
-  margin: 6px 0 6px 15px;
+}
+.main-view .resize-footer #default-configuration {
+  padding: 4px 5px;
+  float: left;
 }
 .main-view .resize-footer .checkbox-container {
   font-family: Verdana, Geneva, sans-serif;
   overflow: hidden;
-  float: right;
   display: inline-block;
-  border-left: 1px solid silver;
-  background: #F7F7F7;
+  border-left: 3px solid silver;
+  float: right;
 }
 .main-view .resize-footer .checkbox-container label {
   font-size: 14px;
   display: block;
-  padding: 11px 8px 11px 5px;
+  padding: 10px 8px 11px 5px;
+  cursor: pointer;
+}
+.main-view .resize-footer .checkbox-container label:hover {
+  box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+}
+.main-view .resize-footer .checkbox-container label:hover input {
+  box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+}
+.main-view .resize-footer .checkbox-container label input {
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  vertical-align: top;
+}
+.main-view .resize-footer .checkbox-container label input:focus {
+  box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+}
+#display-setting-layer {
+  min-height: 250px;
+  position: relative;
+  bottom: 0px;
+  margin: 50px 50px 0px 50px;
+  font-family: Verdana, Geneva, sans-serif;
+}
+#display-setting-layer .display-entry {
+  position: absolute;
+  border: 1px solid grey;
+  border-radius: 3px;
+  -webkit-border-radius: 3px;
+  box-shadow: inset 0px 0px 0px 2px #808080;
+  -webkit-box-shadow: inset 0px 0px 0px 2px #808080;
+  background: white;
+}
+#display-setting-layer .display-entry.selected {
+  background: lightblue;
+}
+#display-setting-layer .display-entry .display-meta {
+  position: relative;
+  top: 10px;
+  left: 10px;
 }
 .custom-view .table-container {
   display: inline-block;
