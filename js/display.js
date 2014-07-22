@@ -73,7 +73,7 @@
 			currentDisplay = displays[index].workArea;
 			if(leastLeft === null || leastLeft > currentDisplay.left){
 				leastLeft = currentDisplay.left;
-			}	
+			}
 
 			if(mostLeft === null || mostLeft < currentDisplay.left + currentDisplay.width){
 				mostLeft = currentDisplay.left + currentDisplay.width;
@@ -98,8 +98,8 @@
 
 		scale = (scaleX < scaleY) ? scaleX : scaleY;
 
-		offsetX = (leastLeft !== 0) ? (leastLeft)*-1*scale : 0; 
-		offsetY = (leastTop !== 0) ? (leastTop)*-1*scale : 0; 
+		offsetX = (leastLeft !== 0) ? (leastLeft)*-1*scale : 0;
+		offsetY = (leastTop !== 0) ? (leastTop)*-1*scale : 0;
 	}
 
 	function getAvailableArea(){
@@ -123,6 +123,9 @@
 
 		for(;index<length;index++){
 			info = displayInfo[index];
+			if(Number(info.id) === 0){ //check for unsupported platoforms - MAC always has id as 0
+				info.id = index;
+			}
 			displayJSON.displays.push({
 				workArea: info.workArea,
 				isEnabled: info.isEnabled,

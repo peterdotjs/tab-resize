@@ -34,7 +34,7 @@
 			}
 
 			var displayLayerValue = localStorage.getItem('displayLayer');
-			if(displayLayerValue && displayLayerValue === 'true'){
+			if(!displayLayerValue || displayLayerValue === 'true'){
 				$('#display-setting').removeClass('hidden-layer');
 				$('#display-setting-layer').removeClass('hidden');
 				resize.displayLayerValue = true;
@@ -114,9 +114,9 @@
 				resize.offsetY = data.top;
 			} else {
 				resize.width = Math.round(window.screen.availWidth/resize.numCols);
-				resize.height  = Math.round(window.screen.availHeight/resize.numRows);	
+				resize.height  = Math.round(window.screen.availHeight/resize.numRows);
 				resize.offsetX = 0;
-				resize.offsetY = 0;			
+				resize.offsetY = 0;
 			}
 
 			var that = this;

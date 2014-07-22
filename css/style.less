@@ -59,26 +59,26 @@ body {
 		}
 	}
 
-	&.glyphicon-plus { 
+	&.glyphicon-plus {
 		top: -1px;
-		&:before { 
+		&:before {
 			content: "\2b";
-			box-sizing: border-box; 
-		} 
+			box-sizing: border-box;
+		}
 	}
 
-	&.glyphicon-chevron-down { 
-		&:before { 
-			content: "\e113"; 
-		} 
+	&.glyphicon-chevron-down {
+		&:before {
+			content: "\e113";
+		}
 	}
 }
 
 .hidden-layer {
-	.glyphicon-chevron-down { 
-		&:before { 
-			content: "\e114"; 
-		} 
+	.glyphicon-chevron-down {
+		&:before {
+			content: "\e114";
+		}
 	}
 }
 
@@ -98,8 +98,8 @@ body {
 	    width: 28px;
 	    height: 16px;
 	    border: 2px solid #333;
-	    background: #eee;	
-	    
+	    background: #eee;
+
 	    &:before {
 		    position: absolute;
 		    content: '';
@@ -108,7 +108,7 @@ body {
 		    background: #333;
 		    bottom: 2px;
 		    left: 11px;
-	    }	
+	    }
 
 	    &:after {
 		    position: absolute;
@@ -332,7 +332,7 @@ button.disabled {
 				}
 
 				.glyphicon {
-					top: -2px;
+					top: -3px;
 					left: 3px;
 				}
 			}
@@ -372,7 +372,7 @@ button.disabled {
 			label {
 				font-size: 14px;
 				display: block;
-				padding: 10px 8px 11px 5px;
+				padding: 10px 8px 12px 5px;
 				cursor: pointer;
 
 				&:hover {
@@ -401,7 +401,7 @@ button.disabled {
 	min-height: 250px;
 	position: relative;
 	bottom: 0px;
-	margin: 50px 50px 0px 50px;
+	margin: 50px 50px 25px 50px;
 	.font-family();
 
 	.display-entry {
@@ -410,6 +410,7 @@ button.disabled {
 		.border-radius(3px);
 		.box-shadow(inset 0px 0px 0px 2px grey);
 		background: white;
+		cursor: pointer;
 
 		&.selected {
 			background: lightblue;
