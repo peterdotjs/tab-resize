@@ -150,6 +150,24 @@ button.disabled {
   float: right;
   margin: 6px 10px 6px 0;
 }
+.display-setting-indicator {
+  display: none;
+  width: 0;
+  height: 0;
+  position: absolute;
+  z-index: 2;
+  bottom: 0px;
+  left: 98px;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid silver;
+}
+.main-view.display-selected .display-setting-indicator {
+  display: block;
+}
+.main-view.display-selected .resize-footer {
+  border-bottom-width: 7px;
+}
 .main-view {
   padding-top: 4px;
   overflow: hidden;
@@ -244,6 +262,19 @@ button.disabled {
   padding: 6px 12px 6px 8px;
   border-right: 3px solid silver;
   cursor: pointer;
+  background: #dcf0f6;
+  position: relative;
+}
+.main-view .resize-footer .footer-wrap.monitor-wrap:hover,
+.main-view .resize-footer .footer-wrap.monitor-wrap:focus {
+  background: #b4e2f6;
+}
+.main-view .resize-footer .footer-wrap.monitor-wrap.hidden-layer {
+  background: white;
+}
+.main-view .resize-footer .footer-wrap.monitor-wrap.hidden-layer:hover,
+.main-view .resize-footer .footer-wrap.monitor-wrap.hidden-layer:focus {
+  background: #b4e2f6;
 }
 .main-view .resize-footer .footer-wrap.monitor-wrap .display-setting-title {
   vertical-align: top;
@@ -285,28 +316,28 @@ button.disabled {
 .main-view .resize-footer .checkbox-container label {
   font-size: 14px;
   display: block;
-  padding: 10px 8px 12px 5px;
+  padding: 8px 7px 8px 5px;
   cursor: pointer;
 }
-.main-view .resize-footer .checkbox-container label:hover {
-  box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
-  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+.main-view .resize-footer .checkbox-container label.selected {
+  background: #dcf0f6;
 }
-.main-view .resize-footer .checkbox-container label:hover input {
-  box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
-  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+.main-view .resize-footer .checkbox-container label:hover {
+  background: #b4e2f6;
 }
 .main-view .resize-footer .checkbox-container label input {
   border-radius: 3px;
   -webkit-border-radius: 3px;
   vertical-align: top;
+  width: 18px;
+  height: 18px;
 }
-.main-view .resize-footer .checkbox-container label input:focus {
-  box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
-  -webkit-box-shadow: inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4);
+.main-view .resize-footer .checkbox-container label span {
+  position: relative;
+  top: 2px;
+  left: -2px;
 }
 #display-setting-layer {
-  min-height: 250px;
   position: relative;
   bottom: 0px;
   margin: 50px 50px 25px 50px;
@@ -321,9 +352,27 @@ button.disabled {
   -webkit-box-shadow: inset 0px 0px 0px 2px #808080;
   background: white;
   cursor: pointer;
+  z-index: 1;
 }
 #display-setting-layer .display-entry.selected {
-  background: lightblue;
+  z-index: 2;
+  background: #eeeeee;
+  border-color: #808080;
+  box-shadow: inset 0px 0px 0px 4px #808080;
+  -webkit-box-shadow: inset 0px 0px 0px 4px #808080;
+  cursor: default;
+}
+#display-setting-layer .display-entry.selected:hover {
+  background: #eeeeee;
+  border-color: #808080;
+  box-shadow: inset 0px 0px 0px 4px #808080;
+  -webkit-box-shadow: inset 0px 0px 0px 4px #808080;
+}
+#display-setting-layer .display-entry:hover {
+  z-index: 3;
+  border-color: #28a2d5;
+  box-shadow: inset 0px 0px 0px 4px #28a2d5;
+  -webkit-box-shadow: inset 0px 0px 0px 4px #28a2d5;
 }
 #display-setting-layer .display-entry .display-meta {
   position: relative;

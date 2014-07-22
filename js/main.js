@@ -108,6 +108,8 @@
 
 		if(!isDisplayed){
 			location.reload();
+		} else {
+			$('.main-view').addClass('display-selected');
 		}
 	});
 

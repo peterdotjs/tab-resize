@@ -16,13 +16,10 @@
 		* @param {boolean} The hex ID.
 		*/
 		processSingleTabSelection: function(singleTab) {
-			if(singleTab){
-				localStorage.setItem('singleTab',true);
-				resize.singleTab = true;
-			} else {
-				localStorage.setItem('singleTab',false);
-				resize.singleTab = false;
-			}
+			var _singleTab = singleTab ? true : false;
+			localStorage.setItem('singleTab',_singleTab);
+			resize.singleTab = _singleTab;
+			$('label.single-tab').toggleClass('selected');
 		},
 
 		/*
@@ -34,13 +31,10 @@
 		* @param {boolean} The hex ID.
 		*/
 		processEmptyTabSelection: function(emptyTab) {
-			if(emptyTab){
-				localStorage.setItem('emptyTab',true);
-				resize.emptyTab = true;
-			} else {
-				localStorage.setItem('emptyTab',false);
-				resize.emptyTab = false;
-			}
+			var _emptyTab = emptyTab ? true : false;
+			localStorage.setItem('emptyTab',_emptyTab);
+			resize.emptyTab = _emptyTab;
+			$('label.empty-tab').toggleClass('selected');
 		},
 
 		/**
@@ -48,13 +42,9 @@
 		* @param {boolean} The hex ID.
 		*/
 		processDisplayLayerSelection: function(displayLayer) {
-			if(displayLayer){
-				localStorage.setItem('displayLayer',true);
-				resize.displayLayer = true;
-			} else {
-				localStorage.setItem('displayLayer',false);
-				resize.displayLayer = false;
-			}
+			var _displayLayer = displayLayer ? true : false;
+			localStorage.setItem('displayLayer',_displayLayer);
+			resize.displayLayer = _displayLayer;
 		},
 
 		/*

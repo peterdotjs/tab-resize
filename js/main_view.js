@@ -24,12 +24,14 @@
 			var singleTabValue = localStorage.getItem('singleTab');
 			if(singleTabValue && singleTabValue === 'true'){
 				$('#checkbox-single-tab').attr('checked',true);
+				$('label.single-tab').addClass('selected');
 				resize.singleTab = true;
 			}
 
 			var emptyTabValue = localStorage.getItem('emptyTab');
 			if(emptyTabValue && emptyTabValue === 'true'){
 				$('#checkbox-empty-tab').attr('checked',true);
+				$('label.empty-tab').addClass('selected');
 				resize.emptyTab = true;
 			}
 
@@ -37,6 +39,7 @@
 			if(!displayLayerValue || displayLayerValue === 'true'){
 				$('#display-setting').removeClass('hidden-layer');
 				$('#display-setting-layer').removeClass('hidden');
+				$('.main-view').addClass('display-selected');
 				resize.displayLayerValue = true;
 			}
 

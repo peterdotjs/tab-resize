@@ -41,6 +41,18 @@ body {
        url('@{icon-font-path}@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg');
 }
 
+@hover-color: #B4E2F6;
+@active-color: #DCF0F6;
+@active-color-display: #EEE;
+@active-color-checkbox: #DCF0F6;
+
+//@hover-display-border:#00B600;
+//@hover-display-border:#0CBD0C;
+//@hover-display-border:#2c2c2c;
+@hover-display-border:#28A2D5;
+@active-display-border:grey;
+@active-display-background: #eee;
+
 .glyphicon {
 	position: relative;
 	display: inline-block;
@@ -212,6 +224,32 @@ button.disabled {
 	}
 }
 
+
+.display-setting-indicator {
+	display: none;
+	width: 0;
+	height: 0;
+	position: absolute;
+	z-index: 2;
+	bottom: 0px;
+	left: 98px;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-bottom: 7px solid silver;
+}
+
+.main-view {
+	&.display-selected {
+		.display-setting-indicator {
+			display: block;
+		}
+
+		.resize-footer {
+			border-bottom-width: 7px;
+		}
+	}
+}
+
 .main-view {
 	padding-top: 4px;
 	overflow: hidden;
@@ -321,6 +359,19 @@ button.disabled {
 				padding: 6px 12px 6px 8px;
 				border-right: 3px solid silver;
 				cursor: pointer;
+				background: @active-color;
+				position: relative;
+
+				&:hover, &:focus {
+					background: @hover-color;
+				}
+
+				&.hidden-layer {
+					background: white;
+					&:hover, &:focus {
+						background: @hover-color;
+					}
+				}
 
 				.display-setting-title {
 					vertical-align: top;
@@ -372,24 +423,27 @@ button.disabled {
 			label {
 				font-size: 14px;
 				display: block;
-				padding: 10px 8px 12px 5px;
+				padding: 8px 7px 8px 5px;
 				cursor: pointer;
+				&.selected {
+					background: @active-color-checkbox;
+				}
 
 				&:hover {
-					.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
-
-					input {
-						.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
-					}
+					background: @hover-color;
 				}
 
 				input {
 					.border-radius(3px);
 					vertical-align: top;
+					width: 18px;
+					height: 18px;
+				}
 
-					&:focus {
-						.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
-					}
+				span {
+					position: relative;
+					top: 2px;
+					left: -2px;
 				}
 
 			}
@@ -398,7 +452,6 @@ button.disabled {
 }
 
 #display-setting-layer {
-	min-height: 250px;
 	position: relative;
 	bottom: 0px;
 	margin: 50px 50px 25px 50px;
@@ -411,9 +464,28 @@ button.disabled {
 		.box-shadow(inset 0px 0px 0px 2px grey);
 		background: white;
 		cursor: pointer;
-
+		z-index: 1;
 		&.selected {
-			background: lightblue;
+			z-index: 2;
+			background: @active-color-display;
+			border-color: @active-display-border;
+			.box-shadow(inset 0px 0px 0px 4px @active-display-border);
+
+			cursor: default;
+
+			&:hover {
+				background: @active-color-display;
+				border-color: @active-display-border;
+				.box-shadow(inset 0px 0px 0px 4px @active-display-border);
+			}
+		}
+
+		&:hover {
+			z-index: 3;
+			//background: @hover-color;
+
+			border-color: @hover-display-border;
+			.box-shadow(inset 0px 0px 0px 4px @hover-display-border);
 		}
 
 		.display-meta {

@@ -8,7 +8,7 @@
 		scale = 0.15,
 		offsetX = 0,
 		offsetY = 0,
-		defaultWidth = 524,
+		defaultWidth = 530,
 		defaultHeight = 250,
 		displayPreferenceMatch = JSON.parse(localStorage.getItem('displayIds')),
 		$el;
@@ -100,14 +100,21 @@
 
 		offsetX = (leastLeft !== 0) ? (leastLeft)*-1*scale : 0;
 		offsetY = (leastTop !== 0) ? (leastTop)*-1*scale : 0;
+
+		setDisplayHeight(scale,totalHeight);
 	}
 
 	function getAvailableArea(){
 		var $displayLayer = $('#display-setting-layer');
 		return {
-			width: $displayLayer.outerWidth() || $('body').outerWidth() - 100,
-			height: $displayLayer.outerHeight() || defaultHeight
+			width: defaultWidth,
+			height: defaultHeight
 		}
+	}
+
+	function setDisplayHeight(scale,height){
+		var $displayLayer = $('#display-setting-layer');
+		$displayLayer.height(scale*height);
 	}
 
 	//format the displayInfo
@@ -124,7 +131,7 @@
 		for(;index<length;index++){
 			info = displayInfo[index];
 			if(Number(info.id) === 0){ //check for unsupported platoforms - MAC always has id as 0
-				info.id = index;
+				info.id = String(index);
 			}
 			displayJSON.displays.push({
 				workArea: info.workArea,
