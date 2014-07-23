@@ -24,21 +24,32 @@
 			var singleTabValue = localStorage.getItem('singleTab');
 			if(singleTabValue && singleTabValue === 'true'){
 				$('#checkbox-single-tab').attr('checked',true);
+				$('label.single-tab').addClass('selected');
 				resize.singleTab = true;
 			}
 
 			var emptyTabValue = localStorage.getItem('emptyTab');
 			if(emptyTabValue && emptyTabValue === 'true'){
 				$('#checkbox-empty-tab').attr('checked',true);
+				$('label.empty-tab').addClass('selected');
 				resize.emptyTab = true;
 			}
 
 			var displayLayerValue = localStorage.getItem('displayLayer');
-			if(displayLayerValue && displayLayerValue === 'true'){
+			if(!displayLayerValue || displayLayerValue === 'true'){
 				$('#display-setting').removeClass('hidden-layer');
 				$('#display-setting-layer').removeClass('hidden');
-				resize.displayLayerValue = true;
+				$('.main-view').addClass('display-selected');
+				resize.displayLayer = true;
 			}
+
+			var alignmentValue = localStorage.getItem('alignment');
+			if(!alignmentValue){
+				resize.alignment = 'left';
+			} else {
+				resize.alignment = alignmentValue;
+			}
+			$('#' + resize.alignment).trigger('click');
 
 			resize.displayUtil.initialize();
 
@@ -53,6 +64,15 @@
 					resize.options.enableUndoButton();
 				}
 			});
+
+			//setting badge update
+			var updateCount = Number(localStorage.getItem('updateBadge'));
+			if(updateCount < resize.badgeLimit){
+				localStorage.setItem('updateBadge',++updateCount);
+				if(updateCount == resize.badgeLimit){
+					chrome.browserAction.setBadgeText({text:''});
+				}
+			}
 		},
 
 		/**
@@ -112,11 +132,15 @@
 				resize.height = Math.round(data.height/resize.numRows);
 				resize.offsetX = data.left;
 				resize.offsetY = data.top;
+				resize.fullWidth = data.width;
+				resize.fullHeight = data.height;
 			} else {
 				resize.width = Math.round(window.screen.availWidth/resize.numCols);
-				resize.height  = Math.round(window.screen.availHeight/resize.numRows);	
+				resize.height  = Math.round(window.screen.availHeight/resize.numRows);
 				resize.offsetX = 0;
-				resize.offsetY = 0;			
+				resize.offsetY = 0;
+				resize.fullWidth = window.screen.availWidth;
+				resize.fullHeight = window.screen.availHeight;
 			}
 
 			var that = this;

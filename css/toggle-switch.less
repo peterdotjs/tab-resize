@@ -1,0 +1,109 @@
+@white: #fff;
+@black: #000;
+@dark-gray: #808080;
+@candy-gray: rgb(80, 80, 80);
+@candy-green: #ceebf8;
+@candy-blue: #38a3d4;
+@candy-yellow: #f5e560;
+@android-gray: #666666;
+@android-black: #464747;
+@android-blue: #0E88B1;
+@ios-white: #fafafa;
+@ios-green: #53d76a;
+@ios-gray: #868686;
+@ios-dark-gray: #3a3a3a;
+
+.layout (@position, @top, @right, @left, @display, @width, @zindex) {
+  position: @position;
+  top: @top;
+  right: @right;
+  left: @left;
+  display: @display;
+  width: @width;
+  z-index: @zindex;
+}
+
+.container (@bg-color, @border, @border-radius, @shadow1, @shadow2, @shadow3) {
+  background-color: @bg-color;
+  border: @border;
+  border-radius: @border-radius;
+}
+
+.bg-image (@start-color, @end-color) {
+  background-image: -webkit-linear-gradient(top, @start-color, @end-color);
+  background-image: linear-gradient(to bottom, @start-color, @end-color);
+}
+
+.slide-button-transition (@duration: .3s) {
+  -webkit-transition: all @duration ease-out;
+  -moz-transition: all @duration ease-out;
+  transition: all @duration ease-out;
+}
+
+.switch-toggle a, .switch-light span span {
+  display: none; }
+
+  .switch-toggle {
+    display: block;
+    height: 30px;
+
+    position: relative;
+
+    padding: 0 !important;
+  }
+  .switch-toggle * {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; }
+  .switch-toggle a {
+    display: block;
+    .slide-button-transition; 
+  }
+  .switch-toggle label, .switch-toggle > span {
+    line-height: 30px;
+    vertical-align: middle; 
+  }
+  .switch-toggle input {
+    position: absolute;
+    opacity: 0; }
+  .switch-toggle input + label {
+    .layout (relative, static, static, static, inherit, 50%, 2);
+    float: left;
+    height: 100%;
+    margin: 0;
+    text-align: center; 
+    cursor: pointer;
+  }
+  .switch-toggle a {
+    .layout (absolute, 0, static, 0, inherit, 50%, 1);
+    padding: 0;
+    height: 100%; }
+  .switch-toggle input:last-of-type:checked ~ a {
+    left: 50%; }
+
+.switch-candy {
+  .container (@white, none, 6px, inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 1px 0px rgba(255, 255, 255, 0.2), 0);
+  color: @white;
+  text-align: center;
+  border: 2px solid @dark-gray;
+
+  label {
+    color: @black;
+    .slide-button-transition(.2s); }
+
+  input:checked + label {
+    color: @black;
+    cursor: default;
+  }
+
+  a {
+    .container (@candy-green, 1px solid @dark-gray, 3px, 0 1px 1px rgba(0, 0, 0, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.45), 0);
+    .bg-image(rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0)); }
+
+  > span {
+    color: @dark-gray;
+    text-shadow: none; }
+
+  span {
+    color: @white; }
+}

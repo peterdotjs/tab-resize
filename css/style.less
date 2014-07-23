@@ -1,3 +1,5 @@
+@import 'checkbox.less';
+@import 'toggle-switch.less';
 
 html{
 	.main-background()
@@ -27,6 +29,13 @@ body {
 	font-weight: bold;
 }
 
+a {
+	text-decoration: none;
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
 //** Load fonts from this directory.
 @icon-font-path:          "../fonts/";
 @icon-font-name:          "glyphicons-halflings-regular";
@@ -40,6 +49,18 @@ body {
        url('@{icon-font-path}@{icon-font-name}.ttf') format('truetype'),
        url('@{icon-font-path}@{icon-font-name}.svg#@{icon-font-svg-id}') format('svg');
 }
+
+@hover-color: #B4E2F6;
+@active-color: #DCF0F6;
+@active-color-display: #EEE;
+@active-color-checkbox: #DCF0F6;
+
+//@hover-display-border:#00B600;
+//@hover-display-border:#0CBD0C;
+//@hover-display-border:#2c2c2c;
+@hover-display-border:#28A2D5;
+@active-display-border:grey;
+@active-display-background: #eee;
 
 .glyphicon {
 	position: relative;
@@ -59,26 +80,26 @@ body {
 		}
 	}
 
-	&.glyphicon-plus { 
+	&.glyphicon-plus {
 		top: -1px;
-		&:before { 
+		&:before {
 			content: "\2b";
-			box-sizing: border-box; 
-		} 
+			box-sizing: border-box;
+		}
 	}
 
-	&.glyphicon-chevron-down { 
-		&:before { 
-			content: "\e113"; 
-		} 
+	&.glyphicon-chevron-down {
+		&:before {
+			content: "\e113";
+		}
 	}
 }
 
 .hidden-layer {
-	.glyphicon-chevron-down { 
-		&:before { 
-			content: "\e114"; 
-		} 
+	.glyphicon-chevron-down {
+		&:before {
+			content: "\e114";
+		}
 	}
 }
 
@@ -98,8 +119,8 @@ body {
 	    width: 28px;
 	    height: 16px;
 	    border: 2px solid #333;
-	    background: #eee;	
-	    
+	    background: #eee;
+
 	    &:before {
 		    position: absolute;
 		    content: '';
@@ -108,7 +129,7 @@ body {
 		    background: #333;
 		    bottom: 2px;
 		    left: 11px;
-	    }	
+	    }
 
 	    &:after {
 		    position: absolute;
@@ -212,6 +233,32 @@ button.disabled {
 	}
 }
 
+
+.display-setting-indicator {
+	display: none;
+	width: 0;
+	height: 0;
+	position: absolute;
+	z-index: 2;
+	bottom: 0px;
+	left: 98px;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-bottom: 7px solid silver;
+}
+
+.main-view {
+	&.display-selected {
+		.display-setting-indicator {
+			display: block;
+		}
+
+		.resize-footer {
+			border-bottom-width: 7px;
+		}
+	}
+}
+
 .main-view {
 	padding-top: 4px;
 	overflow: hidden;
@@ -267,31 +314,31 @@ button.disabled {
 				-webkit-transition: all 200ms ease-in;
 
 				.layout-1x1 {
-					.selector-url-hover("1x1");
+					.selector-url(0px,100px);
 				}
 
 				.layout-1x2 {
-					.selector-url-hover("1x2");
+					.selector-url(-100px,100px);
 				}
 
 				.layout-1x3 {
-					.selector-url-hover("1x3");
+					.selector-url(-200px,100px);
 				}
 
 				.layout-2x1 {
-					.selector-url-hover("2x1");
+					.selector-url(-300px,100px);
 				}
 
 				.layout-2x2 {
-					.selector-url-hover("2x2");
+					.selector-url(-400px,100px);
 				}
 
 				.layout-3x1 {
-					.selector-url-hover("3x1");
+					.selector-url(-500px,100px);
 				}
 
 				.layout-default {
-					.selector-url-hover("default");
+					.selector-url(-600px,100px);
 				}
 
 				.close-button {
@@ -321,6 +368,19 @@ button.disabled {
 				padding: 6px 12px 6px 8px;
 				border-right: 3px solid silver;
 				cursor: pointer;
+				background: @active-color;
+				position: relative;
+
+				&:hover, &:focus {
+					background: @hover-color;
+				}
+
+				&.hidden-layer {
+					background: white;
+					&:hover, &:focus {
+						background: @hover-color;
+					}
+				}
 
 				.display-setting-title {
 					vertical-align: top;
@@ -332,7 +392,7 @@ button.disabled {
 				}
 
 				.glyphicon {
-					top: -2px;
+					top: -3px;
 					left: 3px;
 				}
 			}
@@ -342,13 +402,14 @@ button.disabled {
 			margin: 6px 10px 6px 0;
 
 			&.secondary {
-				margin-left: 10px;
+				margin-left: 12px;
 			}
 
 		}
 
 		#undo-layout{
 			margin-left: 2px;
+			margin-right: 0px;
 		}
 
 		#custom-layout{
@@ -372,24 +433,27 @@ button.disabled {
 			label {
 				font-size: 14px;
 				display: block;
-				padding: 10px 8px 11px 5px;
+				padding: 10px 7px 13px 7px;
 				cursor: pointer;
+				&.selected {
+					background: @active-color-checkbox;
+				}
 
 				&:hover {
-					.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
-
-					input {
-						.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
-					}
+					background: @hover-color;
 				}
 
 				input {
 					.border-radius(3px);
 					vertical-align: top;
+					width: 18px;
+					height: 18px;
+				}
 
-					&:focus {
-						.box-shadow(inset 0px 0px 5px 0px rgba(50, 50, 50, 0.4));
-					}
+				span {
+					position: relative;
+					top: 1px;
+					left: -2px;
 				}
 
 			}
@@ -398,11 +462,31 @@ button.disabled {
 }
 
 #display-setting-layer {
-	min-height: 250px;
 	position: relative;
 	bottom: 0px;
-	margin: 50px 50px 0px 50px;
+	margin: 50px 50px 25px 50px;
 	.font-family();
+
+	.signature {
+		position: absolute;
+	    bottom: -23px;
+	    font-size: 10px;
+	    right: -45px;
+	}
+
+	.switch-toggle {
+		top: -42px;
+		left: 175px;	
+		width: 180px;
+
+		&.right-align a {
+			border-left-width: 2px;
+		}
+
+		&.left-align a {
+			border-right-width: 2px;
+		}
+	}
 
 	.display-entry {
 		position: absolute;
@@ -410,9 +494,29 @@ button.disabled {
 		.border-radius(3px);
 		.box-shadow(inset 0px 0px 0px 2px grey);
 		background: white;
-
+		cursor: pointer;
+		z-index: 1;
 		&.selected {
-			background: lightblue;
+			z-index: 2;
+			background: @active-color-display;
+			border-color: @active-display-border;
+			.box-shadow(inset 0px 0px 0px 4px @active-display-border);
+
+			cursor: default;
+
+			&:hover {
+				background: @active-color-display;
+				border-color: @active-display-border;
+				.box-shadow(inset 0px 0px 0px 4px @active-display-border);
+			}
+		}
+
+		&:hover {
+			z-index: 3;
+			//background: @hover-color;
+
+			border-color: @hover-display-border;
+			.box-shadow(inset 0px 0px 0px 4px @hover-display-border);
 		}
 
 		.display-meta {
@@ -524,39 +628,35 @@ button.disabled {
 }
 
 //mixin for layout sprites
-.selector-url(@size: "0"){
-	background: url('../images/sprites/layout_@{size}.png') !important;
+.selector-url(@x:0, @y:0){
+	background: url('../images/sprites/layouts.png') @x @y;
 }
 
-.selector-url-hover(@size: "0"){
-	background: url('../images/sprites/layout_@{size}_hover.png') !important;
-}
 
 .layout-1x1 {
-	.selector-url("1x1");
+	.selector-url(0px,0px);
 }
 
 .layout-1x2 {
-	.selector-url("1x2");
+	.selector-url(-100px,0px);
 }
 
 .layout-1x3 {
-	.selector-url("1x3");
+	.selector-url(-200px,0px);
 }
 
 .layout-2x1 {
-	.selector-url("2x1");
+	.selector-url(-300px,0px);
 }
 
 .layout-2x2 {
-	.selector-url("2x2");
+	.selector-url(-400px,0px);
 }
 
 .layout-3x1 {
-	.selector-url("3x1");
+	.selector-url(-500px,0px);
 }
 
-
 .layout-default{
-	.selector-url("default");
+	.selector-url(-600px,0px);
 }

@@ -15,13 +15,11 @@
 		addLayout: function(layoutType) {
 			var layoutList = resize.currentLayouts.layoutItems,
 				layoutIndex = layoutList.indexOf(layoutType);
-			if(layoutIndex !== -1){
-				layoutList.splice(layoutIndex,1);
-				this._removeLayoutMarkup(layoutType);
+			if(layoutIndex === -1){
+				resize.currentLayouts.layoutItems.push(layoutType);
+				localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+				this.addLayoutMarkup(layoutType);
 			}
-			resize.currentLayouts.layoutItems.unshift(layoutType);
-			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
-			this.addLayoutMarkup(layoutType,true);
 		},
 
 		/**
