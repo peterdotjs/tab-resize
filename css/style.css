@@ -57,6 +57,96 @@
   color: #aaa;
 }
 /* accessibility */
+.switch-toggle a,
+.switch-light span span {
+  display: none;
+}
+.switch-toggle {
+  display: block;
+  height: 30px;
+  position: relative;
+  padding: 0 !important;
+}
+.switch-toggle * {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.switch-toggle a {
+  display: block;
+  -webkit-transition: all 0.3s ease-out;
+  -moz-transition: all 0.3s ease-out;
+  transition: all 0.3s ease-out;
+}
+.switch-toggle label,
+.switch-toggle > span {
+  line-height: 30px;
+  vertical-align: middle;
+}
+.switch-toggle input {
+  position: absolute;
+  opacity: 0;
+}
+.switch-toggle input + label {
+  position: relative;
+  top: static;
+  right: static;
+  left: static;
+  display: inherit;
+  width: 50%;
+  z-index: 2;
+  float: left;
+  height: 100%;
+  margin: 0;
+  text-align: center;
+  cursor: pointer;
+}
+.switch-toggle a {
+  position: absolute;
+  top: 0;
+  right: static;
+  left: 0;
+  display: inherit;
+  width: 50%;
+  z-index: 1;
+  padding: 0;
+  height: 100%;
+}
+.switch-toggle input:last-of-type:checked ~ a {
+  left: 50%;
+}
+.switch-candy {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  text-align: center;
+  border: 2px solid #808080;
+}
+.switch-candy label {
+  color: #000000;
+  -webkit-transition: all 0.2s ease-out;
+  -moz-transition: all 0.2s ease-out;
+  transition: all 0.2s ease-out;
+}
+.switch-candy input:checked + label {
+  color: #000000;
+  cursor: default;
+}
+.switch-candy a {
+  background-color: #ceebf8;
+  border: 1px solid #808080;
+  border-radius: 3px;
+  background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0));
+  background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0));
+}
+.switch-candy > span {
+  color: #808080;
+  text-shadow: none;
+}
+.switch-candy span {
+  color: #ffffff;
+}
 html {
   background: white;
   overflow: hidden;
@@ -80,6 +170,12 @@ body {
 }
 .bold {
   font-weight: bold;
+}
+a {
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
@@ -402,6 +498,17 @@ button.disabled {
   bottom: 0px;
   margin: 50px 50px 25px 50px;
   font-family: Verdana, Geneva, sans-serif;
+}
+#display-setting-layer .signature {
+  position: absolute;
+  bottom: -23px;
+  font-size: 10px;
+  right: -45px;
+}
+#display-setting-layer .switch-toggle {
+  top: -42px;
+  left: 175px;
+  width: 180px;
 }
 #display-setting-layer .display-entry {
   position: absolute;

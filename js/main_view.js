@@ -40,8 +40,16 @@
 				$('#display-setting').removeClass('hidden-layer');
 				$('#display-setting-layer').removeClass('hidden');
 				$('.main-view').addClass('display-selected');
-				resize.displayLayerValue = true;
+				resize.displayLayer = true;
 			}
+
+			var alignmentValue = localStorage.getItem('alignment');
+			if(!alignmentValue){
+				resize.alignment = 'left';
+			} else {
+				resize.alignment = alignmentValue;
+			}
+			$('#' + resize.alignment).trigger('click');
 
 			resize.displayUtil.initialize();
 
@@ -115,11 +123,15 @@
 				resize.height = Math.round(data.height/resize.numRows);
 				resize.offsetX = data.left;
 				resize.offsetY = data.top;
+				resize.fullWidth = data.width;
+				resize.fullHeight = data.height;
 			} else {
 				resize.width = Math.round(window.screen.availWidth/resize.numCols);
 				resize.height  = Math.round(window.screen.availHeight/resize.numRows);
 				resize.offsetX = 0;
 				resize.offsetY = 0;
+				resize.fullWidth = window.screen.availWidth;
+				resize.fullHeight = window.screen.availHeight;
 			}
 
 			var that = this;

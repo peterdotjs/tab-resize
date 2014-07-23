@@ -153,7 +153,7 @@
 	}
 
 	function renderDisplayTemplate(info, id, isPrimary){
-		var $template = $('<div class="display-entry"><div class="display-meta"></div></div>');
+		var $template = $('<div class="display-entry" title="Please select display to use."><div class="display-meta"></div></div>');
 			$template.css({
 				top: info.top*scale + offsetY,
 				left: info.left*scale + offsetX,

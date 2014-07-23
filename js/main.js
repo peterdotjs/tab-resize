@@ -111,6 +111,9 @@
 		} else {
 			$('.main-view').addClass('display-selected');
 		}
+	}).on('click','#display-setting-layer .switch-toggle input',function(){
+		var alignment = $(this).attr('id');
+		options.processAlignmentSelection(alignment);
 	});
 
 })();

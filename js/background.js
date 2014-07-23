@@ -38,17 +38,29 @@ var util = {
 			index = 0,
 			numEmptyWindows = 0,
 			emptyWindowLimit = (resize.numRows * resize.numCols) - _tabsArray.length,
-			that = this;
+			that = this,
+			leftValue,
+			rightValue;
 
 		//loop through all row and col options
 		for(var y=0; y<resize.numRows; y++){
 			for(var x=0; x<resize.numCols; x++){
+
+				if(resize.alignment === 'left'){
+					leftValue = (x*resize.width) + resize.offsetX;
+				} else {
+					leftValue = resize.fullWidth - ((x+1)*resize.width) + resize.offsetX;
+				}
+
+				rightValue = (y*resize.height) + resize.offsetY;
+
 				// base case we update the current window
 				if(x === 0 && y === 0){
-					window.chrome.windows.update(_tabsArray[index].windowId,{ left: (x*resize.width) + resize.offsetX,
-																		top: (y*resize.height) + resize.offsetY,
+					window.chrome.windows.update(_tabsArray[index].windowId,{ left: leftValue,
+																		top: rightValue,
 																		width: resize.width,
-																		height: resize.height});
+																		height: resize.height});						
+
 					if(singleTab){
 						return;
 					}
@@ -61,7 +73,7 @@ var util = {
 
 					//check the number of new windows that will be created
 					//store the windowId information
-					that.createNewWindow(tabId, (x*resize.width) + resize.offsetX, (y*resize.height) + resize.offsetY, resize.width, resize.height, incog, function(_windowCb){
+					that.createNewWindow(tabId, leftValue, rightValue, resize.width, resize.height, incog, function(_windowCb){
 						//only if update storage when tab option is used
 						if(!tabId && resize.emptyTab){
 							_tabsArray.push(_windowCb.tabs[0]);

@@ -18,7 +18,7 @@
 			<div class="resize-container">
 			</div>
 			<div class="resize-footer">
-				<div id="display-setting" class="hidden-layer monitor-wrap footer-wrap">
+				<div id="display-setting" class="hidden-layer monitor-wrap footer-wrap" title="Settings for multiple monitors and alignment preference">
 					<div class="display-setting-indicator"></div>
 					<div class="icon icon-screen">
 						<div class="screen"></div>
@@ -49,7 +49,16 @@
 					</label>
 				</div>
 			</div>
-			<div id="display-setting-layer" class="hidden"></div>
+			<div id="display-setting-layer" class="hidden">
+				<div class="signature">Created by: <a target="_blank" href="http://peterdotjs.com">peterdotjs</a></div>
+				<div class="switch-toggle switch-candy">
+					<input id="left" name="view" type="radio" checked>
+					<label for="left" title="Left alignment preference">Left</label>
+					<input id="right" name="view" type="radio">
+					<label for="right" title="Right alignment preference">Right</label>
+					<a></a>
+				</div>
+			</div>
 		</div>
 		<div class="custom-view modal-box hidden">
 			<div class="modal-body">

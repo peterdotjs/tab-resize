@@ -47,6 +47,15 @@
 			resize.displayLayer = _displayLayer;
 		},
 
+		/**
+		* sets aligmment flag
+		* @param {String enum} left or right.
+		*/
+		processAlignmentSelection: function(alignment) {
+			localStorage.setItem('alignment',alignment);
+			resize.alignment = alignment;
+		},
+
 		/*
 		* undo previous resize option
 		*/

@@ -1,4 +1,5 @@
 @import 'checkbox.less';
+@import 'toggle-switch.less';
 
 html{
 	.main-background()
@@ -26,6 +27,13 @@ body {
 
 .bold {
 	font-weight: bold;
+}
+
+a {
+	text-decoration: none;
+	&:hover {
+		text-decoration: underline;
+	}
 }
 
 //** Load fonts from this directory.
@@ -458,6 +466,19 @@ button.disabled {
 	bottom: 0px;
 	margin: 50px 50px 25px 50px;
 	.font-family();
+
+	.signature {
+		position: absolute;
+	    bottom: -23px;
+	    font-size: 10px;
+	    right: -45px;
+	}
+
+	.switch-toggle {
+		top: -42px;
+		left: 175px;	
+		width: 180px;
+	}
 
 	.display-entry {
 		position: absolute;
