@@ -295,7 +295,8 @@ button.disabled {
   margin-left: 10px;
 }
 .main-view .resize-footer #undo-layout {
-  margin-left: 2px;
+  margin-left: 1px;
+  margin-right: 0px;
 }
 .main-view .resize-footer #custom-layout {
   margin: 6px 0 6px 12px;
