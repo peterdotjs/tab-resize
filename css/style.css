@@ -375,25 +375,25 @@ button.disabled {
   -webkit-transition: all 200ms ease-in;
 }
 .main-view .resize-container .resize-selector-container:hover .layout-1x1 {
-  background: url('../images/sprites/layout_1x1_hover.png') !important;
+  background: url('../images/sprites/layouts.png') 0px 100px;
 }
 .main-view .resize-container .resize-selector-container:hover .layout-1x2 {
-  background: url('../images/sprites/layout_1x2_hover.png') !important;
+  background: url('../images/sprites/layouts.png') -100px 100px;
 }
 .main-view .resize-container .resize-selector-container:hover .layout-1x3 {
-  background: url('../images/sprites/layout_1x3_hover.png') !important;
+  background: url('../images/sprites/layouts.png') -200px 100px;
 }
 .main-view .resize-container .resize-selector-container:hover .layout-2x1 {
-  background: url('../images/sprites/layout_2x1_hover.png') !important;
+  background: url('../images/sprites/layouts.png') -300px 100px;
 }
 .main-view .resize-container .resize-selector-container:hover .layout-2x2 {
-  background: url('../images/sprites/layout_2x2_hover.png') !important;
+  background: url('../images/sprites/layouts.png') -400px 100px;
 }
 .main-view .resize-container .resize-selector-container:hover .layout-3x1 {
-  background: url('../images/sprites/layout_3x1_hover.png') !important;
+  background: url('../images/sprites/layouts.png') -500px 100px;
 }
 .main-view .resize-container .resize-selector-container:hover .layout-default {
-  background: url('../images/sprites/layout_default_hover.png') !important;
+  background: url('../images/sprites/layouts.png') -600px 100px;
 }
 .main-view .resize-container .resize-selector-container:hover .close-button {
   display: block;
@@ -624,23 +624,23 @@ button.disabled {
   float: left;
 }
 .layout-1x1 {
-  background: url('../images/sprites/layout_1x1.png') !important;
+  background: url('../images/sprites/layouts.png') 0px 0px;
 }
 .layout-1x2 {
-  background: url('../images/sprites/layout_1x2.png') !important;
+  background: url('../images/sprites/layouts.png') -100px 0px;
 }
 .layout-1x3 {
-  background: url('../images/sprites/layout_1x3.png') !important;
+  background: url('../images/sprites/layouts.png') -200px 0px;
 }
 .layout-2x1 {
-  background: url('../images/sprites/layout_2x1.png') !important;
+  background: url('../images/sprites/layouts.png') -300px 0px;
 }
 .layout-2x2 {
-  background: url('../images/sprites/layout_2x2.png') !important;
+  background: url('../images/sprites/layouts.png') -400px 0px;
 }
 .layout-3x1 {
-  background: url('../images/sprites/layout_3x1.png') !important;
+  background: url('../images/sprites/layouts.png') -500px 0px;
 }
 .layout-default {
-  background: url('../images/sprites/layout_default.png') !important;
+  background: url('../images/sprites/layouts.png') -600px 0px;
 }

@@ -314,31 +314,31 @@ button.disabled {
 				-webkit-transition: all 200ms ease-in;
 
 				.layout-1x1 {
-					.selector-url-hover("1x1");
+					.selector-url(0px,100px);
 				}
 
 				.layout-1x2 {
-					.selector-url-hover("1x2");
+					.selector-url(-100px,100px);
 				}
 
 				.layout-1x3 {
-					.selector-url-hover("1x3");
+					.selector-url(-200px,100px);
 				}
 
 				.layout-2x1 {
-					.selector-url-hover("2x1");
+					.selector-url(-300px,100px);
 				}
 
 				.layout-2x2 {
-					.selector-url-hover("2x2");
+					.selector-url(-400px,100px);
 				}
 
 				.layout-3x1 {
-					.selector-url-hover("3x1");
+					.selector-url(-500px,100px);
 				}
 
 				.layout-default {
-					.selector-url-hover("default");
+					.selector-url(-600px,100px);
 				}
 
 				.close-button {
@@ -620,39 +620,35 @@ button.disabled {
 }
 
 //mixin for layout sprites
-.selector-url(@size: "0"){
-	background: url('../images/sprites/layout_@{size}.png') !important;
+.selector-url(@x:0, @y:0){
+	background: url('../images/sprites/layouts.png') @x @y;
 }
 
-.selector-url-hover(@size: "0"){
-	background: url('../images/sprites/layout_@{size}_hover.png') !important;
-}
 
 .layout-1x1 {
-	.selector-url("1x1");
+	.selector-url(0px,0px);
 }
 
 .layout-1x2 {
-	.selector-url("1x2");
+	.selector-url(-100px,0px);
 }
 
 .layout-1x3 {
-	.selector-url("1x3");
+	.selector-url(-200px,0px);
 }
 
 .layout-2x1 {
-	.selector-url("2x1");
+	.selector-url(-300px,0px);
 }
 
 .layout-2x2 {
-	.selector-url("2x2");
+	.selector-url(-400px,0px);
 }
 
 .layout-3x1 {
-	.selector-url("3x1");
+	.selector-url(-500px,0px);
 }
 
-
 .layout-default{
-	.selector-url("default");
+	.selector-url(-600px,0px);
 }
