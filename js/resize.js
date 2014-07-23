@@ -27,7 +27,8 @@
 		main_view: {},
 		custom_view: {},
 		options: {},
-		util: {}
+		util: {},
+		badgeLimit: 5
 	};
 
 	window.resize = resize;

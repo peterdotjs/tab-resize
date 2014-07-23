@@ -113,6 +113,7 @@
 		}
 	}).on('click','#display-setting-layer .switch-toggle input',function(){
 		var alignment = $(this).attr('id');
+		$('.switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
 		options.processAlignmentSelection(alignment);
 	});
 

@@ -510,6 +510,12 @@ button.disabled {
   left: 175px;
   width: 180px;
 }
+#display-setting-layer .switch-toggle.right-align a {
+  border-left-width: 2px;
+}
+#display-setting-layer .switch-toggle.left-align a {
+  border-right-width: 2px;
+}
 #display-setting-layer .display-entry {
   position: absolute;
   border: 1px solid grey;

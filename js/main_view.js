@@ -64,6 +64,15 @@
 					resize.options.enableUndoButton();
 				}
 			});
+
+			//setting badge update
+			var updateCount = Number(localStorage.getItem('updateBadge'));
+			if(updateCount < resize.badgeLimit){
+				localStorage.setItem('updateBadge',++updateCount);
+				if(updateCount == resize.badgeLimit){
+					chrome.browserAction.setBadgeText({text:''});
+				}
+			}
 		},
 
 		/**
