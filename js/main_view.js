@@ -163,12 +163,15 @@
 						window.chrome.tabs.query({currentWindow: true, active: true},
 							function (tab) {
 								resize.currentTab = tab[0];
+								var cb = function(){
+										return backJs.util.processTabs(resize, resize.tabsArray, resize.currentTab.index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito);
+								};
 								if(resize.singleTab){
-									backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index,resize.currentTab.index + 1));
+									backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index,resize.currentTab.index + 1), cb);
 								} else {
-									backJs.util.setUndoStorage(resize, resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index));
+									backJs.util.setUndoStorage(resize, resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index), cb);
 								}
-								backJs.util.processTabs(resize, resize.tabsArray, resize.currentTab.index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito);
+
 							}
 						);
 				}

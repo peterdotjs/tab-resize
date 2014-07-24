@@ -12,14 +12,21 @@ var util = {
 	* @param {function} callback - callback function after window is created
 	*/
 	createNewWindow: function(tabId, startX, startY, width, height, incog, callback) {
-		window.chrome.windows.create({tabId: tabId,
-								left: startX,
-								top: startY,
-								width: width,
-								height: height,
-								incognito: incog},
+		var objectInfo = {
+			left: startX,
+			top: startY,
+			width: width,
+			height: height,
+			incognito: incog
+		};
+
+		if(tabId){
+			objectInfo.tabId = tabId;
+		}
+
+		window.chrome.windows.create(objectInfo,
 								function(_windowCb){
-									callback(_windowCb);
+									callback(_windowCb, tabId);
 								}
 		);
 	},
@@ -40,7 +47,17 @@ var util = {
 			emptyWindowLimit = (resize.numRows * resize.numCols) - _tabsArray.length,
 			that = this,
 			leftValue,
-			rightValue;
+			rightValue,
+			createNewWindowCB = function(_windowCb,_tabId){
+				//only if update storage when tab option is used
+				if(!_tabId && resize.emptyTab){
+						_tabsArray.push(_windowCb.tabs[0]);
+						numEmptyWindows++;
+					if(emptyWindowLimit === numEmptyWindows){
+						that.updateUndoStorage(resize, _tabsArray);
+					}
+				}
+			};
 
 		//loop through all row and col options
 		for(var y=0; y<resize.numRows; y++){
@@ -66,6 +83,7 @@ var util = {
 					}
 				} else { //otherwise we create a new window
 					tabId = _tabsArray[index] ? _tabsArray[index].id : null;
+
 					//when no more tabs avaiable and option to create empty tab is not checked
 					if(!tabId && !resize.emptyTab){
 						return;
@@ -73,17 +91,7 @@ var util = {
 
 					//check the number of new windows that will be created
 					//store the windowId information
-					that.createNewWindow(tabId, leftValue, rightValue, resize.width, resize.height, incog, function(_windowCb){
-						//only if update storage when tab option is used
-						if(!tabId && resize.emptyTab){
-							_tabsArray.push(_windowCb.tabs[0]);
-							numEmptyWindows++;
-							if(emptyWindowLimit === numEmptyWindows){
-								that.updateUndoStorage(resize, windowId, _tabsArray);
-							}
-
-						}
-					});
+					that.createNewWindow(tabId, leftValue, rightValue, resize.width, resize.height, incog, createNewWindowCB);
 				}
 				index++;
 			}
@@ -97,7 +105,7 @@ var util = {
 	* @param {number} windowId Id of the previous window object which was modified
 	* @param {array} tabsArray Array of tab objects to be moved back to the previous window
 	*/
-	setUndoStorage: function(resize, tabIndex, windowId, tabsArray) {
+	setUndoStorage: function(resize, tabIndex, windowId, tabsArray, cb) {
 		window.chrome.windows.get(windowId,{},function(_windowCb){
 			var updateInfo = {left: _windowCb.left,
 								top: _windowCb.top,
@@ -117,26 +125,25 @@ var util = {
 			lastTab.lastTabsArray = tabsStore;
 			localStorage.setItem('lastTab',JSON.stringify(lastTab));
 			chrome.runtime.sendMessage('enable-undo');
+			cb();
 		});
 	},
 
 	/**
 	* set storage of last window and tabs being moved
 	* @param {object} resize object from foreground
-	* @param {number} windowId Id of the previous window object which was modified
 	* @param {array} tabsArray Array of tab objects to be moved back to the previous window
 	*/
-	updateUndoStorage: function(resize, windowId, tabsArray) {
-		window.chrome.windows.get(windowId,{},function(_windowCb){
-			var currentLastTab = JSON.parse(localStorage.getItem('lastTab'));
-			var lastTab = currentLastTab;
-			var tabsStore = [];
-			for(var x=0; x<tabsArray.length && x<(resize.numRows * resize.numCols); x++){
-				tabsStore.push(tabsArray[x].id);
-			}
-			lastTab.lastTabsArray = tabsStore;
-			localStorage.setItem('lastTab',JSON.stringify(lastTab));
+	updateUndoStorage: function(resize, tabsArray) {
+		var currentLastTab = JSON.parse(localStorage.getItem('lastTab'));
+		var tabsStore = [];
+		for(var x=0; x<tabsArray.length && x<(resize.numRows * resize.numCols); x++){
+			tabsStore.push(tabsArray[x].id);
+		}
+		if(currentLastTab){
+			currentLastTab.lastTabsArray = tabsStore;
+			localStorage.setItem('lastTab',JSON.stringify(currentLastTab));
 			chrome.runtime.sendMessage('enable-undo');
-		});
+		}
 	}
 };
