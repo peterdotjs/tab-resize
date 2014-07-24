@@ -125,8 +125,7 @@
 			displayJSON = { //may need to check for some mirroring property, currently only one monitor is display when mirroring
 				displays: [],
 				primaryIndex: 0
-			},
-			displayPreferenceSelected = false;
+			};
 
 		for(;index<length;index++){
 			info = displayInfo[index];
@@ -145,7 +144,7 @@
 				}
 			}
 
-			if(info.isPrimary && !displayPreferenceSelected){
+			if(info.isPrimary && !displayPreferenceMatch){
 				displayJSON.primaryIndex = index;
 			}
 		}
