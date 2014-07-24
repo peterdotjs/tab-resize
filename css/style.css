@@ -543,6 +543,7 @@ button.disabled {
 }
 #display-setting-layer .display-entry:hover {
   z-index: 3;
+  background: #b4e2f6;
   border-color: #28a2d5;
   box-shadow: inset 0px 0px 0px 4px #28a2d5;
   -webkit-box-shadow: inset 0px 0px 0px 4px #28a2d5;

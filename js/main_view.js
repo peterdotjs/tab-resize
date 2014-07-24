@@ -65,11 +65,24 @@
 				}
 			});
 
-			//setting badge update
+			if(localStorage){
+				var updateBadge = localStorage.getItem('updateBadge');
+				if(!updateBadge){
+					localStorage.setItem('updateBadge',0)
+					chrome.browserAction.setBadgeText({text:'new'})
+				}
+			}
+
 			var updateCount = Number(localStorage.getItem('updateBadge'));
+
+			if(!updateCount){
+				localStorage.setItem('updateBadge',0);
+				chrome.browserAction.setBadgeText({text:'new'});
+			}
+
 			if(updateCount < resize.badgeLimit){
 				localStorage.setItem('updateBadge',++updateCount);
-				if(updateCount == resize.badgeLimit){
+				if(updateCount === resize.badgeLimit){
 					chrome.browserAction.setBadgeText({text:''});
 				}
 			}

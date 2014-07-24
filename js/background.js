@@ -1,14 +1,4 @@
 
-
-if(localStorage){
-	var updateBadge = localStorage.getItem('updateBadge');
-	if(!updateBadge){
-		localStorage.setItem('updateBadge',0)
-		chrome.browserAction.setBadgeText({text:'new'})
-	}
-}
-
-
 var util = {
 
 	/**
