@@ -76,7 +76,9 @@ var util = {
 					window.chrome.windows.update(_tabsArray[index].windowId,{ left: leftValue,
 																		top: rightValue,
 																		width: resize.width,
-																		height: resize.height});
+																		height: resize.height,
+																		state: "normal"
+																	});
 
 					if(singleTab){
 						return;
@@ -112,7 +114,7 @@ var util = {
 								width: _windowCb.width,
 								height: _windowCb.height,
 								focused: true,
-								//state: _windowCb.state, //removing as should not specify state when using left top width or height
+								state: "normal",
 								incognito: _windowCb.incognito};
 			var lastTab = {};
 			lastTab.lastWindowInfo = updateInfo;
