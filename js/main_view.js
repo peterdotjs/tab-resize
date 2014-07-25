@@ -77,6 +77,15 @@
 					chrome.browserAction.setBadgeText({text:''});
 				}
 			}
+
+			if(!localStorage.getItem('update-seen')){
+				var $body = $('body');
+				$body.addClass('update');
+				if (navigator.appVersion.indexOf("Linux") != -1){
+					$body.addClass('linux-user');
+				}
+				resize.options.showUpdateModal();
+			}
 		},
 
 		/**

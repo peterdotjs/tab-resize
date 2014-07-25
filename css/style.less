@@ -16,7 +16,7 @@ html, body {
 	display: block;
 }
 
-.bold {
+strong, .bold {
 	font-weight: bold;
 }
 
@@ -463,6 +463,13 @@ button.disabled {
 
 	    a {
 	    	color: #005579;
+	    	padding-right: 5px;
+	    }
+
+	    .feedback {
+	    	border-left: 1px solid silver;
+	    	padding-left: 5px;
+	    	padding-right: 0px;
 	    }
 	}
 
@@ -616,6 +623,109 @@ button.disabled {
 	}
 
 
+}
+
+#update-modal {
+	display: none;
+	.modal-body {
+		width: 450px;
+		height: 375px;
+
+		.header-title-wrap {
+			margin: 15px auto;
+			text-align: center;
+			.icon-48 {
+				background: url('../images/icons/icon48.png');
+				width: 48px;
+				height: 48px;
+				display: inline-block;
+			}
+			.header-title {
+				display: inline-block;
+				vertical-align: top;
+				font-size: 20px;
+				margin: 16px 16px 16px 10px;
+			}
+		}
+
+		.update-list-header {
+			margin: 0px 0px 10px 25px;
+			font-style: italic;
+			font-size: 15px;
+		}
+
+		ul.update-list {
+			margin: 0 28px 0 45px;
+			font-size: 15px;
+
+			li.update-entry {
+				list-style: disc;
+				margin-bottom: 10px;
+				line-height: 16px;
+			}
+		}
+
+		.update-list-footer {
+			margin: 14px 20px 0px 25px;
+    		font-size: 15px;
+    		line-height: 16px;
+    		a {
+    			&:visited {
+    				color: #0181eb;
+    			}
+    		}
+		}
+
+		.additional-message {
+			font-size: 15px;
+			margin: 10px 20px 5px 25px;
+			line-height: 16px;
+		}
+
+		.linux-message {
+			display: none;
+			font-size: 13px;
+		    margin-top: 10px;
+		    color: red;
+		    font-weight: bold;
+		}
+
+	}
+	.modal-footer {
+		padding: 0px 36px;
+		border: none;
+		background: white;
+
+		button {
+			width: 100%;
+			margin: 12px auto;
+			float: none;
+			height: 40px;
+			font-size: 20px;
+			padding-bottom: 10px;
+			background: -webkit-linear-gradient(top, #4096ee 0%,#4096ee 100%);
+		}
+	}
+}
+
+body.linux-user {
+	#update-modal .modal-body .linux-message {
+		display: block;
+	}
+
+	#update-modal .modal-body .additional-message {
+		display: none;
+	}
+}
+
+
+body.update {
+	#update-modal {
+		display: block;
+	}
+	.main-view {
+		min-height: 477px;
+	}
 }
 
 //mixin for layout sprites
