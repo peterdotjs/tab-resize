@@ -1,7 +1,14 @@
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block;}
+body{line-height:1;}
+ol,ul{list-style:none;}
+blockquote,q{quotes:none;}
+blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
+table{border-collapse:collapse;border-spacing:0;}
 [type="checkbox"]:not(:checked),[type="checkbox"]:checked{position:absolute;left:-9999px;}
 [type="checkbox"]:not(:checked)+span,[type="checkbox"]:checked+span{position:relative;padding-left:25px;cursor:pointer;}
 [type="checkbox"]:not(:checked)+span:before,[type="checkbox"]:checked+span:before{content:'';position:absolute;left:0;top:0px;width:17px;height:17px;border:1px solid #aaa;background:#f8f8f8;border-radius:3px;box-shadow:inset 0 1px 3px rgba(0, 0, 0, 0.3);}
-[type="checkbox"]:not(:checked)+span:after,[type="checkbox"]:checked+span:after{content:'\2713';position:absolute;top:-10px;left:1px;font-size:25px;color:black;}
+[type="checkbox"]:not(:checked)+span:after,[type="checkbox"]:checked+span:after{content:'\2713';position:absolute;top:-8px;left:1px;font-size:25px;color:black;}
 [type="checkbox"]:not(:checked)+span:after{opacity:0;transform:scale(0);}
 [type="checkbox"]:checked+span:after{opacity:1;transform:scale(1);}
 [type="checkbox"]:disabled:not(:checked)+span:before,[type="checkbox"]:disabled:checked+span:before{box-shadow:none;border-color:#bbb;background-color:#ddd;}
@@ -21,13 +28,6 @@
 .switch-candy a{background-color:#ceebf8;border:1px solid #808080;border-radius:3px;background-image:-webkit-linear-gradient(top, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0));background-image:linear-gradient(to bottom, rgba(255, 255, 255, 0.2), rgba(0, 0, 0, 0));}
 .switch-candy>span{color:#808080;text-shadow:none;}
 .switch-candy span{color:#ffffff;}
-html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video{margin:0;padding:0;border:0;font-size:100%;font:inherit;vertical-align:baseline;}
-article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{display:block;}
-body{line-height:1;}
-ol,ul{list-style:none;}
-blockquote,q{quotes:none;}
-blockquote:before,blockquote:after,q:before,q:after{content:'';content:none;}
-table{border-collapse:collapse;border-spacing:0;}
 html,body{background:white;min-width:630px;}
 .hidden{display:none;}
 .inactive{opacity:0.2;pointer-events:none;}
@@ -65,7 +65,7 @@ button.disabled{opacity:0.5;pointer-events:none;}
 .main-view .resize-container .resize-selector-container:hover .close-button{display:block;}.main-view .resize-container .resize-selector-container:hover .close-button:hover{background:url('../images/sprites/close_hover.png');}
 .main-view .resize-footer{border:3px solid #c0c0c0;overflow:hidden;background:white;clear:right;font-family:Verdana,Geneva,sans-serif;}.main-view .resize-footer .footer-wrap{display:inline-block;overflow:hidden;}.main-view .resize-footer .footer-wrap.button-wrap{padding:3px 0 0 2px;}
 .main-view .resize-footer .footer-wrap.monitor-wrap{float:left;padding:6px 12px 5px 8px;border-right:3px solid silver;cursor:pointer;background:white;position:relative;}.main-view .resize-footer .footer-wrap.monitor-wrap:hover,.main-view .resize-footer .footer-wrap.monitor-wrap:focus{background:#b4e2f6;}
-.main-view .resize-footer .footer-wrap.monitor-wrap .display-setting-title{vertical-align:top;font-size:15px;position:relative;top:3px;padding:0 10px 0 5px;border-right:1px solid silver;}
+.main-view .resize-footer .footer-wrap.monitor-wrap .display-setting-title{vertical-align:top;font-size:15px;position:relative;top:5px;padding:0 10px 0 5px;border-right:1px solid silver;}
 .main-view .resize-footer .footer-wrap.monitor-wrap .glyphicon{top:-3px;left:3px;}
 .main-view .resize-footer .resize-undo{margin-left:11px;}
 .main-view .resize-footer #custom-layout{padding:4px 5px 1px 5px;float:left;}

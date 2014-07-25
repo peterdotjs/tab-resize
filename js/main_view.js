@@ -63,19 +63,12 @@
 				}
 			});
 
-			if(localStorage){
-				var updateBadge = localStorage.getItem('updateBadge');
-				if(!updateBadge){
-					localStorage.setItem('updateBadge',0)
-					chrome.browserAction.setBadgeText({text:'new'})
-				}
-			}
-
 			var updateCount = Number(localStorage.getItem('updateBadge'));
 
 			if(!updateCount){
 				localStorage.setItem('updateBadge',0);
-				chrome.browserAction.setBadgeText({text:'new'});
+				chrome.browserAction.setBadgeText({text:'NEW'});
+				chrome.browserAction.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
 			}
 
 			if(updateCount < resize.badgeLimit){
