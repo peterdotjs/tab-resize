@@ -32,9 +32,6 @@
 	}).on('click','.close-button',function(evt){
 		evt.stopPropagation();
 		layout.removeLayout($(this).siblings('.resize-selector').attr('data-selector-type'));
-		location.reload();
-		// main_view.initWindowWidth();
-		// main_view.checkWindowHeight();
 	}).on('click','#undo-layout',function(){
 		options.undoResize();
 	}).on('click','#custom-layout',function(evt){
@@ -47,7 +44,6 @@
 		options.hideConfirmationModal();
 	}).on('click','#confirmation-apply',function(){
 		layout.resetLayout();
-		util.reloadWindow();
 	}).on('click','#input-cancel,.main-view',function(){
 		if(!$('.custom-view').hasClass('hidden')){
 			custom_view.clearCustomValues();
@@ -97,20 +93,12 @@
 		var checked = $(this).attr('checked');
 		options.processEmptyTabSelection(checked);
 	}).on('click','#display-setting', function(){
-		var $display = $('#display-setting'),
-			$displayLayer = $('#display-setting-layer'),
+		var $display = $('.main-view'),
 			isDisplayed;
 
-		$display.toggleClass('hidden-layer');
-		$displayLayer.toggleClass('hidden');
-		isDisplayed = !$displayLayer.hasClass('hidden');
+		$display.toggleClass('display-selected');
+		isDisplayed = $display.hasClass('display-selected');
 		options.processDisplayLayerSelection(isDisplayed);
-
-		if(!isDisplayed){
-			location.reload();
-		} else {
-			$('.main-view').addClass('display-selected');
-		}
 	}).on('click','#display-setting-layer .switch-toggle input',function(){
 		var alignment = $(this).attr('id');
 		$('.switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');

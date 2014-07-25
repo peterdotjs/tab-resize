@@ -37,8 +37,6 @@
 
 			var displayLayerValue = localStorage.getItem('displayLayer');
 			if(!displayLayerValue || displayLayerValue === 'true'){
-				$('#display-setting').removeClass('hidden-layer');
-				$('#display-setting-layer').removeClass('hidden');
 				$('.main-view').addClass('display-selected');
 				resize.displayLayer = true;
 			}

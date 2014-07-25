@@ -1,15 +1,58 @@
 @import 'checkbox.less';
 @import 'toggle-switch.less';
 
-html{
-	.main-background()
-}
+// http://meyerweb.com/eric/tools/css/reset/ 
+//   v2.0 | 20110126
+//   License: none (public domain)
 
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
 body {
-	min-width: 630px;
-	padding: 0px;
+	line-height: 1;
+}
+ol, ul {
+	list-style: none;
+}
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+//end css reset
+
+html, body {
 	.main-background();
-	margin: 0px;
+    min-width: 630px;
 }
 
 .hidden {
@@ -90,14 +133,6 @@ a {
 
 	&.glyphicon-chevron-down {
 		&:before {
-			content: "\e113";
-		}
-	}
-}
-
-.hidden-layer {
-	.glyphicon-chevron-down {
-		&:before {
 			content: "\e114";
 		}
 	}
@@ -148,7 +183,7 @@ a {
 .main-background(){
 	//background: -webkit-gradient(linear, left top, left bottom, from(white), to(#E7F3FD));
 	background: white;
-	overflow: hidden;
+	//overflow: hidden;
 }
 
 .font-family(){
@@ -255,6 +290,24 @@ button.disabled {
 
 		.resize-footer {
 			border-bottom-width: 7px;
+		}
+
+		#display-setting-layer {
+			display: block;
+		}
+
+		#display-setting {
+			background: @active-color;
+
+			&:hover, &:focus {
+				background: @hover-color;
+			}
+		}
+
+		.glyphicon-chevron-down {
+			&:before {
+				content: "\e113";
+			}
 		}
 	}
 }
@@ -363,23 +416,20 @@ button.disabled {
 			display: inline-block;
 			overflow: hidden;
 
+			&.button-wrap {
+				padding: 3px 0 0 2px;
+			}
+
 			&.monitor-wrap {
 				float: left;
-				padding: 6px 12px 6px 8px;
+				padding: 6px 12px 5px 8px;
 				border-right: 3px solid silver;
 				cursor: pointer;
-				background: @active-color;
+				background: white;
 				position: relative;
 
 				&:hover, &:focus {
 					background: @hover-color;
-				}
-
-				&.hidden-layer {
-					background: white;
-					&:hover, &:focus {
-						background: @hover-color;
-					}
 				}
 
 				.display-setting-title {
@@ -398,28 +448,17 @@ button.disabled {
 			}
 		}
 
-		.resize-undo{
-			margin: 6px 10px 6px 0;
-
-			&.secondary {
-				margin-left: 12px;
-			}
-
-		}
-
-		#undo-layout{
-			margin-left: 2px;
-			margin-right: 0px;
+		.resize-undo {
+			margin-left: 11px;
 		}
 
 		#custom-layout{
-			margin: 6px 0 6px 12px;
-			padding: 4px 5px;
+			padding: 4px 5px 1px 5px;
 			float: left;
 		}
 
 		#default-configuration {
-			padding: 4px 5px;
+			padding: 3px 5px 2px 5px;
 			float: left;
 		}
 
@@ -433,7 +472,7 @@ button.disabled {
 			label {
 				font-size: 14px;
 				display: block;
-				padding: 10px 7px 13px 7px;
+				padding: 11px 7px 13px 7px;
 				cursor: pointer;
 				&.selected {
 					background: @active-color-checkbox;
@@ -462,9 +501,10 @@ button.disabled {
 }
 
 #display-setting-layer {
+	display: none;
 	position: relative;
 	bottom: 0px;
-	margin: 50px 50px 25px 50px;
+	margin: 75px 50px 25px 50px;
 	.font-family();
 
 	.signature {
@@ -472,10 +512,14 @@ button.disabled {
 	    bottom: -23px;
 	    font-size: 10px;
 	    right: -45px;
+
+	    a {
+	    	color: #005579;
+	    }
 	}
 
 	.switch-toggle {
-		top: -42px;
+		top: -56px;
 		left: 175px;
 		width: 180px;
 

@@ -48,8 +48,6 @@
 				var layoutType = customRows + 'x' + customCols;
 				resize.layout.addLayout(layoutType);
 				this.hideCustomMenu();
-				resize.main_view.initWindowWidth();
-				resize.util.reloadWindow();
 			}
 		}
 
