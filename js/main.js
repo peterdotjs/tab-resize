@@ -22,7 +22,6 @@
 	}).on('click','.resize-selector-container',function(){
 		var resizeSelector = $(this).children('.resize-selector');
 		var resizeType = resizeSelector.attr('data-selector-type').split('x');
-		layout.addLayout(resizeSelector.attr('data-selector-type'));
 		main_view.resizeTabs(Number(resizeType[0]),Number(resizeType[1]));
 	}).on('show','.modal-box', function(evt){
 		evt.stopPropagation();
