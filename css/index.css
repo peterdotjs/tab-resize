@@ -89,7 +89,7 @@ button.disabled{opacity:0.5;pointer-events:none;}
 .custom-view .input-container .label-container .custom-value{float:right;text-align:center;border-radius:2px;border:1px solid #7C7C7C;width:90px;outline:none;padding:4px;}.custom-view .input-container .label-container .custom-value:focus{border:1px solid #599EFF;box-shadow:#599EFF 0px 0px 2px 1px inset;}
 .confirmation-modal .modal-body{height:75px;padding-top:35px;}.confirmation-modal .modal-body .warning-sprite{width:40px;height:40px;background:url('../images/sprites/warning.png');display:inline-block;float:left;margin-left:20px;margin-right:10px;}
 .confirmation-modal .modal-body .message{width:304px;display:inline-block;float:left;}
-#update-modal{display:none;}#update-modal .modal-body{width:450px;height:375px;}#update-modal .modal-body .header-title-wrap{margin:15px auto;text-align:center;}#update-modal .modal-body .header-title-wrap .icon-48{background:url('../images/icons/icon48.png');width:48px;height:48px;display:inline-block;}
+#update-modal{display:none;}#update-modal .modal-body{width:450px;height:400px;}#update-modal .modal-body .header-title-wrap{margin:15px auto;text-align:center;}#update-modal .modal-body .header-title-wrap .icon-48{background:url('../images/icons/icon48.png');width:48px;height:48px;display:inline-block;}
 #update-modal .modal-body .header-title-wrap .header-title{display:inline-block;vertical-align:top;font-size:20px;margin:16px 16px 16px 10px;}
 #update-modal .modal-body .update-list-header{margin:0px 0px 10px 25px;font-style:italic;font-size:15px;}
 #update-modal .modal-body ul.update-list{margin:0 28px 0 45px;font-size:15px;}#update-modal .modal-body ul.update-list li.update-entry{list-style:disc;margin-bottom:10px;line-height:16px;}
@@ -97,7 +97,7 @@ button.disabled{opacity:0.5;pointer-events:none;}
 #update-modal .modal-body .additional-message{font-size:15px;margin:10px 20px 5px 25px;line-height:16px;}
 #update-modal .modal-footer{padding:0px 36px;border:none;background:white;}#update-modal .modal-footer button{width:100%;margin:12px auto;float:none;height:40px;font-size:20px;padding-bottom:10px;background:-webkit-linear-gradient(top, #4096ee 0%, #4096ee 100%);}
 body.update #update-modal{display:block;}
-body.update .main-view{min-height:477px;}
+body.update .main-view{min-height:500px;}
 .layout-1x1{background:url('../images/sprites/layouts.png') 0px 0px;}
 .layout-1x2{background:url('../images/sprites/layouts.png') -100px 0px;}
 .layout-1x3{background:url('../images/sprites/layouts.png') -200px 0px;}
