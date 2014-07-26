@@ -20,6 +20,7 @@
 		* shows custom view menu
 		*/	
 		showCustomMenu: function() {
+			this.clearCustomValues();
 			$('.main-view').addClass('inactive');
 			$('.custom-view').removeClass('hidden').trigger('show');
 			$('.custom-view input.row').focus();
