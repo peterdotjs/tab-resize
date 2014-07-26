@@ -1,3 +1,14 @@
+//background.js - background process for tab resize
+
+if(!localStorage.getItem('updateBadge')){
+	localStorage.setItem('updateBadge',0);
+	chrome.browserAction.setBadgeText({text:'NEW'});
+	chrome.browserAction.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
+}
+
+if(!localStorage.getItem('version')){
+	localStorage.setItem('version','2.0');
+}
 
 var util = {
 
