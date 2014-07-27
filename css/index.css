@@ -93,8 +93,9 @@ button.disabled{opacity:0.5;pointer-events:none;}
 #update-modal .modal-body .header-title-wrap .header-title{display:inline-block;vertical-align:top;font-size:20px;margin:16px 16px 16px 10px;}
 #update-modal .modal-body .update-list-header{margin:0px 0px 10px 25px;font-style:italic;font-size:15px;}
 #update-modal .modal-body ul.update-list{margin:0 28px 0 45px;font-size:15px;}#update-modal .modal-body ul.update-list li.update-entry{list-style:disc;margin-bottom:10px;line-height:16px;}
-#update-modal .modal-body .update-list-footer{margin:14px 20px 0px 25px;font-size:15px;line-height:16px;}#update-modal .modal-body .update-list-footer a:visited{color:#0181eb;}
+#update-modal .modal-body .update-list-footer{margin:14px 20px 0px 25px;font-size:15px;line-height:16px;}
 #update-modal .modal-body .additional-message{font-size:15px;margin:10px 20px 5px 25px;line-height:16px;}
+#update-modal .modal-body a:visited{color:#0181eb;}
 #update-modal .modal-footer{padding:0px 36px;border:none;background:white;}#update-modal .modal-footer button{width:100%;margin:12px auto;float:none;height:40px;font-size:20px;padding-bottom:10px;background:-webkit-linear-gradient(top, #4096ee 0%, #4096ee 100%);}
 body.update #update-modal{display:block;}
 body.update .main-view{min-height:500px;}
