@@ -14,5 +14,6 @@
   "permissions": ["tabs", "system.display"],
   "background": {
     "scripts": ["js/lib/jquery.min.js","js/background.js"]
-  }
+  },
+  "offline_enabled": true
  }
