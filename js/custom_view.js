@@ -20,6 +20,7 @@
 		* shows custom view menu
 		*/	
 		showCustomMenu: function() {
+			this.clearCustomValues();
 			$('.main-view').addClass('inactive');
 			$('.custom-view').removeClass('hidden').trigger('show');
 			$('.custom-view input.row').focus();
@@ -48,8 +49,6 @@
 				var layoutType = customRows + 'x' + customCols;
 				resize.layout.addLayout(layoutType);
 				this.hideCustomMenu();
-				resize.main_view.initWindowWidth();
-				resize.util.reloadWindow();
 			}
 		}
 

@@ -144,6 +144,7 @@
 		hideConfirmationModal: function() {
 			$('.main-view').removeClass('inactive');
 			$('.confirmation-modal').addClass('hidden');
+			$('body').removeClass('update-seen');
 		},
 
 		/**
@@ -152,8 +153,25 @@
 		showConfirmationModal: function() {
 			$('.confirmation-modal').removeClass('hidden').trigger('show');
 			$('.main-view').addClass('inactive');
-		}
+		},
 
+		/**
+		* hides the default layout confirmation modal box
+		*/
+		hideUpdateModal: function() {
+			$('body').removeClass('update');
+			$('.main-view').removeClass('inactive');
+			localStorage.setItem('update-seen',true);
+		},
+
+		/**
+		* shows the default layout confirmation modal box
+		*/
+		showUpdateModal: function() {
+			$('#update-modal').trigger('show');
+			$('.main-view').addClass('inactive');
+		}
+		
 	};
 
 	window.resize.options = options;

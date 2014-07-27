@@ -37,8 +37,6 @@
 
 			var displayLayerValue = localStorage.getItem('displayLayer');
 			if(!displayLayerValue || displayLayerValue === 'true'){
-				$('#display-setting').removeClass('hidden-layer');
-				$('#display-setting-layer').removeClass('hidden');
 				$('.main-view').addClass('display-selected');
 				resize.displayLayer = true;
 			}
@@ -65,13 +63,25 @@
 				}
 			});
 
-			//setting badge update
 			var updateCount = Number(localStorage.getItem('updateBadge'));
+
+			if(!updateCount){
+				localStorage.setItem('updateBadge',0);
+				chrome.browserAction.setBadgeText({text:'NEW'});
+				chrome.browserAction.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
+			}
+
 			if(updateCount < resize.badgeLimit){
 				localStorage.setItem('updateBadge',++updateCount);
-				if(updateCount == resize.badgeLimit){
+				if(updateCount === resize.badgeLimit){
 					chrome.browserAction.setBadgeText({text:''});
 				}
+			}
+
+			if(!localStorage.getItem('update-seen')){
+				var $body = $('body');
+				$body.addClass('update');
+				resize.options.showUpdateModal();
 			}
 		},
 
@@ -150,12 +160,15 @@
 						window.chrome.tabs.query({currentWindow: true, active: true},
 							function (tab) {
 								resize.currentTab = tab[0];
+								var cb = function(){
+										return backJs.util.processTabs(resize, resize.tabsArray, resize.currentTab.index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito);
+								};
 								if(resize.singleTab){
-									backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index,resize.currentTab.index + 1));
+									backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index,resize.currentTab.index + 1), cb);
 								} else {
-									backJs.util.setUndoStorage(resize, resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index));
+									backJs.util.setUndoStorage(resize, resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index), cb);
 								}
-								backJs.util.processTabs(resize, resize.tabsArray, resize.currentTab.index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito);
+
 							}
 						);
 				}

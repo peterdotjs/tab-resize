@@ -15,13 +15,6 @@
 		},
 
 		/**
-		* reloads page
-		*/
-		reloadWindow:  function() {
-			window.location.reload();
-		},
-
-		/**
 		* draws a table using canvas
 		* @param {Number} width - width of table
 		* @param {Number} height - height of table
