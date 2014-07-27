@@ -1,8 +1,9 @@
 {
   "name": "Tab Resize - split screen layouts",
-  "version": "2.0.1",
+  "short_name": "Tab Resize",
+  "version": "2.0.2",
   "manifest_version": 2,
-  "description": "Split Screen Layouts made easy. Automates resizing tab windows to predefined and user defined layouts.",
+  "description": "Split Screen Layouts made easy. Resize the CURRENT tab and tabs to the RIGHT to layouts in separate Windows. Multi Monitor Support.",
   "browser_action": {
     "default_icon": "images/icons/icon128.png",
 	"default_popup": "index.html",
