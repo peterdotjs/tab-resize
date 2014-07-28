@@ -1,13 +1,19 @@
 Tab-Resize
 ==========
 
-Automate resizing tab windows to predefined and user defined layouts. Chrome Web Store: https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc
+Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate Windows. w/ Multi Monitor Support.
 
-***Multiple monitor support now added***
+Chrome Web Store: https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc
+
+*** Version 2.0 *** 
+Added support for multiple monitors, left and right alignment, and empty tab mode
+
+*** DEMO video *** 
+http://www.youtube.com/watch?v=GFHl98nAV04
 
 What
 --------
-✓A simple extension designed to provide ease in resizing your tabs. A set of default layouts are provided but you can add and remove from the list of layouts to fit your needs. 
+✓A simple extension designed to provide ease in resizing your tabs. A set of default layouts are provided but you can add and remove from the list of layouts to fit your needs. With multiple monitor support you can move windows from one screen to the next with ease. 
 
 Why
 -------
@@ -30,3 +36,8 @@ How it works
 ✓You can select left or right alignment for your resize
 
 ✓You can create your own custom layouts within reason and reset to default configurations if desired. Layouts are sorted most recent used on right.
+
+Additional Notes
+------------------------
+Only tab/window id info is being used; browsing activity is not. Tabs and browsing activity access are bundled together.
+
