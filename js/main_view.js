@@ -28,8 +28,9 @@
 				resize.singleTab = true;
 			}
 
+			//by default empty tab is checked to avoid any confusion
 			var emptyTabValue = localStorage.getItem('emptyTab');
-			if(emptyTabValue && emptyTabValue === 'true'){
+			if(!emptyTabValue || emptyTabValue === 'true'){
 				$('#checkbox-empty-tab').attr('checked',true);
 				$('label.empty-tab').addClass('selected');
 				resize.emptyTab = true;
