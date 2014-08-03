@@ -57,7 +57,6 @@
 	}).on('click','#input-cancel,.main-view',function(){
 		if(!$('.custom-view').hasClass('hidden')){
 			custom_view.clearCustomValues();
-			util.clearCanvas();
 			custom_view.hideCustomMenu();
 			sendTracking('custom-layout','cancel');
 		}

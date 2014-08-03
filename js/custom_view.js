@@ -3,32 +3,33 @@
 * handles custom view menu
 */
 (function(){
-	
+
 	var resize = window.resize;
-	
+
 	var custom_view = {
 
 		/**
 		* hides custom view menu
-		*/	
+		*/
 		hideCustomMenu: function() {
 			$('.custom-view').addClass('hidden');
 			$('.main-view').removeClass('inactive');
+			resize.util.clearCanvas();
 		},
-		
+
 		/**
 		* shows custom view menu
-		*/	
+		*/
 		showCustomMenu: function() {
 			this.clearCustomValues();
 			$('.main-view').addClass('inactive');
 			$('.custom-view').removeClass('hidden').trigger('show');
 			$('.custom-view input.row').focus();
-		},	
-		
+		},
+
 		/**
 		* clears custom row and col values from input fields
-		*/	
+		*/
 		clearCustomValues: function(){
 			$('#numRows').val('');
 			$('#numCols').val('');
@@ -36,13 +37,13 @@
 
 		/**
 		* performs save of new layout
-		*/	
+		*/
 		handleCustomSave: function(){
 			var customRows = $('#numRows').val(),
 				customCols = $('#numCols').val();
-			
+
 			this.clearCustomValues();
-			
+
 			if(!Number(customRows) || !Number(customCols) || Number(customRows) < 1 || Number(customCols) < 1){
 				window.alert('Please enter valid input values.');
 			} else {
@@ -53,7 +54,7 @@
 		}
 
 	};
-	
+
 	window.resize.custom_view = custom_view;
-	
+
 })();
