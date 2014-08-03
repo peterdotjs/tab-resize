@@ -13,10 +13,6 @@
 		displayUtil = resize.displayUtil,
 		$doc = $(document);
 
-	function sendTracking(category, label) {
-		_gaq.push(['_trackEvent', category, 'clicked', label || "na"]);
-	};
-
 	/*
 	* events handlers
 	*/
