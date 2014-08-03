@@ -32,7 +32,11 @@ var util = {
 		};
 
 		if(tabId){
-			objectInfo.tabId = tabId;
+			if($.isArray(tabId)){
+				objectInfo.tabId = tabId[0];
+			} else {
+				objectInfo.tabId = tabId;
+			}
 		}
 
 		window.chrome.windows.create(objectInfo,
@@ -55,7 +59,8 @@ var util = {
 			_tabsArray = tabsArray.slice(startIndex),
 			index = 0,
 			numEmptyWindows = 0,
-			emptyWindowLimit = (resize.numRows * resize.numCols) - _tabsArray.length,
+			tabsLength = _tabsArray.length,
+			emptyWindowLimit = (resize.numRows * resize.numCols) - tabsLength,
 			that = this,
 			leftValue,
 			rightValue,
@@ -67,6 +72,11 @@ var util = {
 					if(emptyWindowLimit === numEmptyWindows){
 						that.updateUndoStorage(resize, _tabsArray);
 					}
+				} else if(_tabId && $.isArray(_tabId)){ //moving tabs to last window
+					chrome.tabs.move(_tabId.slice(1),{
+						windowId: _windowCb.id,
+						index: 1
+					});
 				}
 			};
 
@@ -102,6 +112,14 @@ var util = {
 						return;
 					}
 
+					//splitting the rest of the tabs to the last window created
+					if(y === resize.numRows-1 && x === resize.numCols -1 && tabsLength - index > 1){
+						tabId = [];
+						for(var z = index; z < tabsLength; z++){
+							tabId.push(_tabsArray[z].id);
+						}
+					}
+
 					//check the number of new windows that will be created
 					//store the windowId information
 					that.createNewWindow(tabId, leftValue, rightValue, resize.width, resize.height, incog, createNewWindowCB);
@@ -132,7 +150,7 @@ var util = {
 			lastTab.lastTabIndex = tabIndex;
 			lastTab.lastWindowId = windowId;
 			var tabsStore = [];
-			for(var x=0; x<tabsArray.length && x<(resize.numRows * resize.numCols); x++){
+			for(var x=0; x<tabsArray.length; x++){
 				tabsStore.push(tabsArray[x].id);
 			}
 			lastTab.lastTabsArray = tabsStore;
@@ -150,7 +168,7 @@ var util = {
 	updateUndoStorage: function(resize, tabsArray) {
 		var currentLastTab = JSON.parse(localStorage.getItem('lastTab'));
 		var tabsStore = [];
-		for(var x=0; x<tabsArray.length && x<(resize.numRows * resize.numCols); x++){
+		for(var x=0; x<tabsArray.length; x++){
 			tabsStore.push(tabsArray[x].id);
 		}
 		if(currentLastTab){

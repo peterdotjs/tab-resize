@@ -25,12 +25,16 @@
 			$el = $('#display-setting-layer');
 
 			$el.on('click','.display-entry',function(evt){
-				var $this = $(this);
-				var data = {};
-				data[$this.data('id')] = true;
+				var $this = $(this),
+					data = {},
+					id = $this.data('id'),
+					sz = $this.find('.display-meta').text();
+
+				data[id] = true;
 				$el.find('.display-entry').removeClass('selected');
 				$this.addClass('selected');
 				localStorage.setItem('displayIds',JSON.stringify(data));
+				sendTracking('resize',sz);
 			});
 
 			resize.display.getInfo(function(displayInfo){
