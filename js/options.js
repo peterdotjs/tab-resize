@@ -144,7 +144,6 @@
 		hideConfirmationModal: function() {
 			$('.main-view').removeClass('inactive');
 			$('.confirmation-modal').addClass('hidden');
-			$('body').removeClass('update-seen');
 		},
 
 		/**
@@ -171,7 +170,7 @@
 			$('#update-modal').trigger('show');
 			$('.main-view').addClass('inactive');
 		}
-		
+
 	};
 
 	window.resize.options = options;
