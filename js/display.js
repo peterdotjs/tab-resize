@@ -34,7 +34,7 @@
 				$el.find('.display-entry').removeClass('selected');
 				$this.addClass('selected');
 				localStorage.setItem('displayIds',JSON.stringify(data));
-				sendTracking('resize',sz);
+				sendTracking('display-select',sz);
 			});
 
 			resize.display.getInfo(function(displayInfo){

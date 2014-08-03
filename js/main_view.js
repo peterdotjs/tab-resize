@@ -18,8 +18,8 @@
 				localStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
 				resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
 			}
-			//this.initWindowWidth();
-			this._populateMainView();
+
+			this.populateMainView();
 
 			var singleTabValue = localStorage.getItem('singleTab');
 			if(singleTabValue && singleTabValue === 'true'){
@@ -48,7 +48,7 @@
 			} else {
 				resize.alignment = alignmentValue;
 			}
-			$('#' + resize.alignment).trigger('click');
+			$('#' + resize.alignment).trigger('click',['defer-tracking']);
 
 			resize.displayUtil.initialize();
 
@@ -89,7 +89,7 @@
 		/**
 		* populate main view with local storage data
 		*/
-		_populateMainView: function() {
+		populateMainView: function() {
 			for(var x=0; x<resize.currentLayouts.layoutItems.length; x++){
 				resize.layout.addLayoutMarkup(resize.currentLayouts.layoutItems[x],false);
 			}

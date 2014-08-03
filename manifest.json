@@ -1,7 +1,7 @@
 {
   "name": "Tab Resize - split screen layouts",
   "short_name": "Tab Resize",
-  "version": "2.0.7",
+  "version": "2.0.7.4",
   "manifest_version": 2,
   "description": "Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate windows. w/ Multi Monitor Support.",
   "browser_action": {
@@ -17,5 +17,6 @@
     "scripts": ["js/lib/jquery.min.js","js/background.js"]
   },
   "offline_enabled": true,
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'"
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
+  "options_page": "options.html"
  }
