@@ -38,7 +38,7 @@
 		sendTracking('resize-delete',resizeType);
 	}).on('click','#undo-layout',function(){
 		options.undoResize();
-		sendTracking('undo');
+		sendTracking('undo','undo');
 	}).on('click','#custom-layout',function(evt){
 		evt.stopPropagation();
 		custom_view.showCustomMenu();
@@ -112,11 +112,13 @@
 		isDisplayed = $display.hasClass('display-selected');
 		options.processDisplayLayerSelection(isDisplayed);
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
-	}).on('click','#display-setting-layer .switch-toggle input',function(){
+	}).on('click','#display-setting-layer .switch-toggle input',function(evt,deferTracking){
 		var alignment = $(this).attr('id');
 		$('.switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
 		options.processAlignmentSelection(alignment);
-		sendTracking('alignment',alignment);
+		if(!deferTracking){
+			sendTracking('alignment',alignment);
+		}
 	}).on('click','#update-apply',function(){
 		options.hideUpdateModal();
 	});

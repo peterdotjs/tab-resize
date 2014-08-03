@@ -48,7 +48,7 @@
 			} else {
 				resize.alignment = alignmentValue;
 			}
-			$('#' + resize.alignment).trigger('click');
+			$('#' + resize.alignment).trigger('click',['defer-tracking']);
 
 			resize.displayUtil.initialize();
 
