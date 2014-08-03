@@ -52,6 +52,7 @@
 		sendTracking('default-layout','cancel');
 	}).on('click','#confirmation-apply',function(){
 		layout.resetLayout();
+		options.hideConfirmationModal();
 		sendTracking('default-layout','apply');
 	}).on('click','#input-cancel,.main-view',function(){
 		if(!$('.custom-view').hasClass('hidden')){

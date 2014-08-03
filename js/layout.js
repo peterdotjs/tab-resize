@@ -75,9 +75,10 @@
 		* resets to default layouts
 		*/
 		resetLayout: function() {
-			localStorage.removeItem('layoutItems');
 			this._removeAllLayouts();
-			resize.main_view.initialize();
+			localStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
+			resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
+			resize.main_view.populateMainView();
 		},
 
 		/**
