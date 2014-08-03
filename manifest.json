@@ -17,6 +17,6 @@
     "scripts": ["js/lib/jquery.min.js","js/background.js"]
   },
   "offline_enabled": true,
-  "content_security_policy": "script-src 'self' https://ssl.google-analytics.com; object-src 'self'",
+  "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
   "options_page": "options.html"
  }
