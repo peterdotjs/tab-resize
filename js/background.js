@@ -94,12 +94,16 @@ var util = {
 
 				// base case we update the current window
 				if(x === 0 && y === 0){
-					window.chrome.windows.update(_tabsArray[index].windowId,{ left: leftValue,
-																		top: rightValue,
-																		width: resize.width,
-																		height: resize.height,
-																		state: "normal"
-																	});
+					if(resize.numRows === 1 && resize.numCols === 1){
+						window.chrome.windows.update(_tabsArray[index].windowId,{ state: "maximized" });
+					} else {
+						window.chrome.windows.update(_tabsArray[index].windowId,{ left: leftValue,
+													top: rightValue,
+													width: resize.width,
+													height: resize.height,
+													state: "normal"
+												});	
+					}
 
 					if(singleTab){
 						return;
@@ -138,7 +142,9 @@ var util = {
 	*/
 	setUndoStorage: function(resize, tabIndex, windowId, tabsArray, cb) {
 		window.chrome.windows.get(windowId,{},function(_windowCb){
-			var updateInfo = {left: _windowCb.left,
+			var updateInfo = (_windowCb.state === 'maximized') ? {focused: true,
+								state: "maximized",
+								incognito: _windowCb.incognito} : {left: _windowCb.left,
 								top: _windowCb.top,
 								width: _windowCb.width,
 								height: _windowCb.height,
