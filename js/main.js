@@ -121,6 +121,12 @@
 		}
 	}).on('click','#update-apply',function(){
 		options.hideUpdateModal();
+	}).on('click','.signature a',function(){
+		if($(this).hasClass('rate-it')){
+			sendTracking('info-links','rate-it');
+		} else {
+			sendTracking('info-links','author');
+		}
 	});
 
 })();

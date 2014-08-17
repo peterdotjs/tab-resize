@@ -74,8 +74,8 @@ button.disabled{opacity:0.5;pointer-events:none;}
 .main-view .resize-footer .checkbox-container label:hover{background:#b4e2f6;}
 .main-view .resize-footer .checkbox-container label input{border-radius:3px;-webkit-border-radius:3px;vertical-align:top;width:18px;height:18px;}
 .main-view .resize-footer .checkbox-container label span{position:relative;top:1px;left:-2px;}
-#display-setting-layer{display:none;position:relative;bottom:0px;margin:100px 50px 25px 50px;font-family:Verdana,Geneva,sans-serif;}#display-setting-layer .signature{position:absolute;bottom:-23px;font-size:10px;right:-45px;}#display-setting-layer .signature a{color:#005579;padding-right:5px;}
-#display-setting-layer .signature .feedback{border-left:1px solid silver;padding-left:5px;padding-right:0px;}
+#display-setting-layer{display:none;position:relative;bottom:0px;margin:100px 50px 25px 50px;font-family:Verdana,Geneva,sans-serif;}#display-setting-layer .signature{position:absolute;bottom:-22px;font-size:13px;right:-45px;font-weight:bold;}#display-setting-layer .signature a{color:#005579;padding-right:5px;}
+#display-setting-layer .signature .rate-it{border-left:1px solid silver;padding-left:5px;padding-right:0px;}
 #display-setting-layer .switch-toggle{top:-80px;left:0px;width:100%;}#display-setting-layer .switch-toggle.right-align a{border-left-width:2px;}
 #display-setting-layer .switch-toggle.left-align a{border-right-width:2px;}
 #display-setting-layer .display-settings-divider{width:630px;height:1px;position:absolute;top:-22px;left:-50px;background:black;background:-webkit-gradient(linear, 0 0, 100% 0, from(#ffffff), to(#ffffff), color-stop(50%, #000000));}

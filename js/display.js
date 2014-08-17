@@ -10,7 +10,6 @@
 		offsetY = 0,
 		defaultWidth = 530,
 		defaultHeight = 250,
-		displayPreferenceMatch = JSON.parse(localStorage.getItem('displayIds')),
 		$el;
 
 	var displayUtil = {
@@ -33,23 +32,30 @@
 				data[id] = true;
 				$el.find('.display-entry').removeClass('selected');
 				$this.addClass('selected');
-				localStorage.setItem('displayIds',JSON.stringify(data));
 				sendTracking('display-select',sz);
 			});
 
 			resize.display.getInfo(function(displayInfo){
-				var displayJSON = processInfo(displayInfo),
-					template,
-					currentDisplay;
+				chrome.windows.getCurrent({populate:true},function(windowInfo){
 
-				processAutoFormat(displayJSON);
+					var currentWindowInfo = {
+						left: windowInfo.left + windowInfo.width - 100,
+						top: windowInfo.top + 100
+					}
 
-				for(var i=0; i<displayJSON.displays.length; i++){
-					currentDisplay = displayJSON.displays[i];
-					template = renderDisplayTemplate(currentDisplay.workArea, currentDisplay.id, displayJSON.primaryIndex === i);
-					$el.append(template);
-				}
-				//need to start building the dom display
+					var displayJSON = processInfo(displayInfo,currentWindowInfo),
+						template,
+						currentDisplay;
+
+					processAutoFormat(displayJSON);
+
+					for(var i=0; i<displayJSON.displays.length; i++){
+						currentDisplay = displayJSON.displays[i];
+						template = renderDisplayTemplate(currentDisplay.workArea, currentDisplay.id, displayJSON.primaryIndex === i);
+						$el.append(template);
+					}
+					//need to start building the dom display
+				});
 			});
 
 			//event handling for selecting the display
@@ -122,7 +128,7 @@
 	}
 
 	//format the displayInfo
-	function processInfo(displayInfo){
+	function processInfo(displayInfo,currentWindowInfo){
 		var index = 0,
 			length = displayInfo.length,
 			info,
@@ -133,24 +139,17 @@
 
 		for(;index<length;index++){
 			info = displayInfo[index];
-			if(Number(info.id) === 0){ //check for unsupported platoforms - MAC always has id as 0
-				info.id = String(index);
-			}
+			info.id = String(index); //setting index of display
 			displayJSON.displays.push({
 				workArea: info.workArea,
 				isEnabled: info.isEnabled,
 				id: info.id
 			});
 
-			if(displayPreferenceMatch){
-				if(displayPreferenceMatch[info.id]){
-					displayJSON.primaryIndex = index;
-				}
-			}
-
-			if(info.isPrimary && !displayPreferenceMatch){
+			if(currentWindowInfo.left > info.workArea.left && currentWindowInfo.left < info.workArea.left + info.workArea.width && currentWindowInfo.top > info.workArea.top && currentWindowInfo.top < info.workArea.top + info.workArea.height){
 				displayJSON.primaryIndex = index;
 			}
+			
 		}
 		return displayJSON;
 	}
