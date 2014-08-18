@@ -20,6 +20,7 @@
 			localStorage.setItem('singleTab',_singleTab);
 			resize.singleTab = _singleTab;
 			$('label.single-tab').toggleClass('selected');
+			$('body').toggleClass('single-tab-selected');
 		},
 
 		/*
@@ -35,6 +36,7 @@
 			localStorage.setItem('emptyTab',_emptyTab);
 			resize.emptyTab = _emptyTab;
 			$('label.empty-tab').toggleClass('selected');
+			$('body').toggleClass('empty-tab-not-selected');
 		},
 
 		/**
@@ -54,6 +56,11 @@
 		processAlignmentSelection: function(alignment) {
 			localStorage.setItem('alignment',alignment);
 			resize.alignment = alignment;
+			if(alignment === 'right'){
+				$('body').addClass('align-right');
+			} else {
+				$('body').removeClass('align-right');
+			}
 		},
 
 		/*

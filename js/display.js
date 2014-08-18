@@ -41,7 +41,7 @@
 					var currentWindowInfo = {
 						left: windowInfo.left + windowInfo.width - 100,
 						top: windowInfo.top + 100
-					}
+					};
 
 					var displayJSON = processInfo(displayInfo,currentWindowInfo),
 						template,
@@ -55,6 +55,9 @@
 						$el.append(template);
 					}
 					//need to start building the dom display
+					resize.currentWindowTabs = windowInfo.tabs;
+					resize.layout.processTabInfo();
+
 				});
 			});
 
@@ -149,7 +152,7 @@
 			if(currentWindowInfo.left > info.workArea.left && currentWindowInfo.left < info.workArea.left + info.workArea.width && currentWindowInfo.top > info.workArea.top && currentWindowInfo.top < info.workArea.top + info.workArea.height){
 				displayJSON.primaryIndex = index;
 			}
-			
+
 		}
 		return displayJSON;
 	}
