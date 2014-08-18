@@ -79,6 +79,7 @@
 			localStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
 			resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
 			resize.main_view.populateMainView();
+			this.processTabInfo();
 		},
 
 		/**
@@ -86,9 +87,70 @@
 		*/
 		_removeAllLayouts: function() {
 			$('.resize-container').children().remove();
-		}
+		},
 
+		processTabInfo: function($layout){
+			var tabs = resize.currentWindowTabs;
+			var layoutList = $layout || $('.resize-container').find('.resize-selector-container .resize-selector'),
+				length = 0,
+				index = 0,
+				$curLayout,
+				layoutType,
+				rows,
+				cols,
+				innerHtml,
+				curTab,
+				tabNumber;
+
+			layoutList = layoutList.filter(function(){
+				return !$(this).hasClass('layout-default');
+			});
+
+			length = layoutList.length;
+
+			if(tabs && tabs.length > 0){
+				//iterate through the current list of layout options
+				for(;index<length;index++){
+					innerHtml = '';
+					$curLayout = layoutList.eq(index);
+					layoutType = $curLayout.attr('data-selector-type').split('x');
+					rows = layoutType[0];
+					cols = layoutType[1];
+					tabNumber = 1;
+					for(var y=0; y<rows; y++){
+						for(var x=0; x<cols; x++){
+							//add in markup - styles will be added in less
+							innerHtml += '<div title="New Tab" class="tab-layer tab-layer-'+ (tabNumber++) + '"><div class="fav-icon"></div></div>';
+						}
+					}
+					$curLayout.html(innerHtml);
+				}
+
+				//find the selected and add the urls
+				for(index=0;index<tabs.length;index++){
+					curTab = tabs[index];
+					if(curTab.highlighted){
+						processSelectedTab(curTab,index,tabs);
+						break;
+					}
+				}
+			}
+		}
 	};
+
+	function processSelectedTab(curTab,index,tabs){
+		for(var i=1;index<tabs.length && i<5;index++,i++){
+			curTab = tabs[index];
+			if(curTab.favIconUrl){
+				var tabLayers = $('.resize-container').find('.tab-layer-' + i);
+				tabLayers.addClass('valid-tab');
+				for(var j=0;j<tabLayers.length; j++){
+					tabLayers.eq(j).find('.fav-icon').css('background-image','url("' + curTab.favIconUrl + '")');
+					tabLayers.eq(j).attr('title',curTab.title);
+				}
+			}
+		}
+	}
 
 	window.resize.layout = layout;
 

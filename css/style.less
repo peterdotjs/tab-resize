@@ -281,6 +281,23 @@ button.disabled {
 				top: 21px;
 				border-radius: 4px;
 				border: 5px solid #7C7C7C;
+
+				.tab-layer {
+					position: relative;
+					display: inline-block;
+					float: left;
+					top: 0px;
+					left: 0px;
+					.fav-icon {
+						position: absolute;
+						background-repeat: no-repeat;
+						background-size: 27px 27px;
+						width: 27px;
+						height: 27px;
+						background-image: url('https://www.google.com/favicon.ico');
+					}
+				}
+
 			}
 
 
@@ -698,36 +715,150 @@ body.update {
 	}
 }
 
+body {
+	&.align-right {
+		.tab-layer {
+			float: right !important;
+		}
+	}
+
+	&.empty-tab-not-selected {
+		.tab-layer {
+			background: white;
+			.fav-icon {
+				visibility: hidden;
+			}
+			&.valid-tab {
+				background: transparent;
+				.fav-icon {
+					visibility: visible;
+				}
+			}
+		}
+	}
+
+	&.single-tab-selected {
+		//all tabs are hidden except for first tab
+		.tab-layer {
+			background: white !important;
+			.fav-icon {
+				visibility: hidden !important;
+			}
+
+			&.tab-layer-1 {
+				background: transparent !important;
+				.fav-icon {
+					visibility: visible !important;
+				}
+			}
+		}
+	}
+}
+
 //mixin for layout sprites
 .selector-url(@x:0, @y:0){
 	background: url('../images/sprites/layouts.png') @x @y;
 }
 
-
 .layout-1x1 {
 	.selector-url(0px,0px);
+
+	.tab-layer {
+		width: 100%;
+		height: 100%;
+
+		.fav-icon {
+			left: 35px;
+			top: 35px;
+		}
+	}
 }
 
 .layout-1x2 {
 	.selector-url(-100px,0px);
+
+	.tab-layer {
+		width: 50%;
+		height: 100%;
+
+		.fav-icon {
+			left: 11px;
+			top: 35px;
+		}
+	}
+
 }
 
 .layout-1x3 {
 	.selector-url(-200px,0px);
+
+	.tab-layer {
+		width: 33.3%;
+		height: 100%;
+
+		.fav-icon {
+			left: 8px;
+			top: 39px;
+			width: 18px !important;
+			height: 18px !important;
+			background-size: 18px 18px !important;
+		}
+	}
+
 }
 
 .layout-2x1 {
 	.selector-url(-300px,0px);
+
+	.tab-layer {
+		width: 100%;
+		height: 50%;
+
+		.fav-icon {
+			left: 35px;
+			top: 16px;
+		}
+	}
+
 }
 
 .layout-2x2 {
 	.selector-url(-400px,0px);
+
+	.tab-layer {
+		width: 50%;
+		height: 50%;
+
+		.fav-icon {
+			top: 16px;
+			left: 11px;
+		}
+	}
+
 }
 
 .layout-3x1 {
 	.selector-url(-500px,0px);
+
+	.tab-layer {
+		width: 100%;
+		height: 33.3%;
+
+		.fav-icon {
+			top: 12px;
+			left: 42px;
+			width: 18px !important;
+			height: 18px !important;
+			background-size: 18px 18px !important;
+		}
+	}
+
 }
 
 .layout-default{
 	.selector-url(-600px,0px);
+
+	.tab-layer {
+		display: none !important;
+	}
 }

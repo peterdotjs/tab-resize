@@ -25,6 +25,7 @@
 			if(singleTabValue && singleTabValue === 'true'){
 				$('#checkbox-single-tab').attr('checked',true);
 				$('label.single-tab').addClass('selected');
+				$('body').addClass('single-tab-selected');
 				resize.singleTab = true;
 			}
 
@@ -34,6 +35,8 @@
 				$('#checkbox-empty-tab').attr('checked',true);
 				$('label.empty-tab').addClass('selected');
 				resize.emptyTab = true;
+			} else {
+				$('body').addClass('empty-tab-not-selected');
 			}
 
 			var displayLayerValue = localStorage.getItem('displayLayer');
@@ -47,8 +50,12 @@
 				resize.alignment = 'left';
 			} else {
 				resize.alignment = alignmentValue;
+				if(resize.alignment !== 'left'){
+					$('body').addClass('align-right');
+				}
 			}
 			$('#' + resize.alignment).trigger('click',['defer-tracking']);
+
 
 			resize.displayUtil.initialize();
 

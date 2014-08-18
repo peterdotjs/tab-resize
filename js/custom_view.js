@@ -49,6 +49,7 @@
 			} else {
 				var layoutType = customRows + 'x' + customCols;
 				resize.layout.addLayout(layoutType);
+				resize.layout.processTabInfo($('.layout-' + layoutType));
 				this.hideCustomMenu();
 			}
 		}
