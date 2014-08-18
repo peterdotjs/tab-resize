@@ -28,7 +28,8 @@
 		custom_view: {},
 		options: {},
 		util: {},
-		badgeLimit: 5
+		badgeLimit: 5,
+		isMac: navigator.platform.toUpperCase().indexOf('MAC')!==-1
 	};
 
 	window.resize = resize;
