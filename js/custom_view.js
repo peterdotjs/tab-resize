@@ -33,6 +33,7 @@
 		clearCustomValues: function(){
 			$('#numRows').val('');
 			$('#numCols').val('');
+			$('#input-save').addClass('disabled');
 		},
 
 		/**

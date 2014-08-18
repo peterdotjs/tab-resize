@@ -95,6 +95,15 @@
 			}
 
 			util.drawTable(resize.canvasWidth, resize.canvasHeight, numRows, numCols, context);
+			$('#input-save').removeClass('disabled');
+		} else {
+			var $this = $(this),
+				val = Number($this.attr('value'));
+
+			if(val === 0 || isNaN(val)){
+				$this.attr('value','');
+				$('#input-save').addClass('disabled');
+			}
 		}
 	}).on('change','#checkbox-single-tab', function(){
 		var checked = $(this).attr('checked');
