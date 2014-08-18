@@ -141,13 +141,13 @@
 	function processSelectedTab(curTab,index,tabs){
 		for(var i=1;index<tabs.length && i<5;index++,i++){
 			curTab = tabs[index];
-			if(curTab.favIconUrl){
-				var tabLayers = $('.resize-container').find('.tab-layer-' + i);
-				tabLayers.addClass('valid-tab');
-				for(var j=0;j<tabLayers.length; j++){
+			var tabLayers = $('.resize-container').find('.tab-layer-' + i);
+			tabLayers.addClass('valid-tab');
+			for(var j=0;j<tabLayers.length; j++){
+				if(curTab.favIconUrl && curTab.favIconUrl.indexOf('chrome://') !== 0){
 					tabLayers.eq(j).find('.fav-icon').css('background-image','url("' + curTab.favIconUrl + '")');
-					tabLayers.eq(j).attr('title',curTab.title);
 				}
+				tabLayers.eq(j).attr('title',curTab.title);
 			}
 		}
 	}
