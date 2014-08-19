@@ -97,7 +97,9 @@
 								that.recombineTabs(1,window.id,newTabsArray.slice(1));
 							});
 						} else {
-							alert("Previous tabs were closed.");
+							if(!resize.isMac){
+								alert("Previous tabs were closed.");
+							}
 							that.disableUndoButton();
 						}
 					});

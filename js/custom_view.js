@@ -46,7 +46,7 @@
 			this.clearCustomValues();
 
 			if(!Number(customRows) || !Number(customCols) || Number(customRows) < 1 || Number(customCols) < 1){
-				window.alert('Please enter valid input values.');
+				//window.alert('Please enter valid input values.');
 			} else {
 				var layoutType = customRows + 'x' + customCols;
 				resize.layout.addLayout(layoutType);
