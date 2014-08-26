@@ -130,6 +130,8 @@
 		}
 	}).on('click','#update-apply',function(){
 		options.hideUpdateModal();
+	}).on('click','#promo-apply',function(){
+		options.hidePromoModal();
 	}).on('click','.signature a',function(){
 		if($(this).hasClass('rate-it')){
 			sendTracking('info-links','rate-it');

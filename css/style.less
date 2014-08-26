@@ -631,7 +631,7 @@ button.disabled {
 
 }
 
-#update-modal {
+.info-modal.modal-box {
 	display: none;
 	.modal-body {
 		width: 450px;
@@ -684,6 +684,7 @@ button.disabled {
 		}
 
 	    a {
+	    	color: #0181eb;
 			&:visited {
 				color: #0181eb;
 			}
@@ -706,8 +707,23 @@ button.disabled {
 	}
 }
 
+#promo-modal {
+	.modal-body .header-title-wrap .icon-48 {
+		background: url('../images/icons/promo/icon48.png');
+	}
+}
+
 body.update {
 	#update-modal {
+		display: block;
+	}
+	.main-view {
+		min-height: 500px;
+	}
+}
+
+body.promo {
+	#promo-modal {
 		display: block;
 	}
 	.main-view {
