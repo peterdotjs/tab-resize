@@ -97,7 +97,9 @@
 								that.recombineTabs(1,window.id,newTabsArray.slice(1));
 							});
 						} else {
-							alert("Previous tabs were closed.");
+							if(!resize.isMac){
+								alert("Previous tabs were closed.");
+							}
 							that.disableUndoButton();
 						}
 					});
@@ -162,7 +164,7 @@
 		},
 
 		/**
-		* hides the default layout confirmation modal box
+		* hides the update modal box
 		*/
 		hideUpdateModal: function() {
 			$('body').removeClass('update');
@@ -171,10 +173,27 @@
 		},
 
 		/**
-		* shows the default layout confirmation modal box
+		* shows the update modal box
 		*/
 		showUpdateModal: function() {
 			$('#update-modal').trigger('show');
+			$('.main-view').addClass('inactive');
+		},
+
+		/**
+		* hides the promo modal box
+		*/
+		hidePromoModal: function() {
+			$('body').removeClass('promo');
+			$('.main-view').removeClass('inactive');
+			localStorage.setItem('promo-seen',true);
+		},
+
+		/**
+		* shows the promo modal box
+		*/
+		showPromoModal: function() {
+			$('#promo-modal').trigger('show');
 			$('.main-view').addClass('inactive');
 		}
 

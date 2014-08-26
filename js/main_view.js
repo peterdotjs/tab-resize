@@ -91,6 +91,12 @@
 				$body.addClass('update');
 				resize.options.showUpdateModal();
 			}
+
+			if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
+				var $body = $('body');
+				$body.addClass('promo');
+				resize.options.showPromoModal();
+			}
 		},
 
 		/**
