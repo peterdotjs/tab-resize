@@ -56,25 +56,25 @@
 		},
 
 
-		/**
-		* creates a new window at specific location with the tab input
-		* @param {Number} tabId - id of main tab in new window
-		* @param {Number} startX - horizontal position of window
-		* @param {Number} startY - vertical position of window
-		*/
-		createNewWindow: function(tabId, startX, startY, width, heightincog, callback) {
-			window.chrome.windows.create({tabId: tabId,
-									left: startX,
-									top: startY,
-									width: width,
-									height: height,
-									incognito: incog},
-									function(_window){
-										callback(_window);
-									}
-			);
+		initSortable: function(){
+			$('.sortable').sortable().on('sortupdate',function(){
+				resize.layout.updateLayoutStore();
+				sendTracking('dnd-event','dnd-label');
+			});
+			sortableInitialized = true;
+		},
+
+		resetSortable: function(){
+			if(sortableInitialized){
+				var $sortable = $('.sortable');
+				$sortable.sortable('destroy');
+				$sortable.sortable();
+			}
 		}
+
 	};
+
+	var sortableInitialized = false;
 
 	window.resize.util = util;
 

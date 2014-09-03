@@ -8,6 +8,20 @@
 
 	var layout = {
 
+		updateLayoutStore: function(){
+			var $layouts = $('.resize-selector'),
+				length = $layouts.length,
+				index = 0,
+				currentLayouts = [];	
+
+			for(;index<length;index++){
+				currentLayouts.push($layouts.eq(index).attr('data-selector-type'));
+			}
+
+			resize.currentLayouts.layoutItems = currentLayouts;
+			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+		},
+
 		/**
 		* adds layout to popup
 		* @param {string} layoutType Type of layout (ROWxCOL).
@@ -24,6 +38,7 @@
 			resize.currentLayouts.layoutItems.unshift(layoutType);
 			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 			this.addLayoutMarkup(layoutType,true);
+			resize.util.resetSortable();
 		},
 
 		/**
@@ -40,7 +55,7 @@
 			}
 
 			var container = $('.resize-container');
-			var selectorTemplate = '<div class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + layoutType + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></div>';
+			var selectorTemplate = '<li class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + layoutType + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
 
 			if(prepend){
 				container.prepend(selectorTemplate);
@@ -80,6 +95,7 @@
 			resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
 			resize.main_view.populateMainView();
 			this.processTabInfo();
+			resize.util.resetSortable();
 		},
 
 		/**

@@ -114,3 +114,4 @@ body.single-tab-selected .tab-layer.tab-layer-1{background:transparent !importan
 .layout-2x2{background:url('../images/sprites/layouts.png') -400px 0px;}.layout-2x2 .tab-layer{width:50%;height:50%;}.layout-2x2 .tab-layer .fav-icon{top:16px;left:11px;}
 .layout-3x1{background:url('../images/sprites/layouts.png') -500px 0px;}.layout-3x1 .tab-layer{width:100%;height:33.3%;}.layout-3x1 .tab-layer .fav-icon{top:12px;left:42px;width:18px !important;height:18px !important;background-size:18px 18px !important;}
 .layout-default{background:url('../images/sprites/layouts.png') -600px 0px;}.layout-default .tab-layer{display:none !important;}
+.sortable-placeholder{width:113px;height:113px;margin:2px 4px 10px 2px;display:inline-block;position:relative;border:7px dashed darkgrey;border-radius:4px;padding:0 0 15px 15px;float:right;}

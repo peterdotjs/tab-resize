@@ -97,6 +97,10 @@
 				$body.addClass('promo');
 				resize.options.showPromoModal();
 			}
+
+			$(function(){
+				resize.util.initSortable();
+			});
 		},
 
 		/**
@@ -125,7 +129,6 @@
 		* adjusts the popup height accordingly as layout elements are removed
 		*/
 		checkWindowHeight: function() {
-			debugger;
 			var numSelectors = resize.currentLayouts.layoutItems.length;
 			var removedRow = numSelectors % resize.maxSelectorsPerLine;
 			if(numSelectors >=5 && removedRow === 0){
