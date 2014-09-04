@@ -86,10 +86,19 @@
 				}
 			}
 
-			if(!localStorage.getItem('update-seen')){
+			var curVersion = localStorage.getItem('version') || '',
+				isOldVersion = (curVersion === '2.0');
+			//user has never seen update
+			if(!localStorage.getItem('update-seen') || isOldVersion){
 				var $body = $('body');
 				$body.addClass('update');
-				resize.options.showUpdateModal();
+				if(isOldVersion){
+					localStorage.removeItem('update-seen');
+				} else if (!localStorage.getItem('warning-seen')) {
+					$body.addClass('warning');
+					resize.options.showWarningModal();
+				}
+				resize.options.showUpdateModal(isOldVersion ? 'partial-update' : '');
 			}
 
 			if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
@@ -97,6 +106,10 @@
 				$body.addClass('promo');
 				resize.options.showPromoModal();
 			}
+
+			$(function(){
+				resize.util.initSortable();
+			});
 		},
 
 		/**
@@ -125,7 +138,6 @@
 		* adjusts the popup height accordingly as layout elements are removed
 		*/
 		checkWindowHeight: function() {
-			debugger;
 			var numSelectors = resize.currentLayouts.layoutItems.length;
 			var removedRow = numSelectors % resize.maxSelectorsPerLine;
 			if(numSelectors >=5 && removedRow === 0){

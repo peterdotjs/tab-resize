@@ -15,10 +15,8 @@
 		<script type="text/javascript" src="js/main.js"></script>
 	</head>
 	<body>
-
 		<div class="main-view">
-			<div class="resize-container">
-			</div>
+			<ul class="resize-container sortable "></ul>
 			<div class="resize-footer">
 				<div id="display-setting" class="hidden-layer monitor-wrap footer-wrap" title="Settings for multiple monitors and alignment preference">
 					<div class="display-setting-indicator"></div>
@@ -101,12 +99,33 @@
 			</div>
 		</div>
 
+		<div id="warning-modal" class="modal-box info-modal">
+			<div class="modal-body">
+				<div class="header-title-wrap">
+					<div class="header-title">
+						ATTENTION: Please Read Before Using
+					</div>
+				</div>
+				<ul class="update-list">
+					<li class="update-entry">
+						If you expect the extension to resize within the same window, <strong>THIS EXTENSION WILL NOT DO THIS.</strong> If you do this in Chrome you'll have security limitations (i.e. you can't see any https site). If you want this ability I'd recommend using Firefox with the Tile Tabs plugin, Chrome currently cannot replicate the same behavior.
+					</li>
+					<li class="update-entry">
+						Apologies if you've read the description or watched the demo already - with many of the past reviews that have been left I hope you understand why I've added this popup.
+					</li>
+				</ul>
+			</div>
+			<div class="modal-footer">
+				<button class="button primary" id="warning-apply">I understand</button>
+			</div>
+		</div>
+
 		<div id="update-modal" class="modal-box info-modal">
 			<div class="modal-body">
 				<div class="header-title-wrap">
 					<div class="icon-48"></div>
 					<div class="header-title">
-						Tab Resize 2.0 Updates
+						Tab Resize 2.1 Updates
 					</div>
 				</div>
 				<div class="update-list-header">What's New:</div>
@@ -120,11 +139,8 @@
 					<li class="update-entry">
 						<strong>Empty tab option</strong> - create empty tabs when selecting layouts
 					</li>
-					<li class="update-entry">
-						UI updates and improvements
-					</li>
-					<li class="update-entry">
-						Various bug fixes
+					<li class="update-entry latest">
+						<strong>Drag and drop for sorting layouts</strong> - Click and hold on any layout and drag to rearange order to your liking
 					</li>
 				</ul>
 				<div class="update-list-footer bold">
@@ -167,6 +183,6 @@
 				<button class="button primary" id="promo-apply">Close</button>
 			</div>
 		</div>
-
+		<script type="text/javascript" src="js/lib/sortable.js"></script>
 	</body>
 </html>
