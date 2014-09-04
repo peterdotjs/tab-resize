@@ -632,6 +632,7 @@ button.disabled {
 
 .info-modal.modal-box {
 	display: none;
+	z-index: 5;
 	.modal-body {
 		width: 450px;
 		height: 400px;
@@ -723,6 +724,15 @@ body.update {
 
 body.promo {
 	#promo-modal {
+		display: block;
+	}
+	.main-view {
+		min-height: 500px;
+	}
+}
+
+body.warning {
+	#warning-modal {
 		display: block;
 	}
 	.main-view {
@@ -889,4 +899,38 @@ body {
 	border-radius: 4px;
 	padding: 0 0 15px 15px;
 	float: right;
+}
+
+#update-modal.partial-update {
+	.update-entry {
+		display: none;
+		&.latest {
+			display: block;
+			margin-bottom: 50px;
+		}
+	}
+
+	.update-list-footer {
+		display: none;
+	}
+
+	.modal-body {
+		height: 300px;
+	}
+}
+
+#warning-modal {
+	z-index: 10;
+	.header-title {
+		border-bottom: 2px solid grey;
+		padding-bottom: 10px;	
+		margin-bottom: 0px;
+	}
+
+	.update-entry {
+		list-style: none;
+		line-height: 22px;
+		font-size: 16px;
+		margin-bottom: 20px;
+	}
 }

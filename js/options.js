@@ -170,13 +170,14 @@
 			$('body').removeClass('update');
 			$('.main-view').removeClass('inactive');
 			localStorage.setItem('update-seen',true);
+			localStorage.setItem('version','2.1');
 		},
 
 		/**
 		* shows the update modal box
 		*/
-		showUpdateModal: function() {
-			$('#update-modal').trigger('show');
+		showUpdateModal: function(mode) {
+			$('#update-modal').addClass(mode).trigger('show');
 			$('.main-view').addClass('inactive');
 		},
 
@@ -195,7 +196,24 @@
 		showPromoModal: function() {
 			$('#promo-modal').trigger('show');
 			$('.main-view').addClass('inactive');
+		},
+
+		/**
+		* hides the warning modal box
+		*/
+		hideWarningModal: function() {
+			$('body').removeClass('warning');
+			localStorage.setItem('warning-seen',true);
+		},
+
+		/**
+		* shows the warning modal box
+		*/
+		showWarningModal: function() {
+			$('#warning-modal').trigger('show');
+			$('.main-view').addClass('inactive');
 		}
+
 
 	};
 

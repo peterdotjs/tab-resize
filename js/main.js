@@ -132,6 +132,8 @@
 		options.hideUpdateModal();
 	}).on('click','#promo-apply',function(){
 		options.hidePromoModal();
+	}).on('click','#warning-apply',function(){
+		options.hideWarningModal();
 	}).on('click','.signature a',function(){
 		if($(this).hasClass('rate-it')){
 			sendTracking('info-links','rate-it');
