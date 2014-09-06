@@ -88,9 +88,11 @@
 
 			var curVersion = localStorage.getItem('version') || '',
 				isOldVersion = (curVersion === '2.0');
+			
+			var $body = $('body');
+
 			//user has never seen update
 			if(!localStorage.getItem('update-seen') || isOldVersion){
-				var $body = $('body');
 				$body.addClass('update');
 				if(isOldVersion){
 					localStorage.removeItem('update-seen');
@@ -102,7 +104,6 @@
 			}
 
 			if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
-				var $body = $('body');
 				$body.addClass('promo');
 				resize.options.showPromoModal();
 			}

@@ -122,7 +122,7 @@
 		return {
 			width: defaultWidth,
 			height: defaultHeight
-		}
+		};
 	}
 
 	function setDisplayHeight(scale,height){

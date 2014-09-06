@@ -9,20 +9,22 @@ function sendTracking(category, label) {
 	if(!deferTracking && ga) {
 		ga('send','event', category, 'clicked', label || "na");
 	}
-};
+}
 
 if(!deferTracking) {
 	// Standard Google Universal Analytics code
+	/* jshint ignore:start */
 	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
 	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
 	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); // Note: https protocol here
-
+	/* jshint ignore:end */
 	ga('create', 'UA-34217520-2', 'auto');
 	ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
 	ga('require', 'displayfeatures');
 	ga('send', 'pageview', '/index.html');
-};/*
+}
+/*
 * resize.js
 * parent resize object, global variable and object initialization
 */
@@ -58,7 +60,8 @@ if(!deferTracking) {
 
 	window.resize = resize;
 
-})();;/**
+})();
+/**
 * main_view.js
 * handles main view - bulk of resize functionality
 */
@@ -148,9 +151,11 @@ if(!deferTracking) {
 
 			var curVersion = localStorage.getItem('version') || '',
 				isOldVersion = (curVersion === '2.0');
+			
+			var $body = $('body');
+
 			//user has never seen update
 			if(!localStorage.getItem('update-seen') || isOldVersion){
-				var $body = $('body');
 				$body.addClass('update');
 				if(isOldVersion){
 					localStorage.removeItem('update-seen');
@@ -162,7 +167,6 @@ if(!deferTracking) {
 			}
 
 			if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
-				var $body = $('body');
 				$body.addClass('promo');
 				resize.options.showPromoModal();
 			}
@@ -264,7 +268,8 @@ if(!deferTracking) {
 
 	window.resize.main_view = main_view;
 
-})();;/*
+})();
+/*
 * custom_view.js
 * handles custom view menu
 */
@@ -325,7 +330,8 @@ if(!deferTracking) {
 
 	window.resize.custom_view = custom_view;
 
-})();;/*
+})();
+/*
 * options.js
 * handles resize options (single tab, undo resize, default config)
 */
@@ -546,7 +552,8 @@ if(!deferTracking) {
 
 	window.resize.options = options;
 
-})();;/*
+})();
+/*
 * layout.js
 * adds/removes layout from popup
 */
@@ -718,7 +725,8 @@ if(!deferTracking) {
 
 	window.resize.layout = layout;
 
-})();;/**
+})();
+/**
 * utility.js
 * general utility functions used for modal, canvas, etc.
 */
@@ -798,7 +806,8 @@ if(!deferTracking) {
 
 	window.resize.util = util;
 
-})();;/*
+})();
+/*
 * display.js
 * handling display event handling and logic
 */
@@ -922,7 +931,7 @@ if(!deferTracking) {
 		return {
 			width: defaultWidth,
 			height: defaultHeight
-		}
+		};
 	}
 
 	function setDisplayHeight(scale,height){
@@ -975,7 +984,8 @@ if(!deferTracking) {
 		return $template;
 	}
 
-})(window.jQuery);;/**
+})(window.jQuery);
+/**
 * main.js
 * initialization and event handlers
 */
