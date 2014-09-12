@@ -7,7 +7,7 @@ if(!localStorage.getItem('updateBadge')){
 }
 
 if(!localStorage.getItem('version')){
-	localStorage.setItem('version','2.1');
+	localStorage.setItem('version','2.1.1');
 }
 
 var util = {
