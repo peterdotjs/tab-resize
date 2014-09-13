@@ -55,14 +55,18 @@
 						$el.append(template);
 					}
 					//need to start building the dom display
-					resize.currentWindowTabs = windowInfo.tabs;
-					resize.layout.processTabInfo();
-
+					chrome.tabs.query({currentWindow: true, highlighted: true},
+						function (tabs) {
+							if(tabs.length > 1){
+								resize.currentWindowTabs = tabs;
+							} else {
+								resize.currentWindowTabs = windowInfo.tabs;
+							}				
+							resize.layout.processTabInfo();
+					});
 				});
 			});
-
 			//event handling for selecting the display
-			//
 		}
 	};
 
@@ -122,7 +126,7 @@
 		return {
 			width: defaultWidth,
 			height: defaultHeight
-		}
+		};
 	}
 
 	function setDisplayHeight(scale,height){

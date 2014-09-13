@@ -87,10 +87,12 @@
 			}
 
 			var curVersion = localStorage.getItem('version') || '',
-				isOldVersion = (curVersion === '2.0');
+				isOldVersion = (curVersion < '2.1.1' && curVersion !== '');
+			
+			var $body = $('body');
+
 			//user has never seen update
 			if(!localStorage.getItem('update-seen') || isOldVersion){
-				var $body = $('body');
 				$body.addClass('update');
 				if(isOldVersion){
 					localStorage.removeItem('update-seen');
@@ -102,7 +104,6 @@
 			}
 
 			if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
-				var $body = $('body');
 				$body.addClass('promo');
 				resize.options.showPromoModal();
 			}
@@ -183,20 +184,26 @@
 			window.chrome.tabs.query({currentWindow: true},
 				function (tabs) {
 					resize.tabsArray = tabs;
-						window.chrome.tabs.query({currentWindow: true, active: true},
-							function (tab) {
-								resize.currentTab = tab[0];
-								var cb = function(){
-										return backJs.util.processTabs(resize, resize.tabsArray, resize.currentTab.index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito);
-								};
-								if(resize.singleTab){
-									backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index,resize.currentTab.index + 1), cb);
-								} else {
-									backJs.util.setUndoStorage(resize, resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(resize.currentTab.index), cb);
-								}
-
+					window.chrome.tabs.query({currentWindow: true, highlighted: true},
+						function (tab) {
+							resize.currentTab = tab[0];
+							var index = resize.currentTab.index;
+							if(tab.length > 1){
+								resize.tabsArray = tab;
+								index = 0;
 							}
-						);
+
+							var cb = function(){
+									return backJs.util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito);
+							};
+							if(resize.singleTab){
+								backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
+							} else {
+								backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index), cb);
+							}
+
+						}
+					);
 				}
 			);
 		}
