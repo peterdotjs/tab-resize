@@ -21,7 +21,7 @@
 				return;
 			}
 
-			$el = $('#display-setting-layer');
+			$el = $('#display-entry-wrap');
 
 			$el.on('click','.display-entry',function(evt){
 				var $this = $(this),
@@ -30,8 +30,8 @@
 					sz = $this.find('.display-meta').text();
 
 				data[id] = true;
-				$el.find('.display-entry').removeClass('selected');
-				$this.addClass('selected');
+				$el.find('.display-entry').removeClass('selected').attr('tabindex',0);
+				$this.addClass('selected').removeAttr('tabindex');
 				sendTracking('display-select',sz);
 			});
 
@@ -59,9 +59,10 @@
 						function (tabs) {
 							if(tabs.length > 1){
 								resize.currentWindowTabs = tabs;
+								sendTracking('highlight-tabs','click');
 							} else {
 								resize.currentWindowTabs = windowInfo.tabs;
-							}				
+							}
 							resize.layout.processTabInfo();
 					});
 				});
@@ -162,7 +163,7 @@
 	}
 
 	function renderDisplayTemplate(info, id, isPrimary){
-		var $template = $('<div class="display-entry" title="Please select display to use."><div class="display-meta"></div></div>');
+		var $template = $('<div role="button" class="display-entry" title="Please select display to use."><div class="display-meta"></div></div>');
 			$template.css({
 				top: info.top*scale + offsetY,
 				left: info.left*scale + offsetX,
@@ -174,6 +175,8 @@
 
 		if(isPrimary){
 			$template.addClass('selected');
+		} else {
+			$template.attr('tabindex',0);
 		}
 
 		return $template;

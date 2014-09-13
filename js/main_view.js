@@ -88,7 +88,7 @@
 
 			var curVersion = localStorage.getItem('version') || '',
 				isOldVersion = (curVersion < '2.1.1' && curVersion !== '');
-			
+
 			var $body = $('body');
 
 			//user has never seen update
@@ -110,6 +110,18 @@
 
 			$(function(){
 				resize.util.initSortable();
+
+				$('body').on('keypress','[role="button"]',function(evt){
+					if(evt.which === 13 || evt.which === 32){ //enter or spacebar
+						$(this).trigger('click');
+					}
+				}).on('keydown','.modal-box', function(evt){
+					if(evt.which === 27){
+						evt.stopPropagation();
+						evt.preventDefault();
+						$(this).find('button.cancel').trigger('click');
+					}
+				});
 			});
 		},
 

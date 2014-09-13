@@ -153,14 +153,17 @@
 		hideConfirmationModal: function() {
 			$('.main-view').removeClass('inactive');
 			$('.confirmation-modal').addClass('hidden');
+			$('#default-configuration').focus();
 		},
 
 		/**
 		* shows the default layout confirmation modal box
 		*/
 		showConfirmationModal: function() {
-			$('.confirmation-modal').removeClass('hidden').trigger('show');
+			var $confirmation = $('.confirmation-modal');
+			$confirmation.removeClass('hidden').trigger('show');
 			$('.main-view').addClass('inactive');
+			$confirmation.find('#confirmation-cancel').focus();
 		},
 
 		/**

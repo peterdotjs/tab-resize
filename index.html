@@ -10,7 +10,7 @@
 		<div class="main-view">
 			<ul class="resize-container sortable "></ul>
 			<div class="resize-footer">
-				<div id="display-setting" class="hidden-layer monitor-wrap footer-wrap" title="Settings for multiple monitors and alignment preference">
+				<div id="display-setting" tabindex="0" role="button" class="hidden-layer monitor-wrap footer-wrap" title="Settings for multiple monitors and alignment preference" aria-haspopup="true">
 					<div class="display-setting-indicator"></div>
 					<div class="icon icon-screen">
 						<div class="screen"></div>
@@ -19,38 +19,41 @@
 					<span class="glyphicon glyphicon-chevron-down"></span>
 				</div>
 				<div class="button-wrap footer-wrap">
-					<button class="resize-undo primary" id="custom-layout" type="button" title="Create new custom layout">
+					<button class="resize-undo primary" id="custom-layout" type="button" title="Create new custom layout" aria-label="Create new custom layout" aria-haspopup="true">
 						<span class="glyphicon glyphicon-plus"></span>
 					</button>
-					<button class="resize-undo secondary" id="default-configuration" type="button" title="Reset to default layouts">
+					<button class="resize-undo secondary" id="default-configuration" type="button" title="Reset to default layouts" aria-label="Reset to default layouts" aria-haspopup="true">
 						<span class="glyphicon glyphicon-refresh"></span>
 					</button>
-					<button class="resize-undo secondary disabled" id="undo-layout" type="button" title="Undo previous resize">Undo</button>
+					<button class="resize-undo secondary disabled" id="undo-layout" type="button" title="Undo previous resize" aria-label="Undo previous resize">Undo</button>
 				</div>
-
-				<div class="checkbox-container" title="Single Tab Mode - only CURRENT tab/window is resized, tabs will NOT be split">
-					<label for="checkbox-single-tab" class="label single-tab">
-						<input type="checkbox" class="checkbox" id="checkbox-single-tab"></input>
-						<span>Single Tab</span>
-					</label>
-				</div>
-				<div class="checkbox-container" title="Empty Tab Mode - if required, empty tabs are created to complete layouts">
-					<label for="checkbox-empty-tab" class="label empty-tab">
-						<input type="checkbox" class="checkbox" id="checkbox-empty-tab"></input>
-						<span>Empty Tab</span>
-					</label>
+				<div class="checkbox-wrap">
+					<div class="checkbox-container" title="Empty Tab Mode - if required, empty tabs are created to complete layouts">
+						<label for="checkbox-empty-tab" class="label empty-tab">
+							<input type="checkbox" class="checkbox" id="checkbox-empty-tab"></input>
+							<span>Empty Tab</span>
+						</label>
+					</div>
+					<div class="checkbox-container" title="Single Tab Mode - only CURRENT tab/window is resized, tabs will NOT be split">
+						<label for="checkbox-single-tab" class="label single-tab">
+							<input type="checkbox" class="checkbox" id="checkbox-single-tab"></input>
+							<span>Single Tab</span>
+						</label>
+					</div>
 				</div>
 			</div>
 			<div id="display-setting-layer">
-				<div class="signature"><a title="Developed by peterdotjs - http://peterdotjs.com" target="_blank" href="http://peterdotjs.com">peterdotjs</a><a title="If you like Tab Resize you can help me by rating it &#9733; 5 stars and leaving a nice little review" class="rate-it" target="_blank" href="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc/reviews">&#9733; rate it</a></div>
-				<div class="switch-toggle switch-candy">
-					<input id="left" name="view" type="radio" checked>
+				<div class="switch-toggle switch-candy" tabindex="0" role="button">
+					<input tabindex="-1" id="left" name="view" type="radio" checked>
 					<label for="left" title="Left align tabs during resize">Left Align</label>
-					<input id="right" name="view" type="radio">
+					<input tabindex="-1" id="right" name="view" type="radio">
 					<label for="right" title="Right align tabs during resize">Right Align</label>
 					<a></a>
 				</div>
 				<div class="display-settings-divider"></div>
+				<div id="display-entry-wrap">
+				</div>
+				<div class="signature"><a title="Developed by peterdotjs - http://peterdotjs.com" target="_blank" href="http://peterdotjs.com">peterdotjs</a><a title="If you like Tab Resize you can help me by rating it &#9733; 5 stars and leaving a nice little review" class="rate-it" target="_blank" href="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc/reviews">&#9733; rate it</a></div>
 			</div>
 		</div>
 		<div class="custom-view modal-box hidden">
@@ -73,9 +76,9 @@
 					</div>
 				</div>
 			</div>
-			<div class = "input-container-footer modal-footer">
+			<div class="input-container-footer modal-footer">
+				<button class="button cancel" id="input-cancel">Cancel</button>
 				<button class="button primary disabled" id="input-save">Save</button>
-				<button class="button" id="input-cancel">Cancel</button>
 			</div>
 		</div>
 		<div class="confirmation-modal modal-box hidden">
@@ -86,8 +89,8 @@
 				</div>
 			</div>
 			<div class="confirmation-footer modal-footer">
+				<button class="button cancel" id="confirmation-cancel">Cancel</button>
 				<button class="button primary" id="confirmation-apply">Apply</button>
-				<button class="button" id="confirmation-cancel">Cancel</button>
 			</div>
 		</div>
 
@@ -164,7 +167,7 @@
 					</li>
 					<li class="update-entry">
 						Search results in one location. Navigate to links in just a few keystrokes.
-					</li>					
+					</li>
 					<li class="update-entry">
 						Case match, link search, highlight all toggle, highlight and then search.
 					</li>

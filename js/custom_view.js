@@ -15,6 +15,7 @@
 			$('.custom-view').addClass('hidden');
 			$('.main-view').removeClass('inactive');
 			resize.util.clearCanvas();
+			$('#custom-layout').focus();
 		},
 
 		/**
