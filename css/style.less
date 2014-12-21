@@ -132,7 +132,6 @@ input {
 }
 
 button {
-	outline: none;
 	color: black;
 	padding: 5px 10px;
 	font-size: 13px;
@@ -140,7 +139,7 @@ button {
 	font-family: Verdana, Geneva, sans-serif;
 	background: -webkit-linear-gradient(top, #ffffff 0%, #f1f1f1 50%, #f6f6f6 100%);
 	border: 1px solid #707070;
-	&:hover {
+	&:hover, &:focus {
 		background: -webkit-linear-gradient(top, #eeeeee 0%,#cccccc 100%);
 		cursor: pointer;
 		.box-shadow(0px 0px 3px #707070);
@@ -151,7 +150,7 @@ button {
 		color: white;
 		border: 1px solid #333;
 		background: -webkit-linear-gradient(top, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 39%,#2c2c2c 50%,#000000 51%,#111111 60%,#2b2b2b 76%,#1c1c1c 91%,#131313 100%);
-		&:hover {
+		&:hover, &:focus {
 			.box-shadow(0px 0px 3px #707070);
 			background: -webkit-linear-gradient(top, #4c4c4c 0%,#595959 12%,#666666 25%,#474747 100%,#1c1c1c 100%,#2b2b2b 100%,#111111 100%,#2c2c2c 100%,#000000 100%,#131313 100%);
 		}
@@ -186,9 +185,8 @@ button.disabled {
 		border-top: 1px solid #c0c0c0;
 		overflow: hidden;
 		background: #E7F3FD;
-
+		text-align: right;
 		.button {
-			float: right;
 			margin: 6px 10px 6px 0;
 		}
 	}
@@ -300,7 +298,7 @@ button.disabled {
 
 			}
 
-			&:hover {
+			&:hover, &:focus {
 
 				cursor: pointer;
 				border: 1px solid #D3E3F7;
@@ -404,40 +402,44 @@ button.disabled {
 			float: left;
 		}
 
-		.checkbox-container {
-			.font-family();
-			overflow: hidden;
+		.checkbox-wrap {
 			display: inline-block;
-			border-left: 3px solid silver;
-			float:right;
-			background: white;
+			float: right;
+			.checkbox-container {
+				.font-family();
+				overflow: hidden;
+				display: inline-block;
+				border-left: 3px solid silver;
+				float:left;
+				background: white;
 
-			label {
-				font-size: 14px;
-				display: block;
-				padding: 11px 7px 13px 10px;
-				cursor: pointer;
-				&.selected {
-					background: @active-color-checkbox;
+				label {
+					font-size: 14px;
+					display: block;
+					padding: 11px 7px 13px 10px;
+					cursor: pointer;
+					&.selected {
+						background: @active-color-checkbox;
+					}
+
+					&:hover, &:focus {
+						background: @hover-color;
+					}
+
+					input {
+						.border-radius(3px);
+						vertical-align: top;
+						width: 18px;
+						height: 18px;
+					}
+
+					span {
+						position: relative;
+						top: 1px;
+						left: -2px;
+					}
+
 				}
-
-				&:hover {
-					background: @hover-color;
-				}
-
-				input {
-					.border-radius(3px);
-					vertical-align: top;
-					width: 18px;
-					height: 18px;
-				}
-
-				span {
-					position: relative;
-					top: 1px;
-					left: -2px;
-				}
-
 			}
 		}
 	}
@@ -508,14 +510,14 @@ button.disabled {
 
 			cursor: default;
 
-			&:hover {
+			&:hover, &:focus {
 				background: @active-color-display;
 				border-color: @active-display-border;
 				.box-shadow(inset 0px 0px 0px 4px @active-display-border);
 			}
 		}
 
-		&:hover {
+		&:hover, &:focus {
 			z-index: 3;
 			background: @hover-color;
 			border-color: @hover-display-border;
@@ -923,7 +925,7 @@ body {
 	z-index: 10;
 	.header-title {
 		border-bottom: 2px solid grey;
-		padding-bottom: 10px;	
+		padding-bottom: 10px;
 		margin-bottom: 0px;
 	}
 

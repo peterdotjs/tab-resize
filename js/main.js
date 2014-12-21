@@ -63,6 +63,13 @@
 	}).on('click','#input-save',function(){
 		custom_view.handleCustomSave();
 		sendTracking('custom-layout','apply');
+	}).on('keypress','.custom-view',function(evt){
+		if(evt.which === 13){//enter
+			var $saveBtn = $('#input-save');
+			if(!$saveBtn.hasClass('disabled')){
+				$saveBtn.trigger('click');
+			}
+		}
 	}).on('click','body',function(){
 		if(!$('.custom-view').hasClass('hidden')){
 			util.clearCanvas();
@@ -103,6 +110,12 @@
 			if(val === 0 || isNaN(val)){
 				$this.attr('value','');
 				$('#input-save').addClass('disabled');
+			} else {
+				if($this.attr('id') === 'numRows'){
+					$('#numCols').focus();
+				} else {
+					$('#numRows').focus();
+				}
 			}
 		}
 	}).on('change','#checkbox-single-tab', function(){
@@ -122,12 +135,16 @@
 		options.processDisplayLayerSelection(isDisplayed);
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
 	}).on('click','#display-setting-layer .switch-toggle input',function(evt,deferTracking){
+		evt.stopPropagation();
 		var alignment = $(this).attr('id');
 		$('.switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
 		options.processAlignmentSelection(alignment);
 		if(!deferTracking){
 			sendTracking('alignment',alignment);
 		}
+	}).on('click','#display-setting-layer .switch-toggle',function(){ //toggle alignment
+		var curAlignment = $(this).find('input:checked').attr('id');
+		$(curAlignment === 'left' ? '#right' : '#left').trigger('click');
 	}).on('click','#update-apply',function(){
 		options.hideUpdateModal();
 	}).on('click','#promo-apply',function(){

@@ -12,7 +12,7 @@
 			var $layouts = $('.resize-selector'),
 				length = $layouts.length,
 				index = 0,
-				currentLayouts = [];	
+				currentLayouts = [];
 
 			for(;index<length;index++){
 				currentLayouts.push($layouts.eq(index).attr('data-selector-type'));
@@ -55,7 +55,7 @@
 			}
 
 			var container = $('.resize-container');
-			var selectorTemplate = '<li class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + layoutType + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
+			var selectorTemplate = '<li class="resize-selector-container" tabindex="1" role="button"><div class="close-button"></div><div class="layout-title">' + layoutType + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
 
 			if(prepend){
 				container.prepend(selectorTemplate);

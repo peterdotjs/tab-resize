@@ -151,7 +151,7 @@ if(!deferTracking) {
 
 			var curVersion = localStorage.getItem('version') || '',
 				isOldVersion = (curVersion < '2.1.1' && curVersion !== '');
-			
+
 			var $body = $('body');
 
 			//user has never seen update
@@ -173,6 +173,18 @@ if(!deferTracking) {
 
 			$(function(){
 				resize.util.initSortable();
+
+				$('body').on('keypress','[role="button"]',function(evt){
+					if(evt.which === 13 || evt.which === 32){ //enter or spacebar
+						$(this).trigger('click');
+					}
+				}).on('keydown','.modal-box', function(evt){
+					if(evt.which === 27){
+						evt.stopPropagation();
+						evt.preventDefault();
+						$(this).find('button.cancel').trigger('click');
+					}
+				});
 			});
 		},
 
@@ -292,6 +304,7 @@ if(!deferTracking) {
 			$('.custom-view').addClass('hidden');
 			$('.main-view').removeClass('inactive');
 			resize.util.clearCanvas();
+			$('#custom-layout').focus();
 		},
 
 		/**
@@ -492,14 +505,17 @@ if(!deferTracking) {
 		hideConfirmationModal: function() {
 			$('.main-view').removeClass('inactive');
 			$('.confirmation-modal').addClass('hidden');
+			$('#default-configuration').focus();
 		},
 
 		/**
 		* shows the default layout confirmation modal box
 		*/
 		showConfirmationModal: function() {
-			$('.confirmation-modal').removeClass('hidden').trigger('show');
+			var $confirmation = $('.confirmation-modal');
+			$confirmation.removeClass('hidden').trigger('show');
 			$('.main-view').addClass('inactive');
+			$confirmation.find('#confirmation-cancel').focus();
 		},
 
 		/**
@@ -573,7 +589,7 @@ if(!deferTracking) {
 			var $layouts = $('.resize-selector'),
 				length = $layouts.length,
 				index = 0,
-				currentLayouts = [];	
+				currentLayouts = [];
 
 			for(;index<length;index++){
 				currentLayouts.push($layouts.eq(index).attr('data-selector-type'));
@@ -616,7 +632,7 @@ if(!deferTracking) {
 			}
 
 			var container = $('.resize-container');
-			var selectorTemplate = '<li class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + layoutType + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
+			var selectorTemplate = '<li class="resize-selector-container" tabindex="1" role="button"><div class="close-button"></div><div class="layout-title">' + layoutType + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
 
 			if(prepend){
 				container.prepend(selectorTemplate);
@@ -836,7 +852,7 @@ if(!deferTracking) {
 				return;
 			}
 
-			$el = $('#display-setting-layer');
+			$el = $('#display-entry-wrap');
 
 			$el.on('click','.display-entry',function(evt){
 				var $this = $(this),
@@ -845,8 +861,8 @@ if(!deferTracking) {
 					sz = $this.find('.display-meta').text();
 
 				data[id] = true;
-				$el.find('.display-entry').removeClass('selected');
-				$this.addClass('selected');
+				$el.find('.display-entry').removeClass('selected').attr('tabindex',0);
+				$this.addClass('selected').removeAttr('tabindex');
 				sendTracking('display-select',sz);
 			});
 
@@ -874,9 +890,10 @@ if(!deferTracking) {
 						function (tabs) {
 							if(tabs.length > 1){
 								resize.currentWindowTabs = tabs;
+								sendTracking('highlight-tabs','click');
 							} else {
 								resize.currentWindowTabs = windowInfo.tabs;
-							}				
+							}
 							resize.layout.processTabInfo();
 					});
 				});
@@ -977,7 +994,7 @@ if(!deferTracking) {
 	}
 
 	function renderDisplayTemplate(info, id, isPrimary){
-		var $template = $('<div class="display-entry" title="Please select display to use."><div class="display-meta"></div></div>');
+		var $template = $('<div role="button" class="display-entry" title="Please select display to use."><div class="display-meta"></div></div>');
 			$template.css({
 				top: info.top*scale + offsetY,
 				left: info.left*scale + offsetX,
@@ -989,6 +1006,8 @@ if(!deferTracking) {
 
 		if(isPrimary){
 			$template.addClass('selected');
+		} else {
+			$template.attr('tabindex',0);
 		}
 
 		return $template;
@@ -1060,6 +1079,13 @@ if(!deferTracking) {
 	}).on('click','#input-save',function(){
 		custom_view.handleCustomSave();
 		sendTracking('custom-layout','apply');
+	}).on('keypress','.custom-view',function(evt){
+		if(evt.which === 13){//enter
+			var $saveBtn = $('#input-save');
+			if(!$saveBtn.hasClass('disabled')){
+				$saveBtn.trigger('click');
+			}
+		}
 	}).on('click','body',function(){
 		if(!$('.custom-view').hasClass('hidden')){
 			util.clearCanvas();
@@ -1100,6 +1126,12 @@ if(!deferTracking) {
 			if(val === 0 || isNaN(val)){
 				$this.attr('value','');
 				$('#input-save').addClass('disabled');
+			} else {
+				if($this.attr('id') === 'numRows'){
+					$('#numCols').focus();
+				} else {
+					$('#numRows').focus();
+				}
 			}
 		}
 	}).on('change','#checkbox-single-tab', function(){
@@ -1119,12 +1151,16 @@ if(!deferTracking) {
 		options.processDisplayLayerSelection(isDisplayed);
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
 	}).on('click','#display-setting-layer .switch-toggle input',function(evt,deferTracking){
+		evt.stopPropagation();
 		var alignment = $(this).attr('id');
 		$('.switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
 		options.processAlignmentSelection(alignment);
 		if(!deferTracking){
 			sendTracking('alignment',alignment);
 		}
+	}).on('click','#display-setting-layer .switch-toggle',function(){ //toggle alignment
+		var curAlignment = $(this).find('input:checked').attr('id');
+		$(curAlignment === 'left' ? '#right' : '#left').trigger('click');
 	}).on('click','#update-apply',function(){
 		options.hideUpdateModal();
 	}).on('click','#promo-apply',function(){
