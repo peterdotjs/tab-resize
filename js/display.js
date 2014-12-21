@@ -43,7 +43,7 @@
 						top: windowInfo.top + 100
 					};
 
-					var displayJSON = processInfo(displayInfo,currentWindowInfo),
+					var displayJSON = backJs.util.displayInfoFormatter(displayInfo,currentWindowInfo),
 						template,
 						currentDisplay;
 
@@ -132,33 +132,6 @@
 	function setDisplayHeight(scale,height){
 		var $displayLayer = $('#display-setting-layer');
 		$displayLayer.height(scale*height);
-	}
-
-	//format the displayInfo
-	function processInfo(displayInfo,currentWindowInfo){
-		var index = 0,
-			length = displayInfo.length,
-			info,
-			displayJSON = { //may need to check for some mirroring property, currently only one monitor is display when mirroring
-				displays: [],
-				primaryIndex: 0
-			};
-
-		for(;index<length;index++){
-			info = displayInfo[index];
-			info.id = String(index); //setting index of display
-			displayJSON.displays.push({
-				workArea: info.workArea,
-				isEnabled: info.isEnabled,
-				id: info.id
-			});
-
-			if(currentWindowInfo.left > info.workArea.left && currentWindowInfo.left < info.workArea.left + info.workArea.width && currentWindowInfo.top > info.workArea.top && currentWindowInfo.top < info.workArea.top + info.workArea.height){
-				displayJSON.primaryIndex = index;
-			}
-
-		}
-		return displayJSON;
 	}
 
 	function renderDisplayTemplate(info, id, isPrimary){

@@ -177,5 +177,129 @@ var util = {
 			localStorage.setItem('lastTab',JSON.stringify(currentLastTab));
 			chrome.runtime.sendMessage('enable-undo');
 		}
+	},
+
+	//format the displayInfo
+	displayInfoFormatter: function(displayInfo,currentWindowInfo){
+		var index = 0,
+			length = displayInfo.length,
+			info,
+			displayJSON = { //may need to check for some mirroring property, currently only one monitor is display when mirroring
+				displays: [],
+				primaryIndex: 0
+			};
+
+		for(;index<length;index++){
+			info = displayInfo[index];
+			info.id = String(index); //setting index of display
+			displayJSON.displays.push({
+				workArea: info.workArea,
+				isEnabled: info.isEnabled,
+				id: info.id
+			});
+
+			if(currentWindowInfo.left > info.workArea.left && currentWindowInfo.left < info.workArea.left + info.workArea.width && currentWindowInfo.top > info.workArea.top && currentWindowInfo.top < info.workArea.top + info.workArea.height){
+				displayJSON.primaryIndex = index;
+			}
+
+		}
+		return displayJSON;
 	}
+
 };
+
+function getResizeParams(command){
+	var _command = command.split('-');
+	return {
+		rows: Number(_command[2]),
+		cols: Number(_command[3])
+	};
+}
+
+/**
+* resizes tabs to the right of selected tab
+* @param {number} rows number of rows in resize layout
+* @param {number} cols number of columns in resize layout
+*/
+function resizeTabs(displayInfo,rows,cols) {
+
+	var resize = {};
+
+	resize.numRows = rows;
+	resize.numCols = cols;
+
+	/*
+	* split width of screen equally depending on number of cells
+	* create new window unable to take non integers for width and height
+	*/
+
+	var data = displayInfo;
+
+	if(!$.isEmptyObject(data)){
+		resize.width = Math.round(data.width/resize.numCols);
+		resize.height = Math.round(data.height/resize.numRows);
+		resize.offsetX = data.left;
+		resize.offsetY = data.top;
+		resize.fullWidth = data.width;
+		resize.fullHeight = data.height;
+	} else {
+		resize.width = Math.round(window.screen.availWidth/resize.numCols);
+		resize.height  = Math.round(window.screen.availHeight/resize.numRows);
+		resize.offsetX = 0;
+		resize.offsetY = 0;
+		resize.fullWidth = window.screen.availWidth;
+		resize.fullHeight = window.screen.availHeight;
+	}
+
+	var that = this;
+	window.chrome.tabs.query({currentWindow: true},
+		function (tabs) {
+			resize.tabsArray = tabs;
+			window.chrome.tabs.query({currentWindow: true, highlighted: true},
+				function (tab) {
+					resize.currentTab = tab[0];
+					var index = resize.currentTab.index;
+					if(tab.length > 1){
+						resize.tabsArray = tab;
+						index = 0;
+					}
+
+					var cb = function(){
+							return util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito);
+					};
+					if(resize.singleTab){
+						util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
+					} else {
+						util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index), cb);
+					}
+
+				}
+			);
+		}
+	);
+}
+
+chrome.commands.onCommand.addListener(function callback(command) {
+
+	if(command.indexOf('tab-resize') === -1){
+		return;
+	}
+
+	if(chrome.system && chrome.system.display){
+		chrome.system.display.getInfo(function(displayInfo){
+			chrome.windows.getCurrent(function(windowInfo){
+
+				var currentWindowInfo = {
+					left: windowInfo.left + windowInfo.width - 100,
+					top: windowInfo.top + 100
+				};
+
+				var displayJSON = util.displayInfoFormatter(displayInfo,currentWindowInfo),
+					resizeParams = getResizeParams(command); 
+
+				resizeTabs(displayJSON.displays[displayJSON.primaryIndex].workArea,resizeParams.rows,resizeParams.cols);
+			});
+		});
+	}
+});
+

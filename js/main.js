@@ -140,6 +140,8 @@
 		} else {
 			sendTracking('info-links','author');
 		}
+	}).on('click','a.keyboard-shortcuts', function(){
+		chrome.tabs.create({url:'chrome://extensions/configureCommands'});
 	});
 
 })();

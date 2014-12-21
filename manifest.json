@@ -18,5 +18,40 @@
   },
   "offline_enabled": true,
   "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
-  "options_page": "options.html"
+  "options_page": "options.html",
+  "commands": {
+    "tab-resize-1-1": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+1"
+      },
+      "description": "Resize 1x1 layout"
+    },
+    "tab-resize-1-2": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+2"
+      },
+      "description": "Resize 1x2 layout"
+    },
+    "tab-resize-2-1": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+3"
+      },
+      "description": "Resize 2x1 layout"
+    },
+    "tab-resize-2-2": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+4"
+      },
+      "description": "Resize 2x2 layout"
+    },
+    "tab-resize-1-3": {
+      "description": "Resize 1x3 layout"
+    },
+    "tab-resize-3-1": {
+      "description": "Resize 3x1 layout"
+    },
+    "tab-resize-1-3": {
+      "description": "Resize 1x3 layout"
+    }
+  }
  }
