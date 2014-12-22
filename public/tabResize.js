@@ -45,7 +45,7 @@ if(!deferTracking) {
 		canvasWidth: 100,
 		currentLayouts: null,
 		defaultLayouts: {'layoutItems':["1x1","1x2","2x1","2x2"]},
-		layoutSprites: {'layoutItems':["1x1","1x2","2x1","2x2","1x3","3x1"]},
+		layoutSprites: {'layoutItems':["1x1","1x2","2x1","2x2","1x3","3x1","6x4-scale-horizontal","7x3-scale-horizontal", "6x4-scale-vertical", "7x3-scale-vertical"]},
 		maxSelectorsPerLine: 5,
 		maxSelectorContainerWidth: 156,
 		maxSelectorContainerHeight: 156,
@@ -318,7 +318,8 @@ if(!deferTracking) {
 		* performs save of new layout
 		*/
 		handleCustomSave: function(){
-			var option = $('.custom-view').hasClass('scaled') ? 'scaled' : 'fixed';
+			var option = $('.custom-view').hasClass('scaled') ? 'scaled' : 'fixed',
+				layoutType;
 
 			if(option === 'fixed'){
 				var customRows = $('#numRows').val(),
@@ -329,15 +330,20 @@ if(!deferTracking) {
 				if(!Number(customRows) || !Number(customCols) || Number(customRows) < 1 || Number(customCols) < 1){
 					//window.alert('Please enter valid input values.');
 				} else {
-					var layoutType = customRows + 'x' + customCols;
+					layoutType = customRows + 'x' + customCols;
 					resize.layout.addLayout(layoutType);
 					resize.layout.processTabInfo($('.layout-' + layoutType));
 					this.hideCustomMenu();
 				}				
 			} else {
+				var orientation = getScaledOrientation(),
+					scaledOption = getScaledOption();
 				
+				layoutType = scaledOption[0] + 'x' + scaledOption[1] + '-scale-' + orientation;
+				resize.layout.addLayout(layoutType);
+				resize.layout.processTabInfo($('.layout-' + layoutType));
+				this.hideCustomMenu();
 			}
-
 
 		},
 
@@ -637,17 +643,23 @@ if(!deferTracking) {
 		* adds layout markup to popup
 		* @param {string} layoutType Type of layout (ROWxCOL).
 		* @param {boolean} prepend Prepend layout to layout container if true, appends if false
+		* @param {string} layoutText Label Text for layout - default takes layoutType
 		*/
 		addLayoutMarkup: function(layoutType, prepend) {
 
-			var defaultSprite = "layout-default";
+			var defaultSprite = "layout-default",
+				layoutText = '';
 
 			if(resize.layoutSprites.layoutItems.indexOf(layoutType) !== -1 || layoutType === '1x1'){
 				defaultSprite = "layout-" + layoutType;
 			}
 
+			if(layoutType.indexOf('scale') !== -1){
+				layoutText = layoutType.split('-')[0].split('x').join(':');
+			}
+
 			var container = $('.resize-container');
-			var selectorTemplate = '<li class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + layoutType + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
+			var selectorTemplate = '<li class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + (layoutText || layoutType)  + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
 
 			if(prepend){
 				container.prepend(selectorTemplate);
@@ -721,16 +733,22 @@ if(!deferTracking) {
 				for(;index<length;index++){
 					innerHtml = '';
 					$curLayout = layoutList.eq(index);
-					layoutType = $curLayout.attr('data-selector-type').split('x');
-					rows = layoutType[0];
-					cols = layoutType[1];
-					tabNumber = 1;
-					for(var y=0; y<rows; y++){
-						for(var x=0; x<cols; x++){
-							//add in markup - styles will be added in less
-							innerHtml += '<div title="New Tab" class="tab-layer tab-layer-'+ (tabNumber++) + '"><div class="fav-icon"></div></div>';
-						}
+
+					if($curLayout.attr('data-selector-type').indexOf('scale') === -1){
+						layoutType = $curLayout.attr('data-selector-type').split('x');
+						rows = layoutType[0];
+						cols = layoutType[1];
+						tabNumber = 1;
+						for(var y=0; y<rows; y++){
+							for(var x=0; x<cols; x++){
+								//add in markup - styles will be added in less
+								innerHtml += '<div title="New Tab" class="tab-layer tab-layer-'+ (tabNumber++) + '"><div class="fav-icon"></div></div>';
+							}
+						}						
+					} else {
+						innerHtml += '<div title="New Tab" class="tab-layer tab-layer-1"><div class="fav-icon"></div></div>' + '<div title="New Tab" class="tab-layer tab-layer-2"><div class="fav-icon"></div></div>';
 					}
+
 					$curLayout.html(innerHtml);
 				}
 

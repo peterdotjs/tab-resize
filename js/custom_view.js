@@ -41,7 +41,8 @@
 		* performs save of new layout
 		*/
 		handleCustomSave: function(){
-			var option = $('.custom-view').hasClass('scaled') ? 'scaled' : 'fixed';
+			var option = $('.custom-view').hasClass('scaled') ? 'scaled' : 'fixed',
+				layoutType;
 
 			if(option === 'fixed'){
 				var customRows = $('#numRows').val(),
@@ -52,14 +53,19 @@
 				if(!Number(customRows) || !Number(customCols) || Number(customRows) < 1 || Number(customCols) < 1){
 					//window.alert('Please enter valid input values.');
 				} else {
-					var layoutType = customRows + 'x' + customCols;
+					layoutType = customRows + 'x' + customCols;
 					resize.layout.addLayout(layoutType);
 					resize.layout.processTabInfo($('.layout-' + layoutType));
 					this.hideCustomMenu();
 				}				
 			} else {
 				var orientation = getScaledOrientation(),
-					option = getScaledOption();
+					scaledOption = getScaledOption();
+				
+				layoutType = scaledOption[0] + 'x' + scaledOption[1] + '-scale-' + orientation;
+				resize.layout.addLayout(layoutType);
+				resize.layout.processTabInfo($('.layout-' + layoutType));
+				this.hideCustomMenu();
 			}
 
 		},

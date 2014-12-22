@@ -45,17 +45,23 @@
 		* adds layout markup to popup
 		* @param {string} layoutType Type of layout (ROWxCOL).
 		* @param {boolean} prepend Prepend layout to layout container if true, appends if false
+		* @param {string} layoutText Label Text for layout - default takes layoutType
 		*/
 		addLayoutMarkup: function(layoutType, prepend) {
 
-			var defaultSprite = "layout-default";
+			var defaultSprite = "layout-default",
+				layoutText = '';
 
 			if(resize.layoutSprites.layoutItems.indexOf(layoutType) !== -1 || layoutType === '1x1'){
 				defaultSprite = "layout-" + layoutType;
 			}
 
+			if(layoutType.indexOf('scale') !== -1){
+				layoutText = layoutType.split('-')[0].split('x').join(':');
+			}
+
 			var container = $('.resize-container');
-			var selectorTemplate = '<li class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + layoutType + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
+			var selectorTemplate = '<li class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + (layoutText || layoutType)  + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
 
 			if(prepend){
 				container.prepend(selectorTemplate);
@@ -129,16 +135,22 @@
 				for(;index<length;index++){
 					innerHtml = '';
 					$curLayout = layoutList.eq(index);
-					layoutType = $curLayout.attr('data-selector-type').split('x');
-					rows = layoutType[0];
-					cols = layoutType[1];
-					tabNumber = 1;
-					for(var y=0; y<rows; y++){
-						for(var x=0; x<cols; x++){
-							//add in markup - styles will be added in less
-							innerHtml += '<div title="New Tab" class="tab-layer tab-layer-'+ (tabNumber++) + '"><div class="fav-icon"></div></div>';
-						}
+
+					if($curLayout.attr('data-selector-type').indexOf('scale') === -1){
+						layoutType = $curLayout.attr('data-selector-type').split('x');
+						rows = layoutType[0];
+						cols = layoutType[1];
+						tabNumber = 1;
+						for(var y=0; y<rows; y++){
+							for(var x=0; x<cols; x++){
+								//add in markup - styles will be added in less
+								innerHtml += '<div title="New Tab" class="tab-layer tab-layer-'+ (tabNumber++) + '"><div class="fav-icon"></div></div>';
+							}
+						}						
+					} else {
+						innerHtml += '<div title="New Tab" class="tab-layer tab-layer-1"><div class="fav-icon"></div></div>' + '<div title="New Tab" class="tab-layer tab-layer-2"><div class="fav-icon"></div></div>';
 					}
+
 					$curLayout.html(innerHtml);
 				}
 
