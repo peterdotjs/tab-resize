@@ -532,6 +532,83 @@ button.disabled {
 
 .custom-view {
 
+	.modal-body, .modal-footer {
+		position: relative;
+	}
+
+	.scaled-layout-orientation {
+		display: none;
+	    position: absolute;
+	    right: 21px;
+	    top: 12px;
+	    width: 200px;
+	    height: 30px;		
+	}
+
+	.layout-option {
+	    position: absolute;
+	    left: 20px;
+	    top: 6px;
+	    width: 180px;
+	    height: 25px;	
+	    
+	    label {
+		    font-size: 14px;
+		    line-height: 25px;	    	
+	    }
+	}
+
+	.scaled-input-container {
+		display: none;
+	    position: absolute;                                      
+	    right: -3px;
+	    top: 60px;
+
+	    .scaled-input {
+			display: inline-block;
+			width: 70px;
+			height: 70px;
+			border-radius: 3px;
+			margin-right: 35px;
+			border: 2px solid grey;
+			text-align: center;
+			font-size: 19px;
+			cursor: pointer;
+			line-height: 70px;
+
+			&.selected {
+				background: #eee;
+			}
+	    }
+	}
+
+	&.scaled {
+		.scaled-layout-orientation {
+			display: block;
+		}
+
+		.input-container {
+			visibility: hidden;
+		}
+
+		.table-container {
+			.table-label-top, .table-label-left {
+				visibility: hidden;
+			}
+		}
+
+		.scaled-input-container {
+			display: block;
+		}
+
+		.modal-footer {
+			button.disabled {
+				pointer-events: auto;
+				opacity: 1;
+			}
+		}
+	}
+
 	.table-container {
 		display: inline-block;
 		position: relative;

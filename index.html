@@ -4,7 +4,7 @@
 		<title>Resize</title>
 		<link rel="stylesheet" href="public/style.css" type="text/css">
 		<script type="text/javascript" src="js/lib/jquery.min.js"></script>
-		<script type="text/javascript" src="public/tabResize.min.js"></script>
+		<script type="text/javascript" src="public/tabResize.js"></script>
 	</head>
 	<body>
 		<div class="main-view">
@@ -55,6 +55,13 @@
 		</div>
 		<div class="custom-view modal-box hidden">
 			<div class="modal-body">
+				<div class="switch-toggle switch-candy scaled-layout-orientation">
+					<input id="horizontal-scaled" name="scaled-layout-orientation" type="radio" checked="">
+					<label for="horizontal-scaled" title="horizontal scaled layout orientation">Horizontal</label>
+					<input id="vertical-scaled" name="scaled-layout-orientation" type="radio">
+					<label for="vertical-scaled" title="vertical scaled layout orientation">Vertical</label>
+					<a></a>
+				</div>
 				<div class="table-container">
 					<div class="table-label-top">columns</div>
 					<div class="table-label-left">rows</div>
@@ -72,8 +79,19 @@
 						<input type="text" class="custom-value columns" id="numCols" maxlength='1'>
 					</div>
 				</div>
+				<ul class="scaled-input-container">
+					<li class="scaled-input selected" data-type="6-4">6:4</li>
+					<li class="scaled-input" data-type="7-3">7:3</li>
+				</ul>
 			</div>
 			<div class = "input-container-footer modal-footer">
+				<div class="switch-toggle switch-candy layout-option">
+					<input id="fixed" name="layout-option" type="radio" checked="">
+					<label for="fixed" title="Fixed layout-option">Fixed</label>
+					<input id="scaled" name="layout-option" type="radio">
+					<label for="scaled" title="Scaled layout-option">Scaled</label>
+					<a></a>
+				</div>
 				<button class="button primary disabled" id="input-save">Save</button>
 				<button class="button" id="input-cancel">Cancel</button>
 			</div>

@@ -123,7 +123,7 @@
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
 	}).on('click','#display-setting-layer .switch-toggle input',function(evt,deferTracking){
 		var alignment = $(this).attr('id');
-		$('.switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
+		$('#display-setting-layer .switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
 		options.processAlignmentSelection(alignment);
 		if(!deferTracking){
 			sendTracking('alignment',alignment);
@@ -142,6 +142,32 @@
 		}
 	}).on('click','a.keyboard-shortcuts', function(){
 		chrome.tabs.create({url:'chrome://extensions/configureCommands'});
+	}).on('click','.custom-view .switch-toggle.layout-option input', function(){
+		var option = $(this).attr('id'),
+			changed = false,
+			$customView = $('.custom-view');
+
+		if(option === 'scaled' && !$customView.hasClass('scaled') || option !== 'scaled' && $customView.hasClass('scaled')){
+			changed = true;
+		}
+			
+		$customView[(option === 'scaled') ? 'addClass' : 'removeClass']('scaled');
+
+		if(changed){
+			util.clearCanvas();
+			custom_view.clearCustomValues();
+			if(option === 'scaled'){
+				custom_view.showScaledMenu();		
+			}
+		}
+
+	}).on('click', '.custom-view .scaled-input', function(){
+		var $this = $(this);
+		$('.custom-view .scaled-input').removeClass('selected');
+		$this.addClass('selected');
+		custom_view.showScaledMenu();
+	}).on('click','.custom-view .switch-toggle.scaled-layout-orientation input', function(){
+		custom_view.showScaledMenu();
 	});
 
 })();

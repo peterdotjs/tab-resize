@@ -299,6 +299,7 @@ if(!deferTracking) {
 		*/
 		showCustomMenu: function() {
 			this.clearCustomValues();
+			$('.layout-option #fixed').trigger('click');
 			$('.main-view').addClass('inactive');
 			$('.custom-view').removeClass('hidden').trigger('show');
 			$('.custom-view input.row').focus();
@@ -317,22 +318,52 @@ if(!deferTracking) {
 		* performs save of new layout
 		*/
 		handleCustomSave: function(){
-			var customRows = $('#numRows').val(),
-				customCols = $('#numCols').val();
+			var option = $('.custom-view').hasClass('scaled') ? 'scaled' : 'fixed';
 
-			this.clearCustomValues();
+			if(option === 'fixed'){
+				var customRows = $('#numRows').val(),
+					customCols = $('#numCols').val();
 
-			if(!Number(customRows) || !Number(customCols) || Number(customRows) < 1 || Number(customCols) < 1){
-				//window.alert('Please enter valid input values.');
+				this.clearCustomValues();
+
+				if(!Number(customRows) || !Number(customCols) || Number(customRows) < 1 || Number(customCols) < 1){
+					//window.alert('Please enter valid input values.');
+				} else {
+					var layoutType = customRows + 'x' + customCols;
+					resize.layout.addLayout(layoutType);
+					resize.layout.processTabInfo($('.layout-' + layoutType));
+					this.hideCustomMenu();
+				}				
 			} else {
-				var layoutType = customRows + 'x' + customCols;
-				resize.layout.addLayout(layoutType);
-				resize.layout.processTabInfo($('.layout-' + layoutType));
-				this.hideCustomMenu();
+				
 			}
+
+
+		},
+
+		/**
+		* shows the scaled menu view 
+		*/
+		showScaledMenu: function(){
+			var orientation = getScaledOrientation(),
+				option = getScaledOption(),
+				canvas=document.getElementById("myCanvas"),
+				context=canvas.getContext("2d");
+
+			resize.util.clearCanvas();
+
+			resize.util.drawScaledTable(resize.canvasWidth, resize.canvasHeight, option[0], orientation, context);
 		}
 
 	};
+
+	function getScaledOrientation(){
+		return $('#horizontal-scaled').attr('checked') ? 'horizontal' : 'vertical';
+	}
+
+	function getScaledOption(){
+		return $('.scaled-input.selected').text().split(':');
+	}
 
 	window.resize.custom_view = custom_view;
 
@@ -779,6 +810,31 @@ if(!deferTracking) {
 			context.stroke();
 		},
 
+		/**
+		* draws a scaled table using canvas
+		* @param {Number} width - width of table
+		* @param {Number} height - height of table
+		* @param {Number} scale - percentage of first col/row
+		* @param {String} orientation - "vertical" or "horizontal" 
+		* @param {CanvasRenderingContext2D} context - 2D context of canvas object
+		*/
+		drawScaledTable: function(width, height, scale, orientation, context) {
+
+			context.beginPath();
+
+			var offSet = width*(0.1)*scale;
+
+			if(orientation === 'horizontal'){
+				context.moveTo(offSet,0);
+				context.lineTo(offSet,width);
+			} else {
+				context.moveTo(0,offSet);
+				context.lineTo(height,offSet);
+			}
+
+			context.closePath();
+			context.stroke();
+		},
 
 		/**
 		* clears the canvas of previous drawing
@@ -1093,7 +1149,7 @@ if(!deferTracking) {
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
 	}).on('click','#display-setting-layer .switch-toggle input',function(evt,deferTracking){
 		var alignment = $(this).attr('id');
-		$('.switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
+		$('#display-setting-layer .switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
 		options.processAlignmentSelection(alignment);
 		if(!deferTracking){
 			sendTracking('alignment',alignment);
@@ -1112,6 +1168,32 @@ if(!deferTracking) {
 		}
 	}).on('click','a.keyboard-shortcuts', function(){
 		chrome.tabs.create({url:'chrome://extensions/configureCommands'});
+	}).on('click','.custom-view .switch-toggle.layout-option input', function(){
+		var option = $(this).attr('id'),
+			changed = false,
+			$customView = $('.custom-view');
+
+		if(option === 'scaled' && !$customView.hasClass('scaled') || option !== 'scaled' && $customView.hasClass('scaled')){
+			changed = true;
+		}
+			
+		$customView[(option === 'scaled') ? 'addClass' : 'removeClass']('scaled');
+
+		if(changed){
+			util.clearCanvas();
+			custom_view.clearCustomValues();
+			if(option === 'scaled'){
+				custom_view.showScaledMenu();		
+			}
+		}
+
+	}).on('click', '.custom-view .scaled-input', function(){
+		var $this = $(this);
+		$('.custom-view .scaled-input').removeClass('selected');
+		$this.addClass('selected');
+		custom_view.showScaledMenu();
+	}).on('click','.custom-view .switch-toggle.scaled-layout-orientation input', function(){
+		custom_view.showScaledMenu();
 	});
 
 })();
