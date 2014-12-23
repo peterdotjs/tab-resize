@@ -1110,10 +1110,10 @@ if(!deferTracking) {
             scaledResizeType = resizeTypeStr.split('-'),
             resizeType = (isScaled ? scaledResizeType[0]: resizeTypeStr.split('x')),
             orientation = (isScaled ? scaledResizeType[2] : null);
-         
+
         main_view[isScaled ? 'resizeScaledTabs' : 'resizeTabs'](Number(resizeType[0]),Number(resizeType[1]), orientation);
 		sendTracking('resize',resizeTypeStr);
-		
+
 	}).on('show','.modal-box', function(evt){
 		evt.stopPropagation();
 		util.centerModal($(this));
@@ -1225,8 +1225,10 @@ if(!deferTracking) {
 	}).on('click','.signature a',function(){
 		if($(this).hasClass('rate-it')){
 			sendTracking('info-links','rate-it');
-		} else {
+		} else if ($(this).hasClass('signature')) {
 			sendTracking('info-links','author');
+		} else {
+			sendTracking('info-links','keyboard-shortcuts');
 		}
 	}).on('click','a.keyboard-shortcuts', function(){
 		chrome.tabs.create({url:'chrome://extensions/configureCommands'});
@@ -1238,15 +1240,16 @@ if(!deferTracking) {
 		if(option === 'scaled' && !$customView.hasClass('scaled') || option !== 'scaled' && $customView.hasClass('scaled')){
 			changed = true;
 		}
-			
+
 		$customView[(option === 'scaled') ? 'addClass' : 'removeClass']('scaled');
 
 		if(changed){
 			util.clearCanvas();
 			custom_view.clearCustomValues();
 			if(option === 'scaled'){
-				custom_view.showScaledMenu();		
+				custom_view.showScaledMenu();
 			}
+			sendTracking('custom-layout',option);
 		}
 
 	}).on('click', '.custom-view .scaled-input', function(){
@@ -1254,8 +1257,10 @@ if(!deferTracking) {
 		$('.custom-view .scaled-input').removeClass('selected');
 		$this.addClass('selected');
 		custom_view.showScaledMenu();
+		sendTracking('custom-layout',$this.text());
 	}).on('click','.custom-view .switch-toggle.scaled-layout-orientation input', function(){
 		custom_view.showScaledMenu();
+		sendTracking('custom-layout',$(this).attr('id'));
 	});
 
 })();

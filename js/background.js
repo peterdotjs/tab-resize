@@ -297,7 +297,7 @@ function setResizeWidthHeight(resize, screenInfo, rows, cols){
 	} else {
 		resize.width = Math.round(window.screen.availWidth/cols);
 		resize.height  = Math.round(window.screen.availHeight/rows);
-	}		
+	}
 }
 
 function resizeTabHelper(resize, screenInfo, scaledOrientation){
@@ -350,7 +350,7 @@ function initResizePreferences(resize){
 	var emptyTabValue = localStorage.getItem('emptyTab');
 	if(!emptyTabValue || emptyTabValue === 'true'){
 		resize.emptyTab = true;
-	} 
+	}
 
 	var alignmentValue = localStorage.getItem('alignment');
 	if(!alignmentValue){
@@ -359,6 +359,30 @@ function initResizePreferences(resize){
 		resize.alignment = alignmentValue;
 	}
 }
+
+function sendTracking(category, label) {
+	var optOut = localStorage.getItem("tracking-opt-out"),
+		deferTracking = false;
+
+	if(optOut && optOut === 'true'){
+		deferTracking = true;
+	}
+
+	if(!deferTracking && ga) {
+		ga('send','event', category, 'clicked', label || "na");
+	}
+}
+
+// Standard Google Universal Analytics code
+/* jshint ignore:start */
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); // Note: https protocol here
+/* jshint ignore:end */
+ga('create', 'UA-34217520-2', 'auto');
+ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
+ga('require', 'displayfeatures');
 
 chrome.commands.onCommand.addListener(function callback(command) {
 
@@ -377,7 +401,9 @@ chrome.commands.onCommand.addListener(function callback(command) {
 
 				var displayJSON = util.displayInfoFormatter(displayInfo,currentWindowInfo),
 					isScaled = command.indexOf('scale') !== -1,
-					resizeParams = getResizeParams(command); 
+					resizeParams = getResizeParams(command);
+
+				sendTracking('keyboard-shortcut',command);
 
 				if(isScaled){
 					resizeScaledTabs(displayJSON.displays[displayJSON.primaryIndex].workArea, resizeParams.primaryRatio, resizeParams.secondaryRatio, resizeParams.orientation);
