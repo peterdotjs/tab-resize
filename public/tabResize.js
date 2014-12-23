@@ -150,7 +150,7 @@ if(!deferTracking) {
 			}
 
 			var curVersion = localStorage.getItem('version') || '',
-				isOldVersion = (curVersion < '2.1.1' && curVersion !== '');
+				isOldVersion = (curVersion < '2.2.0' && curVersion !== '');
 			
 			var $body = $('body');
 
@@ -163,7 +163,7 @@ if(!deferTracking) {
 					$body.addClass('warning');
 					resize.options.showWarningModal();
 				}
-				resize.options.showUpdateModal(isOldVersion ? 'partial-update' : '');
+				resize.options.showUpdateModal();
 			}
 
 			if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
@@ -225,52 +225,92 @@ if(!deferTracking) {
 			* create new window unable to take non integers for width and height
 			*/
 
-			var data = $('.display-entry.selected').data();
+			var screenInfo = $('.display-entry.selected').data();
+			setResizeWidthHeight(screenInfo,resize.numRows,resize.numCols);
+			resizeTabHelper(screenInfo);
+		},
 
-			if(!$.isEmptyObject(data)){
-				resize.width = Math.round(data.width/resize.numCols);
-				resize.height = Math.round(data.height/resize.numRows);
-				resize.offsetX = data.left;
-				resize.offsetY = data.top;
-				resize.fullWidth = data.width;
-				resize.fullHeight = data.height;
-			} else {
-				resize.width = Math.round(window.screen.availWidth/resize.numCols);
-				resize.height  = Math.round(window.screen.availHeight/resize.numRows);
-				resize.offsetX = 0;
-				resize.offsetY = 0;
-				resize.fullWidth = window.screen.availWidth;
-				resize.fullHeight = window.screen.availHeight;
-			}
+		/**
+		* resizes tabs to the right of selected tab
+		* @param {number} primaryRatio ratio of the first tab
+		* @param {number} secondaryRatio ratio of second tab
+		* @param {string} orientation - veritcal or horizontal
+		*/
+		resizeScaledTabs: function(primaryRatio, secondaryRatio, orientation){
 
-			var that = this;
-			window.chrome.tabs.query({currentWindow: true},
-				function (tabs) {
-					resize.tabsArray = tabs;
-					window.chrome.tabs.query({currentWindow: true, highlighted: true},
-						function (tab) {
-							resize.currentTab = tab[0];
-							var index = resize.currentTab.index;
-							if(tab.length > 1){
-								resize.tabsArray = tab;
-								index = 0;
-							}
+			resize.numRows = (orientation === 'horizontal' ? 1 : 2);
+			resize.numCols = (orientation === 'horizontal' ? 2 : 1);
+		
+			/*
+			* split width of screen based on the primary and secondary ratios
+			*/
 
-							var cb = function(){
-									return backJs.util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito);
-							};
-							if(resize.singleTab){
-								backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
-							} else {
-								backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index), cb);
-							}
-
-						}
-					);
-				}
-			);
+			var screenInfo = $('.display-entry.selected').data();
+			setScaledResizeWidthHeight(screenInfo,primaryRatio, secondaryRatio, orientation);
+			resizeTabHelper(screenInfo,orientation);
 		}
 	};
+
+	function setScaledResizeWidthHeight(screenInfo, primaryRatio, secondaryRatio, orientation){
+		if(!$.isEmptyObject(screenInfo)){
+			resize.width = (orientation === 'horizontal') ? Math.round(screenInfo.width*0.1*primaryRatio) : screenInfo.width;
+			resize.height = (orientation === 'horizontal') ? screenInfo.height : Math.round(screenInfo.height*0.1*primaryRatio);
+		} else {
+			resize.width = (orientation === 'horizontal') ? Math.round(window.screen.availWidth*0.1*primaryRatio) : window.screen.availWidth;
+			resize.height = (orientation === 'horizontal') ? window.screen.availHeight : Math.round(window.screen.availHeight*0.1*primaryRatio);
+		}
+	}
+
+	function setResizeWidthHeight(screenInfo, rows, cols){
+		if(!$.isEmptyObject(screenInfo)){
+			resize.width = Math.round(screenInfo.width/cols);
+			resize.height = Math.round(screenInfo.height/rows);
+		} else {
+			resize.width = Math.round(window.screen.availWidth/cols);
+			resize.height  = Math.round(window.screen.availHeight/rows);
+		}		
+	}
+
+	function resizeTabHelper(screenInfo, scaledOrientation){
+
+		if(!$.isEmptyObject(screenInfo)){
+			resize.offsetX = screenInfo.left;
+			resize.offsetY = screenInfo.top;
+			resize.fullWidth = screenInfo.width;
+			resize.fullHeight = screenInfo.height;
+		} else {
+			resize.offsetX = 0;
+			resize.offsetY = 0;
+			resize.fullWidth = window.screen.availWidth;
+			resize.fullHeight = window.screen.availHeight;
+		}
+
+		window.chrome.tabs.query({currentWindow: true},
+			function (tabs) {
+				resize.tabsArray = tabs;
+				window.chrome.tabs.query({currentWindow: true, highlighted: true},
+					function (tab) {
+						resize.currentTab = tab[0];
+						var index = resize.currentTab.index;
+						if(tab.length > 1){
+							resize.tabsArray = tab;
+							index = 0;
+						}
+
+						var cb = function(){
+								return backJs.util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
+						};
+						if(resize.singleTab){
+							backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
+						} else {
+							backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index), cb);
+						}
+
+					}
+				);
+			}
+		);
+	}
 
 	window.resize.main_view = main_view;
 
@@ -546,14 +586,14 @@ if(!deferTracking) {
 			$('body').removeClass('update');
 			$('.main-view').removeClass('inactive');
 			localStorage.setItem('update-seen',true);
-			localStorage.setItem('version','2.1.1');
+			localStorage.setItem('version','2.2.0');
 		},
 
 		/**
 		* shows the update modal box
 		*/
-		showUpdateModal: function(mode) {
-			$('#update-modal').addClass(mode).trigger('show');
+		showUpdateModal: function() {
+			$('#update-modal').trigger('show');
 			$('.main-view').addClass('inactive');
 		},
 
@@ -1066,10 +1106,14 @@ if(!deferTracking) {
 	}).on('click','.resize-selector-container',function(){
 		var resizeSelector = $(this).children('.resize-selector'),
 			resizeTypeStr = resizeSelector.attr('data-selector-type'),
-			resizeType = resizeTypeStr.split('x');
-
-		main_view.resizeTabs(Number(resizeType[0]),Number(resizeType[1]));
+            isScaled = (resizeTypeStr.indexOf('scale') !== -1),
+            scaledResizeType = resizeTypeStr.split('-'),
+            resizeType = (isScaled ? scaledResizeType[0]: resizeTypeStr.split('x')),
+            orientation = (isScaled ? scaledResizeType[2] : null);
+         
+        main_view[isScaled ? 'resizeScaledTabs' : 'resizeTabs'](Number(resizeType[0]),Number(resizeType[1]), orientation);
 		sendTracking('resize',resizeTypeStr);
+		
 	}).on('show','.modal-box', function(evt){
 		evt.stopPropagation();
 		util.centerModal($(this));

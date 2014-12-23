@@ -53,8 +53,9 @@ var util = {
 	* @param {number} windowId index of window
 	* @param {boolean} singleTab flag of single tab option
 	* @param {boolean} incog - if window is of type incognito
+	* @param {string} veritical or horizontal for scaled layouts
 	*/
-	processTabs: function(resize, tabsArray, startIndex, windowId, singleTab, incog) {
+	processTabs: function(resize, tabsArray, startIndex, windowId, singleTab, incog, scaledOrientation) {
 		var tabId,
 			_tabsArray = tabsArray.slice(startIndex),
 			index = 0,
@@ -90,12 +91,12 @@ var util = {
 					leftValue = resize.fullWidth - ((x+1)*resize.width) + resize.offsetX;
 				}
 
-				rightValue = (y*resize.height) + resize.offsetY;
+				topValue = (y*resize.height) + resize.offsetY;
 
 				// base case we update the current window
 				if(x === 0 && y === 0){
 					window.chrome.windows.update(_tabsArray[index].windowId,{ left: leftValue,
-												top: rightValue,
+												top: topValue,
 												width: resize.width,
 												height: resize.height,
 												state: "normal"
@@ -122,7 +123,21 @@ var util = {
 
 					//check the number of new windows that will be created
 					//store the windowId information
-					that.createNewWindow(tabId, leftValue, rightValue, resize.width, resize.height, incog, createNewWindowCB);
+
+					//handling secondary ratio
+					if(scaledOrientation){
+						if(scaledOrientation === 'horizontal'){
+							resize.width = resize.fullWidth - resize.width;
+							if(resize.alignment !== 'left'){
+								leftValue = resize.offsetX;
+							}
+						} else {
+							resize.height = resize.fullHeight - resize.height;
+						}
+					}
+
+					that.createNewWindow(tabId, leftValue, topValue, resize.width, resize.height, incog, createNewWindowCB);
+
 				}
 				index++;
 			}
@@ -210,18 +225,27 @@ var util = {
 
 function getResizeParams(command){
 	var _command = command.split('-');
-	return {
-		rows: Number(_command[2]),
-		cols: Number(_command[3])
-	};
+	if(command.indexOf('scale') !== -1){
+		return {
+			primaryRatio: Number(_command[2]),
+			secondaryRatio: Number(_command[3]),
+			orientation: _command[5]
+		};
+	} else {
+		return {
+			rows: Number(_command[2]),
+			cols: Number(_command[3])
+		};
+	}
 }
 
 /**
 * resizes tabs to the right of selected tab
+* @param {object} screenInfo object with hardware screen properties
 * @param {number} rows number of rows in resize layout
 * @param {number} cols number of columns in resize layout
 */
-function resizeTabs(displayInfo,rows,cols) {
+function resizeTabs(screenInfo,rows,cols) {
 
 	var resize = {};
 
@@ -233,25 +257,63 @@ function resizeTabs(displayInfo,rows,cols) {
 	* create new window unable to take non integers for width and height
 	*/
 
-	var data = displayInfo;
+	initResizePreferences(resize);
+	setResizeWidthHeight(resize, screenInfo,resize.numRows,resize.numCols);
+	resizeTabHelper(resize, screenInfo);
+}
 
-	if(!$.isEmptyObject(data)){
-		resize.width = Math.round(data.width/resize.numCols);
-		resize.height = Math.round(data.height/resize.numRows);
-		resize.offsetX = data.left;
-		resize.offsetY = data.top;
-		resize.fullWidth = data.width;
-		resize.fullHeight = data.height;
+function resizeScaledTabs(screenInfo, primaryRatio, secondaryRatio, orientation){
+
+	var resize = {};
+
+	resize.numRows = (orientation === 'horizontal' ? 1 : 2);
+	resize.numCols = (orientation === 'horizontal' ? 2 : 1);
+
+	/*
+	* split width of screen equally depending on number of cells
+	* create new window unable to take non integers for width and height
+	*/
+
+	initResizePreferences(resize);
+	setScaledResizeWidthHeight(resize, screenInfo, primaryRatio, secondaryRatio, orientation);
+	resizeTabHelper(resize, screenInfo, orientation);
+
+}
+
+function setScaledResizeWidthHeight(resize, screenInfo, primaryRatio, secondaryRatio, orientation){
+	if(!$.isEmptyObject(screenInfo)){
+		resize.width = (orientation === 'horizontal') ? Math.round(screenInfo.width*0.1*primaryRatio) : screenInfo.width;
+		resize.height = (orientation === 'horizontal') ? screenInfo.height : Math.round(screenInfo.height*0.1*primaryRatio);
 	} else {
-		resize.width = Math.round(window.screen.availWidth/resize.numCols);
-		resize.height  = Math.round(window.screen.availHeight/resize.numRows);
+		resize.width = (orientation === 'horizontal') ? Math.round(window.screen.availWidth*0.1*primaryRatio) : window.screen.availWidth;
+		resize.height = (orientation === 'horizontal') ? window.screen.availHeight : Math.round(window.screen.availHeight*0.1*primaryRatio);
+	}
+}
+
+function setResizeWidthHeight(resize, screenInfo, rows, cols){
+	if(!$.isEmptyObject(screenInfo)){
+		resize.width = Math.round(screenInfo.width/cols);
+		resize.height = Math.round(screenInfo.height/rows);
+	} else {
+		resize.width = Math.round(window.screen.availWidth/cols);
+		resize.height  = Math.round(window.screen.availHeight/rows);
+	}		
+}
+
+function resizeTabHelper(resize, screenInfo, scaledOrientation){
+
+	if(!$.isEmptyObject(screenInfo)){
+		resize.offsetX = screenInfo.left;
+		resize.offsetY = screenInfo.top;
+		resize.fullWidth = screenInfo.width;
+		resize.fullHeight = screenInfo.height;
+	} else {
 		resize.offsetX = 0;
 		resize.offsetY = 0;
 		resize.fullWidth = window.screen.availWidth;
 		resize.fullHeight = window.screen.availHeight;
 	}
 
-	var that = this;
 	window.chrome.tabs.query({currentWindow: true},
 		function (tabs) {
 			resize.tabsArray = tabs;
@@ -265,7 +327,7 @@ function resizeTabs(displayInfo,rows,cols) {
 					}
 
 					var cb = function(){
-							return util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito);
+							return util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
 					};
 					if(resize.singleTab){
 						util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
@@ -277,6 +339,25 @@ function resizeTabs(displayInfo,rows,cols) {
 			);
 		}
 	);
+}
+
+function initResizePreferences(resize){
+	var singleTabValue = localStorage.getItem('singleTab');
+	if(singleTabValue && singleTabValue === 'true'){
+		resize.singleTab = true;
+	}
+
+	var emptyTabValue = localStorage.getItem('emptyTab');
+	if(!emptyTabValue || emptyTabValue === 'true'){
+		resize.emptyTab = true;
+	} 
+
+	var alignmentValue = localStorage.getItem('alignment');
+	if(!alignmentValue){
+		resize.alignment = 'left';
+	} else {
+		resize.alignment = alignmentValue;
+	}
 }
 
 chrome.commands.onCommand.addListener(function callback(command) {
@@ -295,9 +376,14 @@ chrome.commands.onCommand.addListener(function callback(command) {
 				};
 
 				var displayJSON = util.displayInfoFormatter(displayInfo,currentWindowInfo),
+					isScaled = command.indexOf('scale') !== -1,
 					resizeParams = getResizeParams(command); 
 
-				resizeTabs(displayJSON.displays[displayJSON.primaryIndex].workArea,resizeParams.rows,resizeParams.cols);
+				if(isScaled){
+					resizeScaledTabs(displayJSON.displays[displayJSON.primaryIndex].workArea, resizeParams.primaryRatio, resizeParams.secondaryRatio, resizeParams.orientation);
+				} else {
+					resizeTabs(displayJSON.displays[displayJSON.primaryIndex].workArea,resizeParams.rows,resizeParams.cols);
+				}
 			});
 		});
 	}

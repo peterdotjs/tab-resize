@@ -22,10 +22,14 @@
 	}).on('click','.resize-selector-container',function(){
 		var resizeSelector = $(this).children('.resize-selector'),
 			resizeTypeStr = resizeSelector.attr('data-selector-type'),
-			resizeType = resizeTypeStr.split('x');
-
-		main_view.resizeTabs(Number(resizeType[0]),Number(resizeType[1]));
+            isScaled = (resizeTypeStr.indexOf('scale') !== -1),
+            scaledResizeType = resizeTypeStr.split('-'),
+            resizeType = (isScaled ? scaledResizeType[0]: resizeTypeStr.split('x')),
+            orientation = (isScaled ? scaledResizeType[2] : null);
+         
+        main_view[isScaled ? 'resizeScaledTabs' : 'resizeTabs'](Number(resizeType[0]),Number(resizeType[1]), orientation);
 		sendTracking('resize',resizeTypeStr);
+		
 	}).on('show','.modal-box', function(evt){
 		evt.stopPropagation();
 		util.centerModal($(this));

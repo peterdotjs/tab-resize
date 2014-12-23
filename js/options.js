@@ -170,14 +170,14 @@
 			$('body').removeClass('update');
 			$('.main-view').removeClass('inactive');
 			localStorage.setItem('update-seen',true);
-			localStorage.setItem('version','2.1.1');
+			localStorage.setItem('version','2.2.0');
 		},
 
 		/**
 		* shows the update modal box
 		*/
-		showUpdateModal: function(mode) {
-			$('#update-modal').addClass(mode).trigger('show');
+		showUpdateModal: function() {
+			$('#update-modal').trigger('show');
 			$('.main-view').addClass('inactive');
 		},
 
