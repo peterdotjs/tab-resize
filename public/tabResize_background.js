@@ -194,6 +194,80 @@ var util = {
 		}
 	},
 
+
+	/*
+	* undo previous resize option
+	*/
+
+	/**
+	* undo the previous resize that was selected
+	*/
+	undoResize: function(resize,callback) {
+		var that = this,
+			lastTab = localStorage.getItem('lastTab');
+
+		//undo not available
+		if(!lastTab){
+			return;
+		}
+
+		resize.lastTab = JSON.parse(lastTab);
+		var tabIndex = resize.lastTab.lastTabIndex;
+		var windowId = resize.lastTab.lastWindowId;
+		var tabsArray = resize.lastTab.lastTabsArray;
+
+		window.chrome.windows.get(windowId, {}, function(window){
+			if(window){
+				that.recombineTabs(resize,tabIndex,windowId,tabsArray,callback);
+			} else {
+				chrome.tabs.query({status: "complete"}, function(tabs){
+					var currentExistingTabs = {};
+					var newTabsArray = [];
+					for(var i=0; i< tabs.length; i++){
+						currentExistingTabs[tabs[i].id] = true;
+					}
+					for(var j = 0; j< tabsArray.length; j++){
+						if(currentExistingTabs[tabsArray[j]]){
+							newTabsArray.push(tabsArray[j]);
+						}
+					}
+					if(newTabsArray.length !==0){
+						chrome.windows.create({tabId: newTabsArray[0]},function(window){
+							that.recombineTabs(resize,1,window.id,newTabsArray.slice(1),callback);
+						});
+					} else {
+						if(!resize.isMac){
+							alert("Previous tabs were closed.");
+						}
+						if(callback){
+							callback();
+						}
+					}
+				});
+			}
+		});
+	},
+
+	/**
+	* recombine the tabs into one window
+	* @param {object} resize object passed in for modification
+	* @param {number} tabIndex Starting tab index in previous window of first tab
+	* @param {number} windowId Id of final window holding recombined tabs
+	* @param {array} tabsArray Array of tab objects to be moved back to the previous window
+	*/
+	recombineTabs: function(resize,tabIndex, windowId, tabsArray, callback) {
+		var indexCounter = tabIndex;
+		window.chrome.tabs.move(tabsArray,{windowId: windowId, index: indexCounter});
+		var updateInfo = resize.lastTab.lastWindowInfo;
+		var updateInfoForUpdate = $.extend(true, {}, updateInfo);
+		delete updateInfoForUpdate.incognito;
+		window.chrome.windows.update(windowId,updateInfoForUpdate);
+		if(callback){
+			callback();
+		}
+	},
+
+
 	//format the displayInfo
 	displayInfoFormatter: function(displayInfo,currentWindowInfo){
 		var index = 0,
@@ -360,6 +434,11 @@ function initResizePreferences(resize){
 	}
 }
 
+function disableUndoButton(resize){
+	resize.lastTab = null;
+	localStorage.removeItem('lastTab');
+}
+
 function sendTracking(category, label) {
 	var optOut = localStorage.getItem("tracking-opt-out"),
 		deferTracking = false;
@@ -387,6 +466,15 @@ ga('require', 'displayfeatures');
 chrome.commands.onCommand.addListener(function callback(command) {
 
 	if(command.indexOf('tab-resize') === -1){
+		return;
+	}
+
+	if(command.indexOf('undo') !== -1){
+		var resize = {};
+		util.undoResize(resize,function(){
+			disableUndoButton(resize);
+		});
+		sendTracking('undo','undo-shortcut');
 		return;
 	}
 

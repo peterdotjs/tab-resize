@@ -41,7 +41,7 @@
 		layout.removeLayout(resizeType);
 		sendTracking('resize-delete',resizeType);
 	}).on('click','#undo-layout',function(){
-		options.undoResize();
+		backJs.util.undoResize(resize,options.disableUndoButton);
 		sendTracking('undo','undo');
 	}).on('click','#custom-layout',function(evt){
 		evt.stopPropagation();

@@ -20,6 +20,9 @@
   "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
   "options_page": "options.html",
   "commands": {
+    "tab-resize-undo": {
+      "description": "Undo previous resize"
+    },
     "tab-resize-1-1": {
       "description": "Resize 1x1 layout"
     },
