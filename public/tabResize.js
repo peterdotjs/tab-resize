@@ -45,7 +45,7 @@ if(!deferTracking) {
 		canvasWidth: 100,
 		currentLayouts: null,
 		defaultLayouts: {'layoutItems':["1x1","1x2","2x1","2x2"]},
-		layoutSprites: {'layoutItems':["1x1","1x2","2x1","2x2","1x3","3x1"]},
+		layoutSprites: {'layoutItems':["1x1","1x2","2x1","2x2","1x3","3x1","6x4-scale-horizontal","7x3-scale-horizontal", "6x4-scale-vertical", "7x3-scale-vertical"]},
 		maxSelectorsPerLine: 5,
 		maxSelectorContainerWidth: 156,
 		maxSelectorContainerHeight: 156,
@@ -150,7 +150,7 @@ if(!deferTracking) {
 			}
 
 			var curVersion = localStorage.getItem('version') || '',
-				isOldVersion = (curVersion < '2.1.1' && curVersion !== '');
+				isOldVersion = (curVersion < '2.2.0' && curVersion !== '');
 			
 			var $body = $('body');
 
@@ -163,7 +163,7 @@ if(!deferTracking) {
 					$body.addClass('warning');
 					resize.options.showWarningModal();
 				}
-				resize.options.showUpdateModal(isOldVersion ? 'partial-update' : '');
+				resize.options.showUpdateModal();
 			}
 
 			if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
@@ -225,52 +225,92 @@ if(!deferTracking) {
 			* create new window unable to take non integers for width and height
 			*/
 
-			var data = $('.display-entry.selected').data();
+			var screenInfo = $('.display-entry.selected').data();
+			setResizeWidthHeight(screenInfo,resize.numRows,resize.numCols);
+			resizeTabHelper(screenInfo);
+		},
 
-			if(!$.isEmptyObject(data)){
-				resize.width = Math.round(data.width/resize.numCols);
-				resize.height = Math.round(data.height/resize.numRows);
-				resize.offsetX = data.left;
-				resize.offsetY = data.top;
-				resize.fullWidth = data.width;
-				resize.fullHeight = data.height;
-			} else {
-				resize.width = Math.round(window.screen.availWidth/resize.numCols);
-				resize.height  = Math.round(window.screen.availHeight/resize.numRows);
-				resize.offsetX = 0;
-				resize.offsetY = 0;
-				resize.fullWidth = window.screen.availWidth;
-				resize.fullHeight = window.screen.availHeight;
-			}
+		/**
+		* resizes tabs to the right of selected tab
+		* @param {number} primaryRatio ratio of the first tab
+		* @param {number} secondaryRatio ratio of second tab
+		* @param {string} orientation - veritcal or horizontal
+		*/
+		resizeScaledTabs: function(primaryRatio, secondaryRatio, orientation){
 
-			var that = this;
-			window.chrome.tabs.query({currentWindow: true},
-				function (tabs) {
-					resize.tabsArray = tabs;
-					window.chrome.tabs.query({currentWindow: true, highlighted: true},
-						function (tab) {
-							resize.currentTab = tab[0];
-							var index = resize.currentTab.index;
-							if(tab.length > 1){
-								resize.tabsArray = tab;
-								index = 0;
-							}
+			resize.numRows = (orientation === 'horizontal' ? 1 : 2);
+			resize.numCols = (orientation === 'horizontal' ? 2 : 1);
+		
+			/*
+			* split width of screen based on the primary and secondary ratios
+			*/
 
-							var cb = function(){
-									return backJs.util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito);
-							};
-							if(resize.singleTab){
-								backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
-							} else {
-								backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index), cb);
-							}
-
-						}
-					);
-				}
-			);
+			var screenInfo = $('.display-entry.selected').data();
+			setScaledResizeWidthHeight(screenInfo,primaryRatio, secondaryRatio, orientation);
+			resizeTabHelper(screenInfo,orientation);
 		}
 	};
+
+	function setScaledResizeWidthHeight(screenInfo, primaryRatio, secondaryRatio, orientation){
+		if(!$.isEmptyObject(screenInfo)){
+			resize.width = (orientation === 'horizontal') ? Math.round(screenInfo.width*0.1*primaryRatio) : screenInfo.width;
+			resize.height = (orientation === 'horizontal') ? screenInfo.height : Math.round(screenInfo.height*0.1*primaryRatio);
+		} else {
+			resize.width = (orientation === 'horizontal') ? Math.round(window.screen.availWidth*0.1*primaryRatio) : window.screen.availWidth;
+			resize.height = (orientation === 'horizontal') ? window.screen.availHeight : Math.round(window.screen.availHeight*0.1*primaryRatio);
+		}
+	}
+
+	function setResizeWidthHeight(screenInfo, rows, cols){
+		if(!$.isEmptyObject(screenInfo)){
+			resize.width = Math.round(screenInfo.width/cols);
+			resize.height = Math.round(screenInfo.height/rows);
+		} else {
+			resize.width = Math.round(window.screen.availWidth/cols);
+			resize.height  = Math.round(window.screen.availHeight/rows);
+		}		
+	}
+
+	function resizeTabHelper(screenInfo, scaledOrientation){
+
+		if(!$.isEmptyObject(screenInfo)){
+			resize.offsetX = screenInfo.left;
+			resize.offsetY = screenInfo.top;
+			resize.fullWidth = screenInfo.width;
+			resize.fullHeight = screenInfo.height;
+		} else {
+			resize.offsetX = 0;
+			resize.offsetY = 0;
+			resize.fullWidth = window.screen.availWidth;
+			resize.fullHeight = window.screen.availHeight;
+		}
+
+		window.chrome.tabs.query({currentWindow: true},
+			function (tabs) {
+				resize.tabsArray = tabs;
+				window.chrome.tabs.query({currentWindow: true, highlighted: true},
+					function (tab) {
+						resize.currentTab = tab[0];
+						var index = resize.currentTab.index;
+						if(tab.length > 1){
+							resize.tabsArray = tab;
+							index = 0;
+						}
+
+						var cb = function(){
+								return backJs.util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
+						};
+						if(resize.singleTab){
+							backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
+						} else {
+							backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index), cb);
+						}
+
+					}
+				);
+			}
+		);
+	}
 
 	window.resize.main_view = main_view;
 
@@ -299,6 +339,7 @@ if(!deferTracking) {
 		*/
 		showCustomMenu: function() {
 			this.clearCustomValues();
+			$('.layout-option #fixed').trigger('click');
 			$('.main-view').addClass('inactive');
 			$('.custom-view').removeClass('hidden').trigger('show');
 			$('.custom-view input.row').focus();
@@ -317,22 +358,58 @@ if(!deferTracking) {
 		* performs save of new layout
 		*/
 		handleCustomSave: function(){
-			var customRows = $('#numRows').val(),
-				customCols = $('#numCols').val();
+			var option = $('.custom-view').hasClass('scaled') ? 'scaled' : 'fixed',
+				layoutType;
 
-			this.clearCustomValues();
+			if(option === 'fixed'){
+				var customRows = $('#numRows').val(),
+					customCols = $('#numCols').val();
 
-			if(!Number(customRows) || !Number(customCols) || Number(customRows) < 1 || Number(customCols) < 1){
-				//window.alert('Please enter valid input values.');
+				this.clearCustomValues();
+
+				if(!Number(customRows) || !Number(customCols) || Number(customRows) < 1 || Number(customCols) < 1){
+					//window.alert('Please enter valid input values.');
+				} else {
+					layoutType = customRows + 'x' + customCols;
+					resize.layout.addLayout(layoutType);
+					resize.layout.processTabInfo($('.layout-' + layoutType));
+					this.hideCustomMenu();
+				}				
 			} else {
-				var layoutType = customRows + 'x' + customCols;
+				var orientation = getScaledOrientation(),
+					scaledOption = getScaledOption();
+				
+				layoutType = scaledOption[0] + 'x' + scaledOption[1] + '-scale-' + orientation;
 				resize.layout.addLayout(layoutType);
 				resize.layout.processTabInfo($('.layout-' + layoutType));
 				this.hideCustomMenu();
 			}
+
+		},
+
+		/**
+		* shows the scaled menu view 
+		*/
+		showScaledMenu: function(){
+			var orientation = getScaledOrientation(),
+				option = getScaledOption(),
+				canvas=document.getElementById("myCanvas"),
+				context=canvas.getContext("2d");
+
+			resize.util.clearCanvas();
+
+			resize.util.drawScaledTable(resize.canvasWidth, resize.canvasHeight, option[0], orientation, context);
 		}
 
 	};
+
+	function getScaledOrientation(){
+		return $('#horizontal-scaled').attr('checked') ? 'horizontal' : 'vertical';
+	}
+
+	function getScaledOption(){
+		return $('.scaled-input.selected').text().split(':');
+	}
 
 	window.resize.custom_view = custom_view;
 
@@ -402,70 +479,6 @@ if(!deferTracking) {
 			}
 		},
 
-		/*
-		* undo previous resize option
-		*/
-
-		/**
-		* undo the previous resize that was selected
-		*/
-		undoResize: function() {
-			var that = this;
-			resize.lastTab = JSON.parse(localStorage.getItem('lastTab'));
-			var tabIndex = resize.lastTab.lastTabIndex;
-			var windowId = resize.lastTab.lastWindowId;
-			var tabsArray = resize.lastTab.lastTabsArray;
-
-			window.chrome.windows.get(windowId, {}, function(window){
-				if(window){
-					that.recombineTabs(tabIndex,windowId,tabsArray);
-				} else {
-					chrome.tabs.query({status: "complete"}, function(tabs){
-						var currentExistingTabs = {};
-						var newTabsArray = [];
-						for(var i=0; i< tabs.length; i++){
-							currentExistingTabs[tabs[i].id] = true;
-						}
-						for(var j = 0; j< tabsArray.length; j++){
-							if(currentExistingTabs[tabsArray[j]]){
-								newTabsArray.push(tabsArray[j]);
-							}
-						}
-						if(newTabsArray.length !==0){
-							chrome.windows.create({tabId: newTabsArray[0]},function(window){
-								that.recombineTabs(1,window.id,newTabsArray.slice(1));
-							});
-						} else {
-							if(!resize.isMac){
-								alert("Previous tabs were closed.");
-							}
-							that.disableUndoButton();
-						}
-					});
-				}
-			});
-		},
-
-		/**
-		* recombine the tabs into one window
-		* @param {number} tabIndex Starting tab index in previous window of first tab
-		* @param {number} windowId Id of final window holding recombined tabs
-		* @param {array} tabsArray Array of tab objects to be moved back to the previous window
-		*/
-		recombineTabs: function(tabIndex, windowId, tabsArray) {
-			var indexCounter = tabIndex;
-			// for(var index=0; index<tabsArray.length; index++){
-			// 	window.chrome.tabs.move(tabsArray[index],{windowId: windowId, index: indexCounter});
-			// 	indexCounter++;
-			// }
-			window.chrome.tabs.move(tabsArray,{windowId: windowId, index: indexCounter});
-			var updateInfo = resize.lastTab.lastWindowInfo;
-			var updateInfoForUpdate = $.extend(true, {}, updateInfo);
-			delete updateInfoForUpdate.incognito;
-			window.chrome.windows.update(windowId,updateInfoForUpdate);
-			this.disableUndoButton();
-		},
-
 		/**
 		* disabled undo button from user input
 		*/
@@ -509,14 +522,14 @@ if(!deferTracking) {
 			$('body').removeClass('update');
 			$('.main-view').removeClass('inactive');
 			localStorage.setItem('update-seen',true);
-			localStorage.setItem('version','2.1.1');
+			localStorage.setItem('version','2.2.0');
 		},
 
 		/**
 		* shows the update modal box
 		*/
-		showUpdateModal: function(mode) {
-			$('#update-modal').addClass(mode).trigger('show');
+		showUpdateModal: function() {
+			$('#update-modal').trigger('show');
 			$('.main-view').addClass('inactive');
 		},
 
@@ -606,17 +619,23 @@ if(!deferTracking) {
 		* adds layout markup to popup
 		* @param {string} layoutType Type of layout (ROWxCOL).
 		* @param {boolean} prepend Prepend layout to layout container if true, appends if false
+		* @param {string} layoutText Label Text for layout - default takes layoutType
 		*/
 		addLayoutMarkup: function(layoutType, prepend) {
 
-			var defaultSprite = "layout-default";
+			var defaultSprite = "layout-default",
+				layoutText = '';
 
 			if(resize.layoutSprites.layoutItems.indexOf(layoutType) !== -1 || layoutType === '1x1'){
 				defaultSprite = "layout-" + layoutType;
 			}
 
+			if(layoutType.indexOf('scale') !== -1){
+				layoutText = layoutType.split('-')[0].split('x').join(':');
+			}
+
 			var container = $('.resize-container');
-			var selectorTemplate = '<li class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + layoutType + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
+			var selectorTemplate = '<li class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + (layoutText || layoutType)  + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
 
 			if(prepend){
 				container.prepend(selectorTemplate);
@@ -690,16 +709,22 @@ if(!deferTracking) {
 				for(;index<length;index++){
 					innerHtml = '';
 					$curLayout = layoutList.eq(index);
-					layoutType = $curLayout.attr('data-selector-type').split('x');
-					rows = layoutType[0];
-					cols = layoutType[1];
-					tabNumber = 1;
-					for(var y=0; y<rows; y++){
-						for(var x=0; x<cols; x++){
-							//add in markup - styles will be added in less
-							innerHtml += '<div title="New Tab" class="tab-layer tab-layer-'+ (tabNumber++) + '"><div class="fav-icon"></div></div>';
-						}
+
+					if($curLayout.attr('data-selector-type').indexOf('scale') === -1){
+						layoutType = $curLayout.attr('data-selector-type').split('x');
+						rows = layoutType[0];
+						cols = layoutType[1];
+						tabNumber = 1;
+						for(var y=0; y<rows; y++){
+							for(var x=0; x<cols; x++){
+								//add in markup - styles will be added in less
+								innerHtml += '<div title="New Tab" class="tab-layer tab-layer-'+ (tabNumber++) + '"><div class="fav-icon"></div></div>';
+							}
+						}						
+					} else {
+						innerHtml += '<div title="New Tab" class="tab-layer tab-layer-1"><div class="fav-icon"></div></div>' + '<div title="New Tab" class="tab-layer tab-layer-2"><div class="fav-icon"></div></div>';
 					}
+
 					$curLayout.html(innerHtml);
 				}
 
@@ -779,6 +804,31 @@ if(!deferTracking) {
 			context.stroke();
 		},
 
+		/**
+		* draws a scaled table using canvas
+		* @param {Number} width - width of table
+		* @param {Number} height - height of table
+		* @param {Number} scale - percentage of first col/row
+		* @param {String} orientation - "vertical" or "horizontal" 
+		* @param {CanvasRenderingContext2D} context - 2D context of canvas object
+		*/
+		drawScaledTable: function(width, height, scale, orientation, context) {
+
+			context.beginPath();
+
+			var offSet = width*(0.1)*scale;
+
+			if(orientation === 'horizontal'){
+				context.moveTo(offSet,0);
+				context.lineTo(offSet,width);
+			} else {
+				context.moveTo(0,offSet);
+				context.lineTo(height,offSet);
+			}
+
+			context.closePath();
+			context.stroke();
+		},
 
 		/**
 		* clears the canvas of previous drawing
@@ -858,7 +908,7 @@ if(!deferTracking) {
 						top: windowInfo.top + 100
 					};
 
-					var displayJSON = processInfo(displayInfo,currentWindowInfo),
+					var displayJSON = backJs.util.displayInfoFormatter(displayInfo,currentWindowInfo),
 						template,
 						currentDisplay;
 
@@ -949,33 +999,6 @@ if(!deferTracking) {
 		$displayLayer.height(scale*height);
 	}
 
-	//format the displayInfo
-	function processInfo(displayInfo,currentWindowInfo){
-		var index = 0,
-			length = displayInfo.length,
-			info,
-			displayJSON = { //may need to check for some mirroring property, currently only one monitor is display when mirroring
-				displays: [],
-				primaryIndex: 0
-			};
-
-		for(;index<length;index++){
-			info = displayInfo[index];
-			info.id = String(index); //setting index of display
-			displayJSON.displays.push({
-				workArea: info.workArea,
-				isEnabled: info.isEnabled,
-				id: info.id
-			});
-
-			if(currentWindowInfo.left > info.workArea.left && currentWindowInfo.left < info.workArea.left + info.workArea.width && currentWindowInfo.top > info.workArea.top && currentWindowInfo.top < info.workArea.top + info.workArea.height){
-				displayJSON.primaryIndex = index;
-			}
-
-		}
-		return displayJSON;
-	}
-
 	function renderDisplayTemplate(info, id, isPrimary){
 		var $template = $('<div class="display-entry" title="Please select display to use."><div class="display-meta"></div></div>');
 			$template.css({
@@ -1019,10 +1042,14 @@ if(!deferTracking) {
 	}).on('click','.resize-selector-container',function(){
 		var resizeSelector = $(this).children('.resize-selector'),
 			resizeTypeStr = resizeSelector.attr('data-selector-type'),
-			resizeType = resizeTypeStr.split('x');
+            isScaled = (resizeTypeStr.indexOf('scale') !== -1),
+            scaledResizeType = resizeTypeStr.split('-'),
+            resizeType = (isScaled ? scaledResizeType[0]: resizeTypeStr.split('x')),
+            orientation = (isScaled ? scaledResizeType[2] : null);
 
-		main_view.resizeTabs(Number(resizeType[0]),Number(resizeType[1]));
+        main_view[isScaled ? 'resizeScaledTabs' : 'resizeTabs'](Number(resizeType[0]),Number(resizeType[1]), orientation);
 		sendTracking('resize',resizeTypeStr);
+
 	}).on('show','.modal-box', function(evt){
 		evt.stopPropagation();
 		util.centerModal($(this));
@@ -1034,7 +1061,7 @@ if(!deferTracking) {
 		layout.removeLayout(resizeType);
 		sendTracking('resize-delete',resizeType);
 	}).on('click','#undo-layout',function(){
-		options.undoResize();
+		backJs.util.undoResize(resize,options.disableUndoButton);
 		sendTracking('undo','undo');
 	}).on('click','#custom-layout',function(evt){
 		evt.stopPropagation();
@@ -1120,7 +1147,7 @@ if(!deferTracking) {
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
 	}).on('click','#display-setting-layer .switch-toggle input',function(evt,deferTracking){
 		var alignment = $(this).attr('id');
-		$('.switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
+		$('#display-setting-layer .switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
 		options.processAlignmentSelection(alignment);
 		if(!deferTracking){
 			sendTracking('alignment',alignment);
@@ -1134,9 +1161,42 @@ if(!deferTracking) {
 	}).on('click','.signature a',function(){
 		if($(this).hasClass('rate-it')){
 			sendTracking('info-links','rate-it');
-		} else {
+		} else if ($(this).hasClass('signature')) {
 			sendTracking('info-links','author');
+		} else {
+			sendTracking('info-links','keyboard-shortcuts');
 		}
+	}).on('click','a.keyboard-shortcuts', function(){
+		chrome.tabs.create({url:'chrome://extensions/configureCommands'});
+	}).on('click','.custom-view .switch-toggle.layout-option input', function(){
+		var option = $(this).attr('id'),
+			changed = false,
+			$customView = $('.custom-view');
+
+		if(option === 'scaled' && !$customView.hasClass('scaled') || option !== 'scaled' && $customView.hasClass('scaled')){
+			changed = true;
+		}
+
+		$customView[(option === 'scaled') ? 'addClass' : 'removeClass']('scaled');
+
+		if(changed){
+			util.clearCanvas();
+			custom_view.clearCustomValues();
+			if(option === 'scaled'){
+				custom_view.showScaledMenu();
+			}
+			sendTracking('custom-layout',option);
+		}
+
+	}).on('click', '.custom-view .scaled-input', function(){
+		var $this = $(this);
+		$('.custom-view .scaled-input').removeClass('selected');
+		$this.addClass('selected');
+		custom_view.showScaledMenu();
+		sendTracking('custom-layout',$this.text());
+	}).on('click','.custom-view .switch-toggle.scaled-layout-orientation input', function(){
+		custom_view.showScaledMenu();
+		sendTracking('custom-layout',$(this).attr('id'));
 	});
 
 })();

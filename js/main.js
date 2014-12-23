@@ -22,10 +22,14 @@
 	}).on('click','.resize-selector-container',function(){
 		var resizeSelector = $(this).children('.resize-selector'),
 			resizeTypeStr = resizeSelector.attr('data-selector-type'),
-			resizeType = resizeTypeStr.split('x');
+            isScaled = (resizeTypeStr.indexOf('scale') !== -1),
+            scaledResizeType = resizeTypeStr.split('-'),
+            resizeType = (isScaled ? scaledResizeType[0]: resizeTypeStr.split('x')),
+            orientation = (isScaled ? scaledResizeType[2] : null);
 
-		main_view.resizeTabs(Number(resizeType[0]),Number(resizeType[1]));
+        main_view[isScaled ? 'resizeScaledTabs' : 'resizeTabs'](Number(resizeType[0]),Number(resizeType[1]), orientation);
 		sendTracking('resize',resizeTypeStr);
+
 	}).on('show','.modal-box', function(evt){
 		evt.stopPropagation();
 		util.centerModal($(this));
@@ -37,7 +41,7 @@
 		layout.removeLayout(resizeType);
 		sendTracking('resize-delete',resizeType);
 	}).on('click','#undo-layout',function(){
-		options.undoResize();
+		backJs.util.undoResize(resize,options.disableUndoButton);
 		sendTracking('undo','undo');
 	}).on('click','#custom-layout',function(evt){
 		evt.stopPropagation();
@@ -123,7 +127,7 @@
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
 	}).on('click','#display-setting-layer .switch-toggle input',function(evt,deferTracking){
 		var alignment = $(this).attr('id');
-		$('.switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
+		$('#display-setting-layer .switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
 		options.processAlignmentSelection(alignment);
 		if(!deferTracking){
 			sendTracking('alignment',alignment);
@@ -137,9 +141,42 @@
 	}).on('click','.signature a',function(){
 		if($(this).hasClass('rate-it')){
 			sendTracking('info-links','rate-it');
-		} else {
+		} else if ($(this).hasClass('signature')) {
 			sendTracking('info-links','author');
+		} else {
+			sendTracking('info-links','keyboard-shortcuts');
 		}
+	}).on('click','a.keyboard-shortcuts', function(){
+		chrome.tabs.create({url:'chrome://extensions/configureCommands'});
+	}).on('click','.custom-view .switch-toggle.layout-option input', function(){
+		var option = $(this).attr('id'),
+			changed = false,
+			$customView = $('.custom-view');
+
+		if(option === 'scaled' && !$customView.hasClass('scaled') || option !== 'scaled' && $customView.hasClass('scaled')){
+			changed = true;
+		}
+
+		$customView[(option === 'scaled') ? 'addClass' : 'removeClass']('scaled');
+
+		if(changed){
+			util.clearCanvas();
+			custom_view.clearCustomValues();
+			if(option === 'scaled'){
+				custom_view.showScaledMenu();
+			}
+			sendTracking('custom-layout',option);
+		}
+
+	}).on('click', '.custom-view .scaled-input', function(){
+		var $this = $(this);
+		$('.custom-view .scaled-input').removeClass('selected');
+		$this.addClass('selected');
+		custom_view.showScaledMenu();
+		sendTracking('custom-layout',$this.text());
+	}).on('click','.custom-view .switch-toggle.scaled-layout-orientation input', function(){
+		custom_view.showScaledMenu();
+		sendTracking('custom-layout',$(this).attr('id'));
 	});
 
 })();

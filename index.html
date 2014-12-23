@@ -42,7 +42,7 @@
 				</div>
 			</div>
 			<div id="display-setting-layer">
-				<div class="signature"><a title="Developed by peterdotjs - http://peterdotjs.com" target="_blank" href="http://peterdotjs.com">peterdotjs</a><a title="If you like Tab Resize you can help me by rating it &#9733; 5 stars and leaving a nice little review" class="rate-it" target="_blank" href="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc/reviews">&#9733; rate it</a></div>
+				<div class="signature"><a title="Developed by peterdotjs - http://peterdotjs.com" target="_blank" href="http://peterdotjs.com">peterdotjs</a><a title="If you like Tab Resize you can help me by rating it &#9733; 5 stars and leaving a nice little review" class="rate-it" target="_blank" href="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc/reviews">&#9733; rate it</a><a class="keyboard-shortcuts" target="_blank" href="javascript:;" title="keyboard shortcuts">hotkeys</a></div>
 				<div class="switch-toggle switch-candy">
 					<input id="left" name="view" type="radio" checked>
 					<label for="left" title="Left align tabs during resize">Left Align</label>
@@ -55,6 +55,13 @@
 		</div>
 		<div class="custom-view modal-box hidden">
 			<div class="modal-body">
+				<div class="switch-toggle switch-candy scaled-layout-orientation">
+					<input id="horizontal-scaled" name="scaled-layout-orientation" type="radio" checked="">
+					<label for="horizontal-scaled" title="horizontal scaled layout orientation">Horizontal</label>
+					<input id="vertical-scaled" name="scaled-layout-orientation" type="radio">
+					<label for="vertical-scaled" title="vertical scaled layout orientation">Vertical</label>
+					<a></a>
+				</div>
 				<div class="table-container">
 					<div class="table-label-top">columns</div>
 					<div class="table-label-left">rows</div>
@@ -72,8 +79,19 @@
 						<input type="text" class="custom-value columns" id="numCols" maxlength='1'>
 					</div>
 				</div>
+				<ul class="scaled-input-container">
+					<li class="scaled-input selected" data-type="6-4">6:4</li>
+					<li class="scaled-input" data-type="7-3">7:3</li>
+				</ul>
 			</div>
 			<div class = "input-container-footer modal-footer">
+				<div class="switch-toggle switch-candy layout-option">
+					<input id="fixed" name="layout-option" type="radio" checked="">
+					<label for="fixed" title="Fixed layout-option">Fixed</label>
+					<input id="scaled" name="layout-option" type="radio">
+					<label for="scaled" title="Scaled layout-option">Scaled</label>
+					<a></a>
+				</div>
 				<button class="button primary disabled" id="input-save">Save</button>
 				<button class="button" id="input-cancel">Cancel</button>
 			</div>
@@ -117,30 +135,27 @@
 				<div class="header-title-wrap">
 					<div class="icon-48"></div>
 					<div class="header-title">
-						Tab Resize 2.1.1 Updates
+						Tab Resize 2.2.0 Updates
 					</div>
 				</div>
 				<div class="update-list-header">What's New:</div>
 				<ul class="update-list">
 					<li class="update-entry">
-						<strong>Multiple monitor support!</strong> - individually select each display in your desktop setup
+						<strong>Scaled split screen layouts</strong> - you can now add split layouts for vertical and horizontal 7:3 and 6:4 ratio split screen in the custom view option by clicking the "+"icon in the extension popup.
 					</li>
 					<li class="update-entry">
-						<strong>Left and right option</strong> - align tabs to the left or right
-					</li>
-					<li class="update-entry">
-						<strong>Empty tab option</strong> - create empty tabs when selecting layouts
-					</li>
-					<li class="update-entry latest">
-						<strong>Drag and drop for sorting layouts</strong> - Click and hold on any layout and drag to rearange order to your liking
-					</li>
-					<li class="update-entry latest">
-						<strong>Highlighted tabs now can be resized</strong> - when 2 or more tabs are highlighted, only these tabs will be considered for resize. Credit goes to F.C. for the idea. <a target="_blank" href="http://www.cnet.com/how-to/how-to-manipulate-multiple-tabs-in-chrome-or-firefox/" title="In Chrome, you can select multiple tabs by clicking on tabs while holding down the Ctrl (Command for Mac) key or select a range of tabs by holding down the Shift key and clicking.  http://www.cnet.com/how-to/how-to-manipulate-multiple-tabs-in-chrome-or-firefox/">Hover for more info.</a>
+						<strong>Keyboard Shortcut/Hotkeys enabled </strong> - You can now use tab resize with just keyboard shortcuts rather than opening up the extension from the icon. Add your own custom shotcut keys for various layout types by clicking here: <a class="keyboard-shortcuts" href="javascript:;" target="_blank">Keyboard shortcuts/hotkeys</a>
 					</li>
 				</ul>
-				<div class="update-list-footer bold">
-					You can checkout the <a target="_blank" href="https://www.youtube.com/watch?v=GFHl98nAV04" title="https://www.youtube.com/watch?v=GFHl98nAV04">video demo</a> for a more detailed description.
+				
+				<div class="additional-message bold">
+					-- Past change log <a href="/options.html" target="_blank">details</a> --
 				</div>
+
+				<div class="update-list-footer bold">
+					You can checkout the <a target="_blank" href="https://www.youtube.com/watch?v=GFHl98nAV04" title="https://www.youtube.com/watch?v=GFHl98nAV04">video demo</a> for a more detailed description of how to use the extension.
+				</div>
+				
 				<div class="additional-message bold">If you like the extension and find it useful please show your support by rating it in the <a target="_blank" href="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc/reviews" title="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc/reviews">web store</a>. Thanks! -Peter</div>
 			</div>
 			<div class="modal-footer">

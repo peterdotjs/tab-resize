@@ -19,7 +19,7 @@
 		canvasWidth: 100,
 		currentLayouts: null,
 		defaultLayouts: {'layoutItems':["1x1","1x2","2x1","2x2"]},
-		layoutSprites: {'layoutItems':["1x1","1x2","2x1","2x2","1x3","3x1"]},
+		layoutSprites: {'layoutItems':["1x1","1x2","2x1","2x2","1x3","3x1","6x4-scale-horizontal","7x3-scale-horizontal", "6x4-scale-vertical", "7x3-scale-vertical"]},
 		maxSelectorsPerLine: 5,
 		maxSelectorContainerWidth: 156,
 		maxSelectorContainerHeight: 156,
