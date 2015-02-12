@@ -1,6 +1,8 @@
 Tab-Resize
 ==========
 
+[![Join the chat at https://gitter.im/peterdotjs/Tab-Resize](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/peterdotjs/Tab-Resize?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate Windows. w/ Multi Monitor Support.
 
 Chrome Web Store: https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc
