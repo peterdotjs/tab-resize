@@ -1,7 +1,9 @@
 Tab-Resize
 ==========
 
-Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate Windows. w/ Multi Monitor Support.
+Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate Windows. Only Single Monitor Support.
+
+*** Opera version is currently missing Multi-Monitor Support and highlighting multiple tabs due to lack of API support ***
 
 Chrome Web Store: https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc
 
