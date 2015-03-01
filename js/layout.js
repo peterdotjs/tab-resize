@@ -12,7 +12,7 @@
 			var $layouts = $('.resize-selector'),
 				length = $layouts.length,
 				index = 0,
-				currentLayouts = [];	
+				currentLayouts = [];
 
 			for(;index<length;index++){
 				currentLayouts.push($layouts.eq(index).attr('data-selector-type'));
@@ -146,7 +146,7 @@
 								//add in markup - styles will be added in less
 								innerHtml += '<div title="New Tab" class="tab-layer tab-layer-'+ (tabNumber++) + '"><div class="fav-icon"></div></div>';
 							}
-						}						
+						}
 					} else {
 						innerHtml += '<div title="New Tab" class="tab-layer tab-layer-1"><div class="fav-icon"></div></div>' + '<div title="New Tab" class="tab-layer tab-layer-2"><div class="fav-icon"></div></div>';
 					}
@@ -157,7 +157,7 @@
 				//find the selected and add the urls
 				for(index=0;index<tabs.length;index++){
 					curTab = tabs[index];
-					if(curTab.highlighted){
+					if(curTab.active){
 						processSelectedTab(curTab,index,tabs);
 						break;
 					}

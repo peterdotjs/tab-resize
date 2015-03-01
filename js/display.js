@@ -15,12 +15,6 @@
 	var displayUtil = {
 
 		initialize: function(){
-			if(chrome.system && chrome.system.display){
-				resize.display = chrome.system.display;
-			} else {
-				return;
-			}
-
 			$el = $('#display-setting-layer');
 
 			$el.on('click','.display-entry',function(evt){
@@ -35,37 +29,54 @@
 				sendTracking('display-select',sz);
 			});
 
-			resize.display.getInfo(function(displayInfo){
+			if(chrome.system && chrome.system.display){
+				resize.display = chrome.system.display;
+
+				resize.display.getInfo(function(displayInfo){
+					chrome.windows.getCurrent({populate:true},function(windowInfo){
+
+						var currentWindowInfo = {
+							left: windowInfo.left + windowInfo.width - 100,
+							top: windowInfo.top + 100
+						};
+
+						var displayJSON = backJs.util.displayInfoFormatter(displayInfo,currentWindowInfo),
+							template,
+							currentDisplay;
+
+						processAutoFormat(displayJSON);
+
+						for(var i=0; i<displayJSON.displays.length; i++){
+							currentDisplay = displayJSON.displays[i];
+							template = renderDisplayTemplate(currentDisplay.workArea, currentDisplay.id, displayJSON.primaryIndex === i);
+							$el.append(template);
+						}
+						//need to start building the dom display
+						chrome.tabs.query({currentWindow: true, active: true},
+							function (tabs) {
+								if(tabs.length > 1){
+									resize.currentWindowTabs = tabs;
+								} else {
+									resize.currentWindowTabs = windowInfo.tabs;
+								}
+								resize.layout.processTabInfo();
+						});
+					});
+				});
+			} else {
 				chrome.windows.getCurrent({populate:true},function(windowInfo){
-
-					var currentWindowInfo = {
-						left: windowInfo.left + windowInfo.width - 100,
-						top: windowInfo.top + 100
-					};
-
-					var displayJSON = backJs.util.displayInfoFormatter(displayInfo,currentWindowInfo),
-						template,
-						currentDisplay;
-
-					processAutoFormat(displayJSON);
-
-					for(var i=0; i<displayJSON.displays.length; i++){
-						currentDisplay = displayJSON.displays[i];
-						template = renderDisplayTemplate(currentDisplay.workArea, currentDisplay.id, displayJSON.primaryIndex === i);
-						$el.append(template);
-					}
 					//need to start building the dom display
-					chrome.tabs.query({currentWindow: true, highlighted: true},
+					chrome.tabs.query({currentWindow: true, active: true},
 						function (tabs) {
 							if(tabs.length > 1){
 								resize.currentWindowTabs = tabs;
 							} else {
 								resize.currentWindowTabs = windowInfo.tabs;
-							}				
+							}
 							resize.layout.processTabInfo();
 					});
 				});
-			});
+			}
 			//event handling for selecting the display
 		}
 	};

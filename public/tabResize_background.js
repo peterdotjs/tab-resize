@@ -391,7 +391,7 @@ function resizeTabHelper(resize, screenInfo, scaledOrientation){
 	window.chrome.tabs.query({currentWindow: true},
 		function (tabs) {
 			resize.tabsArray = tabs;
-			window.chrome.tabs.query({currentWindow: true, highlighted: true},
+			window.chrome.tabs.query({currentWindow: true, active: true},
 				function (tab) {
 					resize.currentTab = tab[0];
 					var index = resize.currentTab.index;
@@ -500,6 +500,29 @@ chrome.commands.onCommand.addListener(function callback(command) {
 				}
 			});
 		});
+	} else {
+		chrome.windows.getCurrent(function(windowInfo){
+			var currentWindowInfo = {
+				left: windowInfo.left + windowInfo.width - 100,
+				top: windowInfo.top + 100
+			};
+
+			var workArea = {
+					height: window.screen.availHeight,
+					width: window.screen.availWidth,
+					top: window.screen.availTop,
+					left: window.screen.availLeft
+				},
+				isScaled = command.indexOf('scale') !== -1,
+				resizeParams = getResizeParams(command);
+
+			sendTracking('keyboard-shortcut',command);
+
+			if(isScaled){
+				resizeScaledTabs(workArea, resizeParams.primaryRatio, resizeParams.secondaryRatio, resizeParams.orientation);
+			} else {
+				resizeTabs(workArea,resizeParams.rows,resizeParams.cols);
+			}
+		});
 	}
 });
-

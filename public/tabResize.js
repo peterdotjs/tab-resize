@@ -151,7 +151,7 @@ if(!deferTracking) {
 
 			var curVersion = localStorage.getItem('version') || '',
 				isOldVersion = (curVersion < '2.2.0' && curVersion !== '');
-			
+
 			var $body = $('body');
 
 			//user has never seen update
@@ -166,10 +166,10 @@ if(!deferTracking) {
 				resize.options.showUpdateModal();
 			}
 
-			if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
-				$body.addClass('promo');
-				resize.options.showPromoModal();
-			}
+			// if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
+			// 	$body.addClass('promo');
+			// 	resize.options.showPromoModal();
+			// }
 
 			$(function(){
 				resize.util.initSortable();
@@ -240,7 +240,7 @@ if(!deferTracking) {
 
 			resize.numRows = (orientation === 'horizontal' ? 1 : 2);
 			resize.numCols = (orientation === 'horizontal' ? 2 : 1);
-		
+
 			/*
 			* split width of screen based on the primary and secondary ratios
 			*/
@@ -268,7 +268,7 @@ if(!deferTracking) {
 		} else {
 			resize.width = Math.round(window.screen.availWidth/cols);
 			resize.height  = Math.round(window.screen.availHeight/rows);
-		}		
+		}
 	}
 
 	function resizeTabHelper(screenInfo, scaledOrientation){
@@ -288,7 +288,7 @@ if(!deferTracking) {
 		window.chrome.tabs.query({currentWindow: true},
 			function (tabs) {
 				resize.tabsArray = tabs;
-				window.chrome.tabs.query({currentWindow: true, highlighted: true},
+				window.chrome.tabs.query({currentWindow: true, active: true},
 					function (tab) {
 						resize.currentTab = tab[0];
 						var index = resize.currentTab.index;
@@ -315,6 +315,7 @@ if(!deferTracking) {
 	window.resize.main_view = main_view;
 
 })();
+
 /*
 * custom_view.js
 * handles custom view menu
@@ -572,6 +573,7 @@ if(!deferTracking) {
 	window.resize.options = options;
 
 })();
+
 /*
 * layout.js
 * adds/removes layout from popup
@@ -586,7 +588,7 @@ if(!deferTracking) {
 			var $layouts = $('.resize-selector'),
 				length = $layouts.length,
 				index = 0,
-				currentLayouts = [];	
+				currentLayouts = [];
 
 			for(;index<length;index++){
 				currentLayouts.push($layouts.eq(index).attr('data-selector-type'));
@@ -720,7 +722,7 @@ if(!deferTracking) {
 								//add in markup - styles will be added in less
 								innerHtml += '<div title="New Tab" class="tab-layer tab-layer-'+ (tabNumber++) + '"><div class="fav-icon"></div></div>';
 							}
-						}						
+						}
 					} else {
 						innerHtml += '<div title="New Tab" class="tab-layer tab-layer-1"><div class="fav-icon"></div></div>' + '<div title="New Tab" class="tab-layer tab-layer-2"><div class="fav-icon"></div></div>';
 					}
@@ -731,7 +733,7 @@ if(!deferTracking) {
 				//find the selected and add the urls
 				for(index=0;index<tabs.length;index++){
 					curTab = tabs[index];
-					if(curTab.highlighted){
+					if(curTab.active){
 						processSelectedTab(curTab,index,tabs);
 						break;
 					}
@@ -757,6 +759,7 @@ if(!deferTracking) {
 	window.resize.layout = layout;
 
 })();
+
 /**
 * utility.js
 * general utility functions used for modal, canvas, etc.
@@ -880,12 +883,6 @@ if(!deferTracking) {
 	var displayUtil = {
 
 		initialize: function(){
-			if(chrome.system && chrome.system.display){
-				resize.display = chrome.system.display;
-			} else {
-				return;
-			}
-
 			$el = $('#display-setting-layer');
 
 			$el.on('click','.display-entry',function(evt){
@@ -900,37 +897,54 @@ if(!deferTracking) {
 				sendTracking('display-select',sz);
 			});
 
-			resize.display.getInfo(function(displayInfo){
+			if(chrome.system && chrome.system.display){
+				resize.display = chrome.system.display;
+
+				resize.display.getInfo(function(displayInfo){
+					chrome.windows.getCurrent({populate:true},function(windowInfo){
+
+						var currentWindowInfo = {
+							left: windowInfo.left + windowInfo.width - 100,
+							top: windowInfo.top + 100
+						};
+
+						var displayJSON = backJs.util.displayInfoFormatter(displayInfo,currentWindowInfo),
+							template,
+							currentDisplay;
+
+						processAutoFormat(displayJSON);
+
+						for(var i=0; i<displayJSON.displays.length; i++){
+							currentDisplay = displayJSON.displays[i];
+							template = renderDisplayTemplate(currentDisplay.workArea, currentDisplay.id, displayJSON.primaryIndex === i);
+							$el.append(template);
+						}
+						//need to start building the dom display
+						chrome.tabs.query({currentWindow: true, active: true},
+							function (tabs) {
+								if(tabs.length > 1){
+									resize.currentWindowTabs = tabs;
+								} else {
+									resize.currentWindowTabs = windowInfo.tabs;
+								}
+								resize.layout.processTabInfo();
+						});
+					});
+				});
+			} else {
 				chrome.windows.getCurrent({populate:true},function(windowInfo){
-
-					var currentWindowInfo = {
-						left: windowInfo.left + windowInfo.width - 100,
-						top: windowInfo.top + 100
-					};
-
-					var displayJSON = backJs.util.displayInfoFormatter(displayInfo,currentWindowInfo),
-						template,
-						currentDisplay;
-
-					processAutoFormat(displayJSON);
-
-					for(var i=0; i<displayJSON.displays.length; i++){
-						currentDisplay = displayJSON.displays[i];
-						template = renderDisplayTemplate(currentDisplay.workArea, currentDisplay.id, displayJSON.primaryIndex === i);
-						$el.append(template);
-					}
 					//need to start building the dom display
-					chrome.tabs.query({currentWindow: true, highlighted: true},
+					chrome.tabs.query({currentWindow: true, active: true},
 						function (tabs) {
 							if(tabs.length > 1){
 								resize.currentWindowTabs = tabs;
 							} else {
 								resize.currentWindowTabs = windowInfo.tabs;
-							}				
+							}
 							resize.layout.processTabInfo();
 					});
 				});
-			});
+			}
 			//event handling for selecting the display
 		}
 	};
@@ -1018,6 +1032,7 @@ if(!deferTracking) {
 	}
 
 })(window.jQuery);
+
 /**
 * main.js
 * initialization and event handlers

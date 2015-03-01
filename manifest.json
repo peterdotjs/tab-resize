@@ -12,7 +12,7 @@
   "icons": { "16": "images/icons/icon16.png",
            "48": "images/icons/icon48.png",
           "128": "images/icons/icon128.png" },
-  "permissions": ["tabs", "system.display"],
+  "permissions": ["tabs"],
   "background": {
     "scripts": ["js/lib/jquery.min.js","public/tabResize_background.min.js"]
   },
