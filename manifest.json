@@ -14,7 +14,7 @@
           "128": "images/icons/icon128.png" },
   "permissions": ["tabs"],
   "background": {
-    "scripts": ["js/lib/jquery.min.js","public/tabResize_background.min.js"]
+    "scripts": ["js/lib/jquery.min.js","public/tabResize_background.js"]
   },
   "offline_enabled": true,
   "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
