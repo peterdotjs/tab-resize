@@ -84,11 +84,13 @@
 				if(updateCount === resize.badgeLimit){
 					chrome.browserAction.setBadgeText({text:''});
 				}
+			} else {
+				chrome.browserAction.setBadgeText({text:''});
 			}
 
 			var curVersion = localStorage.getItem('version') || '',
 				isOldVersion = (curVersion < '2.2.0' && curVersion !== '');
-			
+
 			var $body = $('body');
 
 			//user has never seen update
@@ -103,10 +105,10 @@
 				resize.options.showUpdateModal();
 			}
 
-			if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
-				$body.addClass('promo');
-				resize.options.showPromoModal();
-			}
+			// if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
+			// 	$body.addClass('promo');
+			// 	resize.options.showPromoModal();
+			// }
 
 			$(function(){
 				resize.util.initSortable();
@@ -177,7 +179,7 @@
 
 			resize.numRows = (orientation === 'horizontal' ? 1 : 2);
 			resize.numCols = (orientation === 'horizontal' ? 2 : 1);
-		
+
 			/*
 			* split width of screen based on the primary and secondary ratios
 			*/
@@ -205,7 +207,7 @@
 		} else {
 			resize.width = Math.round(window.screen.availWidth/cols);
 			resize.height  = Math.round(window.screen.availHeight/rows);
-		}		
+		}
 	}
 
 	function resizeTabHelper(screenInfo, scaledOrientation){

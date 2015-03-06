@@ -28,7 +28,7 @@
 		custom_view: {},
 		options: {},
 		util: {},
-		badgeLimit: 7,
+		badgeLimit: 4,
 		isMac: navigator.platform.toUpperCase().indexOf('MAC')!==-1
 	};
 
