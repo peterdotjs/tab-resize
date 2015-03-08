@@ -54,13 +54,14 @@ if(!deferTracking) {
 		custom_view: {},
 		options: {},
 		util: {},
-		badgeLimit: 7,
+		badgeLimit: 4,
 		isMac: navigator.platform.toUpperCase().indexOf('MAC')!==-1
 	};
 
 	window.resize = resize;
 
 })();
+
 /**
 * main_view.js
 * handles main view - bulk of resize functionality
@@ -147,6 +148,8 @@ if(!deferTracking) {
 				if(updateCount === resize.badgeLimit){
 					chrome.browserAction.setBadgeText({text:''});
 				}
+			} else {
+				chrome.browserAction.setBadgeText({text:''});
 			}
 
 			var curVersion = localStorage.getItem('version') || '',
@@ -1173,10 +1176,13 @@ if(!deferTracking) {
 		options.hidePromoModal();
 	}).on('click','#warning-apply',function(){
 		options.hideWarningModal();
-	}).on('click','.signature a',function(){
-		if($(this).hasClass('rate-it')){
+	}).on('click','.track-me a',function(){
+		var $this = $(this);
+		if($this.hasClass('rate-it')){
 			sendTracking('info-links','rate-it');
-		} else if ($(this).hasClass('signature')) {
+		} else if ($this.hasClass('options')) {
+			sendTracking('info-links','options');
+		} else if ($this.hasClass('author')) {
 			sendTracking('info-links','author');
 		} else {
 			sendTracking('info-links','keyboard-shortcuts');

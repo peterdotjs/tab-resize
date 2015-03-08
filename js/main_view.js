@@ -84,6 +84,8 @@
 				if(updateCount === resize.badgeLimit){
 					chrome.browserAction.setBadgeText({text:''});
 				}
+			} else {
+				chrome.browserAction.setBadgeText({text:''});
 			}
 
 			var curVersion = localStorage.getItem('version') || '',

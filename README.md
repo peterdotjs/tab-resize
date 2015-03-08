@@ -5,17 +5,19 @@ Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layout
 
 *** Opera version is currently missing Multi-Monitor Support and highlighting multiple tabs due to lack of API support ***
 
+[![Join the chat at https://gitter.im/peterdotjs/Tab-Resize](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/peterdotjs/Tab-Resize?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Chrome Web Store: https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc
 
-*** Version 2.0 *** 
+*** Version 2.0 ***
 Added support for multiple monitors, left and right alignment, and empty tab mode
 
-*** DEMO video *** 
+*** DEMO video ***
 http://www.youtube.com/watch?v=GFHl98nAV04
 
 What
 --------
-✓A simple extension designed to provide ease in resizing your tabs. A set of default layouts are provided but you can add and remove from the list of layouts to fit your needs. With multiple monitor support you can move windows from one screen to the next with ease. 
+✓A simple extension designed to provide ease in resizing your tabs. A set of default layouts are provided but you can add and remove from the list of layouts to fit your needs. With multiple monitor support you can move windows from one screen to the next with ease.
 
 Why
 -------
@@ -27,13 +29,13 @@ Why
 
 How it works
 -------------------
-✓The selected/highlighted tab along with all tabs to the right of it will be considered. Whether you have more or less tabs than are needed the extension will resize only the available tabs. 
+✓The selected/highlighted tab along with all tabs to the right of it will be considered. Whether you have more or less tabs than are needed the extension will resize only the available tabs.
 
 ✓Undo button will undo the previous layout resize. You can only perform undo once at any time.
 
-✓In 'single tab' mode, only the selected/highlighted tab will considered. Only the current window/tab will change in size, all other tabs to the right will be ignored. 
+✓In 'single tab' mode, only the selected/highlighted tab will considered. Only the current window/tab will change in size, all other tabs to the right will be ignored.
 
-✓In 'empty tab' mode, new windows with empty tabs will be created if there are not enough tabs to fill your selected layout. 
+✓In 'empty tab' mode, new windows with empty tabs will be created if there are not enough tabs to fill your selected layout.
 
 ✓You can select left or right alignment for your resize
 
@@ -42,4 +44,3 @@ How it works
 Additional Notes
 ------------------------
 Only tab/window id info is being used; browsing activity is not. Tabs and browsing activity access are bundled together.
-

@@ -463,29 +463,47 @@ button.disabled {
 	display: none;
 	position: relative;
 	bottom: 0px;
-	margin: 50px 50px 0px 50px;
+	margin: 80px 50px 0px 50px;
 	.font-family();
+
+  #ext-title {
+		position: absolute;
+		left: -36px;
+		bottom: 20px;
+
+		.title {
+			a {
+				color: #005579;
+			}
+			font-size: 13px;
+			font-weight: bold;
+		}
+	}
 
 	.signature {
 		position: absolute;
-	    bottom: 10px;
-	    font-size: 13px;
-	    right: -45px;
-	    font-weight: bold;
-	    a {
-	    	color: #005579;
-	    	padding-right: 5px;
-	    }
+    bottom: 20px;
+    font-size: 13px;
+    right: -42px;
+    font-weight: bold;
 
-	    .rate-it, .keyboard-shortcuts {
-	    	border-left: 1px solid silver;
-	    	padding-left: 5px;
-	    	padding-right: 5px;
-	    }
+		li {
+			display: inline;
+		}
+
+    a {
+    	color: #005579;
+    	padding-right: 5px;
+    }
+
+    .rate-it, .keyboard-shortcuts {
+    	padding-left: 5px;
+    	padding-right: 5px;
+    }
 	}
 
 	.switch-toggle {
-		top: -38px;
+		top: -60px;
 		left: 0px;
 		width: 100%;
 
