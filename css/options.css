@@ -1,0 +1,117 @@
+html {
+  font: 18px/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin: 0 50px;
+}
+
+body {
+  width: 550px;
+  margin: 50px auto;
+  position: relative;
+}
+
+h1 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 35px;
+}
+
+h2 {
+  font-size: 20px;
+  font-weight: bold;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+  margin-bottom: -5px;
+}
+
+h3 {
+  font-size: 18px;
+  line-height: 25px;
+}
+
+section {
+  margin-bottom: 80px;
+}
+
+.update-entry {
+  font-size: 16px;
+}
+
+.donate-wrap {
+  padding: 0px;
+}
+
+.donate-wrap .choice {
+  font-size: 12px;
+}
+
+.donate {
+  list-style: none;
+  text-align: center;
+}
+
+iframe.star-gazer {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+}
+
+a {
+  color: #08c;
+  text-decoration: none;
+}
+
+.btn {
+	border: none;
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	background: none;
+	cursor: pointer;
+	padding: 15px 30px;
+	display: inline-block;
+	margin: 10px;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: 700;
+	outline: none;
+	position: relative;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.btn:after {
+	content: '';
+	position: absolute;
+	z-index: -1;
+	-webkit-transition: all 0.3s;
+	-moz-transition: all 0.3s;
+	transition: all 0.3s;
+}
+
+.btn-6 {
+	color: #fff;
+	background: #226fbe;
+	-webkit-transition: none;
+	-moz-transition: none;
+	transition: none;
+}
+
+.btn-6:active {
+	top: 2px;
+}
+
+.btn-6b {
+	border: 4px solid #226fbe;
+	border-radius: 10px;
+}
+
+.btn-6b:hover {
+	background: transparent;
+	color: #226fbe;
+}
+
+#tracking-opt-out {
+  position: relative;
+  top: -2px;
+}
