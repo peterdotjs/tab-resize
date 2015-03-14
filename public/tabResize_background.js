@@ -1,5 +1,14 @@
 //background.js - background process for tab resize
 
+//update when available rather than needing to wait for chrome to restart
+chrome.runtime.onUpdateAvailable.addListener(function(details){
+	var curVersion = localStorage.getItem('version');
+	if(curVersion < details.version){
+		localStorage.setItem('version',details.version);
+		chrome.runtime.reload();
+	}
+});
+
 if(!localStorage.getItem('updateBadge')){
 	localStorage.setItem('updateBadge',0);
 	chrome.browserAction.setBadgeText({text:'NEW'});
@@ -502,4 +511,3 @@ chrome.commands.onCommand.addListener(function callback(command) {
 		});
 	}
 });
-

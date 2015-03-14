@@ -7,8 +7,10 @@
 
 	$('body').on('click','#tracking-opt-out',function(){
 		var checked = $(this).attr('checked');
+		sendTracking('options-link', checked ? "opt-out-true" : "opt-out-false");
 		localStorage.setItem("tracking-opt-out",checked ? "true" : "false");
 	}).on('click', '#keyboard-shortcut-link', function(){
+		sendTracking('options-link','keyboard-shortcut');
 		chrome.tabs.create({url:'chrome://extensions/configureCommands'});
 	}).on('click', '#water-charity', function(){
 		sendTracking('options-link','water.org');
