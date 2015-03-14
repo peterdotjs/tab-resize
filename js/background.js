@@ -9,6 +9,21 @@ chrome.runtime.onUpdateAvailable.addListener(function(details){
 	}
 });
 
+var SECONDS_IN_DAY = 86400000;
+
+//run once a day to check for updates
+setInterval(function(){
+	chrome.runtime.requestUpdateCheck(function(status) {
+	  if (status === "update_available") {
+	    console.log("update pending...");
+	  } else if (status === "no_update") {
+	    console.log("no update found");
+	  } else if (status === "throttled") {
+	    console.log("Oops, I'm asking too frequently - I need to back off.");
+	  }
+	});
+},SECONDS_IN_DAY);
+
 if(!localStorage.getItem('updateBadge')){
 	localStorage.setItem('updateBadge',0);
 	chrome.browserAction.setBadgeText({text:'NEW'});
