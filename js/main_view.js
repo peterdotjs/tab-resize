@@ -98,9 +98,10 @@
 				$body.addClass('update');
 				if(isOldVersion){
 					localStorage.removeItem('update-seen');
-				} else if (!localStorage.getItem('warning-seen')) {
-					$body.addClass('warning');
-					resize.options.showWarningModal();
+					if (!localStorage.getItem('warning-seen')) {
+						$body.addClass('warning');
+						resize.options.showWarningModal();
+					}
 				}
 				resize.options.showUpdateModal();
 			}
