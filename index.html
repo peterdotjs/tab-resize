@@ -31,6 +31,23 @@
           <p><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/tab-resize/ss4v4.png" alt="Tab Resize Screenshot"></p>
 
 <h1>
+<a id="preface" class="anchor" href="#preface" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preface</h1>
+
+<ul>
+<li><p><a href="https://github.com/everyone" class="user-mention">@everyone</a> that's liked it, thanks a lot for the support! I'm really glad you guys found it useful. You're pretty much the motivation continuing to build and improve the extension. =) Thanks for checking it out! =)</p></li>
+<li><p>If you like it please rate it and if you have any feature requests, questions or bugs you file it here: 
+<a href="https://github.com/peterdotjs/Tab-Resize/issues?state=open">https://github.com/peterdotjs/Tab-Resize/issues?state=open</a> </p></li>
+<li><p>This extension will not resize within the same tab (multiple panes with only ONE url bar). Chrome extensions with iframes have security limitations (i.e. you can't see any https site like Gmail or Facebook). You also won't be able to access any of your favorite extensions on the individual panes. Tab Resize splits tabs into separate windows and has none of the limitations listed earlier. If you can't figure out how to use the Tab Resize extension, please read the rest of the description or watch the demo. </p></li>
+</ul>
+
+<h1>
+<a id="known-issues" class="anchor" href="#known-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Known Issues</h1>
+
+<ul>
+<li>There is currently a Chrome issue where the popup permissions text is incorrect. It should read: "Access your browsing activity" rather than " Read your browsing history." (<a href="https://developer.chrome.com/extensions/permission_warnings#warnings">https://developer.chrome.com/extensions/permission_warnings#warnings</a>) The extension DOES NOT and CANNOT access your browsing history. I have filed the following bug against the Chrome Team: <a href="https://code.google.com/p/chromium/issues/detail?id=462287">https://code.google.com/p/chromium/issues/detail?id=462287</a> </li>
+</ul>
+
+<h1>
 <a id="install" class="anchor" href="#install" aria-hidden="true"><span class="octicon octicon-link"></span></a>Install</h1>
 
 <ul>
@@ -44,6 +61,9 @@
 <ul>
 <li><a href="http://www.youtube.com/watch?v=GFHl98nAV04">http://www.youtube.com/watch?v=GFHl98nAV04</a></li>
 </ul>
+
+<p>If you like it please rate it and if you have any feature requests, questions or bugs you file it here: 
+<a href="https://github.com/peterdotjs/Tab-Resize/issues?state=open">https://github.com/peterdotjs/Tab-Resize/issues?state=open</a> </p>
 
 <h1>
 <a id="change-log" class="anchor" href="#change-log" aria-hidden="true"><span class="octicon octicon-link"></span></a>Change Log:</h1>
@@ -84,7 +104,8 @@
 <hr>
 
 <ul>
-<li>A simple extension designed to provide ease in resizing your tabs. A set of default layouts are provided but you can add and remove from the list of layouts to fit your needs. With multiple monitor support you can move windows from one screen to the next with ease. </li>
+<li><p>A simple extension designed to provide ease in resizing your tabs. A set of default layouts are provided but you can add and remove from the list of layouts to fit your needs. With multiple monitor support you can move windows from one screen to the next with ease. </p></li>
+<li><p>Has the functionality of Tab Scissors and much much more!</p></li>
 </ul>
 
 <h1>
@@ -120,7 +141,9 @@
 <hr>
 
 <ul>
-<li>Only tab/window id info is being used; browsing activity is not. Tabs and browsing activity access are bundled together.</li>
+<li><p>Only tab/window id info is being used; browsing activity is not. Tabs and browsing activity access are bundled together. "tabs" permissions is one of the least invasive permissions that are available. Browsing activity you should note is NOT the same as Browsing History. "Browsing activity" means the current tabs that are open not your previously closed tabs. This permission is required because this extension needs to manipulate and move tabs around (an essential feature of this extension) If you feel uncomfortable with this basic permission please don't install it. Giving it a bad review because you don't understand or like the permissions doesn't do anything productive. All my code is open sourced on github (<a href="https://github.com/peterdotjs/Tab-Resize">https://github.com/peterdotjs/Tab-Resize</a>) so feel free to look at how I'm using this permission.</p></li>
+<li><p>It's good to be informed and understand the permissions of any extension you install. For more chrome permission information go here: <a href="https://developer.chrome.com/extensions/declare_permissions">https://developer.chrome.com/extensions/declare_permissions</a></p></li>
+<li><p>Anonymous usage tracking (# clicks on the different resize options) is used to improve the extension and user experience. You can opt out in the options menu.</p></li>
 </ul>
         </section>
 
