@@ -1,34 +1,37 @@
 <!DOCTYPE html>
 <html>
+
   <head>
     <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+    <meta name="description" content="Tab-resize : Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate Windows. w/ Multi-monitor Support">
 
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
-    <title>Tab-resize by peterdotjs</title>
+    <title>Tab-resize</title>
   </head>
 
   <body>
-    <header>
-      <div class="inner">
-        <h1>Tab-resize</h1>
-        <h2>Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate Windows. w/ Multi-monitor Support</h2>
-        <a href="https://github.com/peterdotjs/Tab-Resize" class="button"><small>View project on</small> GitHub</a>
-      </div>
-    </header>
 
-    <div id="content-wrapper">
-      <div class="inner clearfix">
-        <section id="main-content">
-          <p><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/tab-resize/ss4v4.png" alt="Tab Resize Screenshot"></p>
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/peterdotjs/Tab-Resize">View on GitHub</a>
+
+          <h1 id="project_title">Tab-resize</h1>
+          <h2 id="project_tagline">Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate Windows. w/ Multi-monitor Support</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/peterdotjs/Tab-Resize/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/peterdotjs/Tab-Resize/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/tab-resize/ss4v4.png" alt="Tab Resize Screenshot"></p>
 
 <h1>
 <a id="preface" class="anchor" href="#preface" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preface</h1>
@@ -37,7 +40,7 @@
 <li><p>@ everyone that's liked it, thanks a lot for the support! I'm really glad you guys found it useful. You're pretty much the motivation continuing to build and improve the extension. =) Thanks for checking it out! =)</p></li>
 <li><p>If you like it please rate it and if you have any feature requests, questions or bugs you file it here: 
 <a href="https://github.com/peterdotjs/Tab-Resize/issues?state=open">https://github.com/peterdotjs/Tab-Resize/issues?state=open</a> </p></li>
-<li><p>This extension will not resize within the same tab (multiple panes with only ONE url bar). Chrome extensions with iframes have security limitations (i.e. you can't see any https site like Gmail or Facebook). You also won't be able to access any of your favorite extensions on the individual panes. Tab Resize splits tabs into separate windows and has none of the limitations listed earlier. If you can't figure out how to use the Tab Resize extension, please read the rest of the description or watch the demo. </p></li>
+<li><p>This extension will not resize within the same tab <strong>(multiple panes with only ONE url bar)</strong>. Chrome extensions with iframes have security limitations (i.e. you can't see any https site like Gmail or Facebook). You also won't be able to access any of your favorite extensions on the individual panes. Tab Resize splits tabs into <strong>separate windows</strong> and has <strong>none of the limitations listed earlier</strong>. If you can't figure out how to use the Tab Resize extension, please read the rest of the description or watch the demo. </p></li>
 </ul>
 
 <h1>
@@ -145,26 +148,18 @@
 <li><p>It's good to be informed and understand the permissions of any extension you install. For more chrome permission information go here: <a href="https://developer.chrome.com/extensions/declare_permissions">https://developer.chrome.com/extensions/declare_permissions</a></p></li>
 <li><p>Anonymous usage tracking (# clicks on the different resize options) is used to improve the extension and user experience. You can opt out in the options menu.</p></li>
 </ul>
-        </section>
-
-        <aside id="sidebar">
-          <a href="https://github.com/peterdotjs/Tab-Resize/zipball/master" class="button">
-            <small>Download</small>
-            .zip file
-          </a>
-          <a href="https://github.com/peterdotjs/Tab-Resize/tarball/master" class="button">
-            <small>Download</small>
-            .tar.gz file
-          </a>
-
-          <p class="repo-owner"><a href="https://github.com/peterdotjs/Tab-Resize"></a> is maintained by <a href="https://github.com/peterdotjs">peterdotjs</a>.</p>
-
-          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
-        </aside>
-      </div>
+      </section>
     </div>
 
-            <script type="text/javascript">
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Tab-resize maintained by <a href="https://github.com/peterdotjs">peterdotjs</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
             var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
             document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
           </script>
@@ -174,6 +169,7 @@
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
+
 
   </body>
 </html>
