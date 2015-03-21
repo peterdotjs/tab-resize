@@ -13,10 +13,6 @@ Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layout
 -------
 <a href="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc"><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/Franksouza183-Fs-Apps-google-chrome.ico" height="100" width="100"></a><a href="https://addons.opera.com/en/extensions/details/tab-resize-split-screen-layouts/?display=en"><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/opera-browser.png" height="100" width="100"></a>
 
-- Chrome Web Store: https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc
-
-- Opera Web Store: https://addons.opera.com/en/extensions/details/tab-resize-split-screen-layouts/?display=en
-
 <br/>
 
 #Demo
