@@ -25,3 +25,15 @@
   width: 100%;
   height: 100%;
 }
+
+.header-icon {
+  position: relative;
+  top: 8px;
+  border: 4px solid white;
+  left: 20px;
+  margin: 0px;
+  border-radius: 4px;
+  background: white;
+  width: 50px;
+  height: 50px;
+}
