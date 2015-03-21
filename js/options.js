@@ -106,7 +106,7 @@
 			$('body').removeClass('update');
 			$('.main-view').removeClass('inactive');
 			localStorage.setItem('update-seen',true);
-			localStorage.setItem('version','2.3.3');
+			localStorage.setItem('version','2.3.4');
 		},
 
 		/**

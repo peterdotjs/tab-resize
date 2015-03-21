@@ -4,7 +4,6 @@
 chrome.runtime.onUpdateAvailable.addListener(function(details){
 	var curVersion = localStorage.getItem('version');
 	if(curVersion < details.version){
-		localStorage.setItem('version',details.version);
 		chrome.runtime.reload();
 	}
 });
@@ -24,16 +23,33 @@ chrome.runtime.onUpdateAvailable.addListener(function(details){
 // 	});
 // },SECONDS_IN_DAY);
 
-var version = localStorage.getItem('version');
+chrome.runtime.onInstalled.addListener(function(details){
+	if(details){
+		var reason = details.reason;
+		if(reason === 'install'){
+			sendTracking('install','install');
+		} else if(reason === 'update'){
+			sendTracking('install','update');
+		}
+	}
+});
 
-if(!localStorage.getItem('updateBadge') || version < '2.3.3'){
+var curVersion = localStorage.getItem('version') || '',
+		isOldVersion = (curVersion < '2.3.4' && curVersion !== '');
+
+if(!curVersion){
+	localStorage.setItem('version','2.2.0');
+}
+
+//is new install or hasen't seen latest update
+if(!localStorage.getItem('updateBadge') || isOldVersion ){
 	localStorage.setItem('updateBadge',0);
 	chrome.browserAction.setBadgeText({text:'NEW'});
 	chrome.browserAction.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
 }
 
-if(!localStorage.getItem('version')){
-	localStorage.setItem('version','2.1.1');
+if(isOldVersion){
+	localStorage.removeItem('update-seen');
 }
 
 var util = {

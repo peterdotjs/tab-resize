@@ -74,7 +74,7 @@
 			var updateCount = Number(localStorage.getItem('updateBadge'));
 
 			var curVersion = localStorage.getItem('version') || '',
-					isOldVersion = (curVersion < '2.3.3' && curVersion !== '');
+					isOldVersion = (curVersion < '2.3.4' && curVersion !== '');
 
 			if(!updateCount || isOldVersion){
 				updateCount = 0;

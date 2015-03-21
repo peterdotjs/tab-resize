@@ -138,7 +138,7 @@ if(!deferTracking) {
 			var updateCount = Number(localStorage.getItem('updateBadge'));
 
 			var curVersion = localStorage.getItem('version') || '',
-					isOldVersion = (curVersion < '2.3.3' && curVersion !== '');
+					isOldVersion = (curVersion < '2.3.4' && curVersion !== '');
 
 			if(!updateCount || isOldVersion){
 				updateCount = 0;
@@ -528,7 +528,7 @@ if(!deferTracking) {
 			$('body').removeClass('update');
 			$('.main-view').removeClass('inactive');
 			localStorage.setItem('update-seen',true);
-			localStorage.setItem('version','2.3.3');
+			localStorage.setItem('version','2.3.4');
 		},
 
 		/**
