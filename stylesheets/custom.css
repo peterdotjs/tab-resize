@@ -1,0 +1,27 @@
+.flash-video {
+  margin: 0 auto 1.5em;
+  border-radius: 0.3em;
+  box-shadow:rgba(0,0,0,0.15) 0 1px 4px;
+  box-sizing: border-box;
+  border: #fff 0.5em solid;
+  border-width: 6px;
+  max-width: 100%;
+  height: auto;
+}
+
+.flash-video > div {
+  position: relative;
+  display: block;
+  padding-bottom: 56.25%;
+  padding-top: 1px;
+  height: 0;
+  overflow: hidden;
+}
+
+.flash-video > div iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
