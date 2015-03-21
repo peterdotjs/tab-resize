@@ -54,7 +54,7 @@ if(!deferTracking) {
 		custom_view: {},
 		options: {},
 		util: {},
-		badgeLimit: 4,
+		badgeLimit: 2,
 		isMac: navigator.platform.toUpperCase().indexOf('MAC')!==-1
 	};
 
@@ -137,7 +137,13 @@ if(!deferTracking) {
 
 			var updateCount = Number(localStorage.getItem('updateBadge'));
 
-			if(!updateCount){
+			var curVersion = localStorage.getItem('version') || '',
+					isOldVersion = (curVersion < '2.3.1' && curVersion !== '');
+
+			localStorage.setItem('version','2.3.1');
+
+			if(!updateCount || isOldVersion){
+				updateCount = 0;
 				localStorage.setItem('updateBadge',0);
 				chrome.browserAction.setBadgeText({text:'NEW'});
 				chrome.browserAction.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
@@ -151,9 +157,6 @@ if(!deferTracking) {
 			} else {
 				chrome.browserAction.setBadgeText({text:''});
 			}
-
-			var curVersion = localStorage.getItem('version') || '',
-				isOldVersion = (curVersion < '2.2.0' && curVersion !== '');
 
 			var $body = $('body');
 
@@ -527,7 +530,7 @@ if(!deferTracking) {
 			$('body').removeClass('update');
 			$('.main-view').removeClass('inactive');
 			localStorage.setItem('update-seen',true);
-			localStorage.setItem('version','2.2.0');
+			localStorage.setItem('version','2.3.1');
 		},
 
 		/**
@@ -577,6 +580,7 @@ if(!deferTracking) {
 	window.resize.options = options;
 
 })();
+
 /*
 * layout.js
 * adds/removes layout from popup

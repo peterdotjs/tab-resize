@@ -1,7 +1,7 @@
 {
   "name": "Tab Resize - split screen layouts",
   "short_name": "Tab Resize",
-  "version": "2.2.9",
+  "version": "2.3.0",
   "manifest_version": 2,
   "minimum_chrome_version": "30",
   "description": "Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate windows. w/ Multi Monitor Support.",
@@ -33,25 +33,34 @@
       }
     },
     "tab-resize-1-1": {
-      "description": "Resize 1x1 layout"
+      "description": "Resize 1x1 layout",
+      "suggested_key": {
+        "default": "Ctrl+Shift+1",
+        "mac": "MacCtrl+Shift+1"
+      }
     },
     "tab-resize-1-2": {
-      "description": "Resize 1x2 layout"
+      "description": "Resize 1x2 layout",
+      "suggested_key": {
+        "default": "Ctrl+Shift+2",
+        "mac": "MacCtrl+Shift+2"
+      }
     },
     "tab-resize-2-1": {
       "description": "Resize 2x1 layout"
     },
     "tab-resize-2-2": {
-      "description": "Resize 2x2 layout"
+      "description": "Resize 2x2 layout",
+      "suggested_key": {
+        "default": "Ctrl+Shift+4",
+        "mac": "MacCtrl+Shift+4"
+      }
     },
     "tab-resize-1-3": {
       "description": "Resize 1x3 layout"
     },
     "tab-resize-3-1": {
       "description": "Resize 3x1 layout"
-    },
-    "tab-resize-1-3": {
-      "description": "Resize 1x3 layout"
     },
     "tab-resize-6-4-scale-horizontal": {
       "description": "Resize 6:4 layout"

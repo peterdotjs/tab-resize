@@ -73,7 +73,13 @@
 
 			var updateCount = Number(localStorage.getItem('updateBadge'));
 
-			if(!updateCount){
+			var curVersion = localStorage.getItem('version') || '',
+					isOldVersion = (curVersion < '2.3.1' && curVersion !== '');
+
+			localStorage.setItem('version','2.3.1');
+
+			if(!updateCount || isOldVersion){
+				updateCount = 0;
 				localStorage.setItem('updateBadge',0);
 				chrome.browserAction.setBadgeText({text:'NEW'});
 				chrome.browserAction.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
@@ -87,9 +93,6 @@
 			} else {
 				chrome.browserAction.setBadgeText({text:''});
 			}
-
-			var curVersion = localStorage.getItem('version') || '',
-				isOldVersion = (curVersion < '2.2.0' && curVersion !== '');
 
 			var $body = $('body');
 
