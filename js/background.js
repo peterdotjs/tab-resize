@@ -24,7 +24,9 @@ chrome.runtime.onUpdateAvailable.addListener(function(details){
 // 	});
 // },SECONDS_IN_DAY);
 
-if(!localStorage.getItem('updateBadge')){
+var version = localStorage.getItem('version');
+
+if(!localStorage.getItem('updateBadge') || version < '2.3.3'){
 	localStorage.setItem('updateBadge',0);
 	chrome.browserAction.setBadgeText({text:'NEW'});
 	chrome.browserAction.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
