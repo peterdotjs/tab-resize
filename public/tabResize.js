@@ -140,8 +140,6 @@ if(!deferTracking) {
 			var curVersion = localStorage.getItem('version') || '',
 					isOldVersion = (curVersion < '2.3.1' && curVersion !== '');
 
-			localStorage.setItem('version','2.3.1');
-
 			if(!updateCount || isOldVersion){
 				updateCount = 0;
 				localStorage.setItem('updateBadge',0);
@@ -382,11 +380,11 @@ if(!deferTracking) {
 					resize.layout.addLayout(layoutType);
 					resize.layout.processTabInfo($('.layout-' + layoutType));
 					this.hideCustomMenu();
-				}				
+				}
 			} else {
 				var orientation = getScaledOrientation(),
 					scaledOption = getScaledOption();
-				
+
 				layoutType = scaledOption[0] + 'x' + scaledOption[1] + '-scale-' + orientation;
 				resize.layout.addLayout(layoutType);
 				resize.layout.processTabInfo($('.layout-' + layoutType));
@@ -396,7 +394,7 @@ if(!deferTracking) {
 		},
 
 		/**
-		* shows the scaled menu view 
+		* shows the scaled menu view
 		*/
 		showScaledMenu: function(){
 			var orientation = getScaledOrientation(),
@@ -530,7 +528,7 @@ if(!deferTracking) {
 			$('body').removeClass('update');
 			$('.main-view').removeClass('inactive');
 			localStorage.setItem('update-seen',true);
-			localStorage.setItem('version','2.3.1');
+			localStorage.setItem('version','2.3.2');
 		},
 
 		/**
@@ -595,7 +593,7 @@ if(!deferTracking) {
 			var $layouts = $('.resize-selector'),
 				length = $layouts.length,
 				index = 0,
-				currentLayouts = [];	
+				currentLayouts = [];
 
 			for(;index<length;index++){
 				currentLayouts.push($layouts.eq(index).attr('data-selector-type'));
@@ -729,7 +727,7 @@ if(!deferTracking) {
 								//add in markup - styles will be added in less
 								innerHtml += '<div title="New Tab" class="tab-layer tab-layer-'+ (tabNumber++) + '"><div class="fav-icon"></div></div>';
 							}
-						}						
+						}
 					} else {
 						innerHtml += '<div title="New Tab" class="tab-layer tab-layer-1"><div class="fav-icon"></div></div>' + '<div title="New Tab" class="tab-layer tab-layer-2"><div class="fav-icon"></div></div>';
 					}
@@ -818,7 +816,7 @@ if(!deferTracking) {
 		* @param {Number} width - width of table
 		* @param {Number} height - height of table
 		* @param {Number} scale - percentage of first col/row
-		* @param {String} orientation - "vertical" or "horizontal" 
+		* @param {String} orientation - "vertical" or "horizontal"
 		* @param {CanvasRenderingContext2D} context - 2D context of canvas object
 		*/
 		drawScaledTable: function(width, height, scale, orientation, context) {
@@ -935,7 +933,7 @@ if(!deferTracking) {
 								resize.currentWindowTabs = tabs;
 							} else {
 								resize.currentWindowTabs = windowInfo.tabs;
-							}				
+							}
 							resize.layout.processTabInfo();
 					});
 				});
