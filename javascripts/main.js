@@ -3,8 +3,8 @@
   var isChrome = (window.chrome && window.chrome.webstore),
       isOpera = (window.opr && window.opr.addons);
 
-  var chromeInstallBtn = $('install-button-chrome'),
-      operaInstalBtn = $('install-button-opera');
+  var chromeInstallBtn = $('#install-button-chrome'),
+      operaInstalBtn = $('#install-button-opera');
 
   if(isChrome){
     chromeInstallBtn
