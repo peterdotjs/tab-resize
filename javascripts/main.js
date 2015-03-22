@@ -10,15 +10,24 @@
     chromeInstallBtn
       .attr({
         role:'button',
-        href:'javascript;:',
-        onclick:'chrome.webstore.install()'
+        href:'#'
       });
+
+    chromeInstallBtn.on('click',function(evt){
+      evt.preventDefault();
+      chrome.webstore.install();
+    });
+
   } else if(isOpera){
     operaInstalBtn
       .attr({
         role:'button',
-        href:'javascript;:',
-        onclick:"opr.addons.installExtension('lfdlpjohbjaibcdopbbbkclkagnaemop')"
+        href:'#'
       });
+
+    operaInstalBtn.on('click',function(evt){
+      evt.preventDefault();
+      opr.addons.installExtension('lfdlpjohbjaibcdopbbbkclkagnaemop');
+    });
   }
 })(window.jQuery);
