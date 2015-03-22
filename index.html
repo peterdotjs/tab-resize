@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
     <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
     <link rel="stylesheet" type="text/css" href="stylesheets/custom.css">
+    <link rel="chrome-webstore-item" href="https://chrome.google.com/webstore/detail/bkpenclhmiealbebdopglffmfdiilejc">
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -38,7 +39,7 @@
 
 <hr>
 
-<p><a href="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc"><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/Franksouza183-Fs-Apps-google-chrome.ico" height="100" width="100"></a><a href="https://addons.opera.com/en/extensions/details/tab-resize-split-screen-layouts/?display=en"><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/opera-browser.png" height="100" width="100"></a></p>
+<p><a id="install-button-chrome" href="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc"><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/Franksouza183-Fs-Apps-google-chrome.ico" height="100" width="100"></a><a id="install-button-opera" href="https://addons.opera.com/en/extensions/details/tab-resize-split-screen-layouts/?display=en"><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/opera-browser.png" height="100" width="100"></a></p>
 
 <p><br></p>
 
@@ -110,21 +111,40 @@
 <a id="220" class="anchor" href="#220" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.2.0</h3>
 
 <ul>
-<li>Added support for shortcut keys and scaled split screen layouts.</li>
+  <li>
+    <strong>Scaled split screen layouts</strong> - you can now add split layouts for 7:3 and 6:4 ratio split screen in the custom view option by clicking the "+"icon in the extension popup.
+  </li>
+  <li>
+    <strong>Keyboard Shortcut/Hotkeys enabled </strong> - You can now use tab resize with just keyboard shortcuts rather than opening up the extension from the icon. Add your own custom shortcut keys for various layout types.
+  </li>
 </ul>
 
 <h3>
 <a id="211" class="anchor" href="#211" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1.1</h3>
 
 <ul>
-<li>HIGHLIGHTED TABS NOW CAN BE RESIZED (not only tabs to the right) - when 2 or more tabs are highlighted, only these tabs will be considered for resize. In Chrome, you can select multiple tabs by clicking on tabs while holding down the Ctrl (Command for Mac) key or select a range of tabs by holding down the Shift key and clicking. </li>
+  <li>
+    <strong>Drag and Drop support!</strong> - drag and drop to rearrange layouts
+  </li>
+<li><strong>HIGHLIGHTED TABS NOW CAN BE RESIZED</strong> (not only tabs to the right) - when 2 or more tabs are highlighted, only these tabs will be considered for resize. In Chrome, you can select multiple tabs by clicking on tabs while holding down the Ctrl (Command for Mac) key or select a range of tabs by holding down the Shift key and clicking. </li>
 </ul>
 
 <h3>
 <a id="21" class="anchor" href="#21" aria-hidden="true"><span class="octicon octicon-link"></span></a>2.1</h3>
 
 <ul>
-<li>Added support for multiple monitors, left and right alignment, empty tab mode, drag and drop to rearrange layouts and highlighted tab mode. Fully supports Windows, Mac and Linux OS.</li>
+  <li>
+    <strong>Multiple monitor support!</strong> - individually select each display in your desktop setup
+  </li>
+  <li>
+    <strong>Left and right option</strong> - align tabs to the left or right
+  </li>
+  <li>
+    <strong>Empty tab option</strong> - create empty tabs when selecting layouts
+  </li>
+  <li>
+    <strong>Cross platform support</strong> - Fully supports Windows, Mac and Linux OS.
+  </li>
 </ul>
 
 <p><br></p>
@@ -211,6 +231,7 @@
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
-
+          <script src="https://code.jquery.com/jquery-2.1.3.min.js"></script>
+          <script src="javascripts/main.js"></script>
   </body>
 </html>
