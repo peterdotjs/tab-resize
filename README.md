@@ -104,3 +104,9 @@ https://github.com/peterdotjs/Tab-Resize/issues?state=open
 - It's good to be informed and understand the permissions of any extension you install. For more chrome permission information go here: https://developer.chrome.com/extensions/declare_permissions
 
 - Anonymous usage tracking (# clicks on the different resize options) is used to improve the extension and user experience. You can opt out in the options menu.
+
+<br/>
+
+#License
+---------
+See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
