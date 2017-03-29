@@ -54,7 +54,7 @@ https://github.com/peterdotjs/Tab-Resize/issues?state=open
 ### 2.1.1
 - HIGHLIGHTED TABS NOW CAN BE RESIZED (not only tabs to the right) - when 2 or more tabs are highlighted, only these tabs will be considered for resize. In Chrome, you can select multiple tabs by clicking on tabs while holding down the Ctrl (Command for Mac) key or select a range of tabs by holding down the Shift key and clicking. 
 
-###2.1
+### 2.1
 - Added support for multiple monitors, left and right alignment, empty tab mode, drag and drop to rearrange layouts and highlighted tab mode. Fully supports Windows, Mac and Linux OS.
 
 <br/>
@@ -97,7 +97,7 @@ https://github.com/peterdotjs/Tab-Resize/issues?state=open
 
 <br/>
 
-#Additional Notes
+# Additional Notes
 -------
 - Only tab/window id info is being used; browsing activity is not. Tabs and browsing activity access are bundled together. "tabs" permissions is one of the least invasive permissions that are available. Browsing activity you should note is NOT the same as Browsing History. "Browsing activity" means the current tabs that are open not your previously closed tabs. This permission is required because this extension needs to manipulate and move tabs around (an essential feature of this extension) If you feel uncomfortable with this basic permission please don't install it. Giving it a bad review because you don't understand or like the permissions doesn't do anything productive. All my code is open sourced on github (https://github.com/peterdotjs/Tab-Resize) so feel free to look at how I'm using this permission.
 
