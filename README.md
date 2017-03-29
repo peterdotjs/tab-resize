@@ -9,19 +9,19 @@ Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layout
 
 <br/>
 
-#Install
+# Install
 -------
 <a href="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc"><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/Franksouza183-Fs-Apps-google-chrome.ico" height="100" width="100"></a><a href="https://addons.opera.com/en/extensions/details/tab-resize-split-screen-layouts/?display=en"><img src="https://raw.githubusercontent.com/peterdotjs/resources/master/opera-browser.png" height="100" width="100"></a>
 
 <br/>
 
-#Demo
+# Demo
 -------
  - http://www.youtube.com/watch?v=GFHl98nAV04
 
 <br/>
 
-#Preface
+# Preface
 -------
 - @ everyone that's liked it, thanks a lot for the support! I'm really glad you guys found it useful. You're pretty much the motivation continuing to build and improve the extension. =) Thanks for checking it out! =)
 
@@ -32,15 +32,15 @@ https://github.com/peterdotjs/Tab-Resize/issues?state=open
 
 <br/>
 
-#Known Issues
+# Known Issues
 -------
 - There is currently a Chrome issue where the popup permissions text is incorrect. It should read: "Access your browsing activity" rather than " Read your browsing history." (https://developer.chrome.com/extensions/permission_warnings#warnings) The extension DOES NOT and CANNOT access your browsing history. I have filed the following bug against the Chrome Team: https://code.google.com/p/chromium/issues/detail?id=462287 
 
 <br/>
 
-#Change Log
+# Change Log
 -------
-###2.3.0
+### 2.3.0
 - Added default shortcut keys:
 - **Ctrl + Shift + Z**: Undo Last Resize 
 - **Ctrl + Shift + 1**: 1x1 Resize 
@@ -48,10 +48,10 @@ https://github.com/peterdotjs/Tab-Resize/issues?state=open
 - **Ctrl + Shift + 4**: 2x2 Resize 
 - Can still be changed through shortcut key menu.
 
-###2.2.0
+### 2.2.0
 - Added support for shortcut keys and scaled split screen layouts.
 
-###2.1.1
+### 2.1.1
 - HIGHLIGHTED TABS NOW CAN BE RESIZED (not only tabs to the right) - when 2 or more tabs are highlighted, only these tabs will be considered for resize. In Chrome, you can select multiple tabs by clicking on tabs while holding down the Ctrl (Command for Mac) key or select a range of tabs by holding down the Shift key and clicking. 
 
 ###2.1
@@ -59,7 +59,7 @@ https://github.com/peterdotjs/Tab-Resize/issues?state=open
 
 <br/>
 
-#What
+# What
 -------
 - A simple extension designed to provide ease in resizing your tabs. A set of default layouts are provided but you can add and remove from the list of layouts to fit your needs. With multiple monitor support you can move windows from one screen to the next with ease. 
 
@@ -67,7 +67,7 @@ https://github.com/peterdotjs/Tab-Resize/issues?state=open
 
 <br/>
 
-#Why
+# Why
 -------
 - Manually resizing windows is no fun.
 
@@ -77,7 +77,7 @@ https://github.com/peterdotjs/Tab-Resize/issues?state=open
 
 <br/>
 
-#How it works
+# How it works
 -------
 - The selected/highlighted tab along with all tabs to the right of it will be considered. Whether you have more or less tabs than are needed the extension will resize only the available tabs. 
 
@@ -107,6 +107,6 @@ https://github.com/peterdotjs/Tab-Resize/issues?state=open
 
 <br/>
 
-#License
+# License
 ---------
-See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
+See the [LICENSE](LICENSE.md) file for license rights and limitations.
