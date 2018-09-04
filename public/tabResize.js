@@ -50,6 +50,7 @@ if(!deferTracking) {
 		maxSelectorContainerWidth: 156,
 		maxSelectorContainerHeight: 156,
 		singleTab: false,
+		dismissAfter: false,
 		main_view: {},
 		custom_view: {},
 		options: {},
@@ -59,6 +60,17 @@ if(!deferTracking) {
 	};
 
 	window.resize = resize;
+
+	/*
+	* add listener for close request from background to close the foreground (default_popup)
+	*/
+	chrome.runtime.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.close === "foreground") {
+				sendResponse({success: true});
+				window.close();
+			}
+	});
 
 })();
 
@@ -84,6 +96,14 @@ if(!deferTracking) {
 			}
 
 			this.populateMainView();
+
+			var dismissAfterValue = localStorage.getItem('dismissAfter');
+			if(dismissAfterValue && dismissAfterValue === 'true'){
+				$('#checkbox-dismiss-after').attr('checked',true);
+				$('label.dismiss-after').addClass('selected');
+				$('body').addClass('dismiss-after-selected');
+				resize.dismissAfter = true;
+			}
 
 			var singleTabValue = localStorage.getItem('singleTab');
 			if(singleTabValue && singleTabValue === 'true'){
@@ -303,7 +323,7 @@ if(!deferTracking) {
 						}
 
 						var cb = function(){
-								return backJs.util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
+								return backJs.util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.dismissAfter, resize.currentTab.incognito, scaledOrientation);
 						};
 						if(resize.singleTab){
 							backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
@@ -428,6 +448,23 @@ if(!deferTracking) {
 
 	var resize = window.resize;
 	var options = {
+
+		/*
+		* dismiss after select layout option
+		*/
+
+		/**
+		* sets dismissAfter flag
+		* @param {boolean} The hex ID.
+		*/
+		processDismissAfterSelection: function(dismissAfter) {
+			console.log('dismiss after');
+			var _dismissAfter = dismissAfter ? true : false;
+			localStorage.setItem('dismissAfter',_dismissAfter);
+			resize.dismissAfter = _dismissAfter;
+			$('label.dismiss-after').toggleClass('selected');
+			$('body').toggleClass('dismiss-after-selected');
+		},
 
 		/*
 		* single tab option
@@ -1140,6 +1177,10 @@ if(!deferTracking) {
 		var checked = $(this).attr('checked');
 		options.processSingleTabSelection(checked);
 		sendTracking('single-tab',checked ? "checked" : "unchecked");
+	}).on('change','#checkbox-dismiss-after', function(){
+		var checked = $(this).attr('checked');
+		options.processDismissAfterSelection(checked);
+		sendTracking('dismiss-after',checked ? "checked" : "unchecked");
 	}).on('change','#checkbox-empty-tab', function(){
 		var checked = $(this).attr('checked');
 		options.processEmptyTabSelection(checked);

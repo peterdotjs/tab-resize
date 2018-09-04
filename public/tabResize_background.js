@@ -94,10 +94,11 @@ var util = {
 	* @param {number} startIndex index of selected tab in window
 	* @param {number} windowId index of window
 	* @param {boolean} singleTab flag of single tab option
+	* @param {dismissAfter} dismissAfter flag for dismiss context modal after selecting layout
 	* @param {boolean} incog - if window is of type incognito
 	* @param {string} veritical or horizontal for scaled layouts
 	*/
-	processTabs: function(resize, tabsArray, startIndex, windowId, singleTab, incog, scaledOrientation) {
+	processTabs: function(resize, tabsArray, startIndex, windowId, singleTab, dismissAfter, incog, scaledOrientation) {
 		var tabId,
 			_tabsArray = tabsArray.slice(startIndex),
 			index = 0,
@@ -123,6 +124,11 @@ var util = {
 				}
 			};
 
+		var dismiss = function() {
+			// dismiss if configured to do so
+			if (dismissAfter) chrome.runtime.sendMessage({close: "foreground"});
+		}
+
 		//loop through all row and col options
 		for(var y=0; y<resize.numRows; y++){
 			for(var x=0; x<resize.numCols; x++){
@@ -145,6 +151,7 @@ var util = {
 											});
 
 					if(singleTab){
+						dismiss();
 						return;
 					}
 				} else { //otherwise we create a new window
@@ -152,6 +159,7 @@ var util = {
 
 					//when no more tabs avaiable and option to create empty tab is not checked
 					if(!tabId && !resize.emptyTab){
+						dismiss();
 						return;
 					}
 
@@ -184,6 +192,7 @@ var util = {
 				index++;
 			}
 		}
+		dismiss();
 	},
 
 	/**
@@ -443,7 +452,7 @@ function resizeTabHelper(resize, screenInfo, scaledOrientation){
 					}
 
 					var cb = function(){
-							return util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
+							return util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.dismissAfter, resize.currentTab.incognito, scaledOrientation);
 					};
 					if(resize.singleTab){
 						util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);

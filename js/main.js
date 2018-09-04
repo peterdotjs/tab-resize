@@ -113,6 +113,10 @@
 		var checked = $(this).attr('checked');
 		options.processSingleTabSelection(checked);
 		sendTracking('single-tab',checked ? "checked" : "unchecked");
+	}).on('change','#checkbox-dismiss-after', function(){
+		var checked = $(this).attr('checked');
+		options.processDismissAfterSelection(checked);
+		sendTracking('dismiss-after',checked ? "checked" : "unchecked");
 	}).on('change','#checkbox-empty-tab', function(){
 		var checked = $(this).attr('checked');
 		options.processEmptyTabSelection(checked);

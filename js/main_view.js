@@ -21,6 +21,14 @@
 
 			this.populateMainView();
 
+			var dismissAfterValue = localStorage.getItem('dismissAfter');
+			if(dismissAfterValue && dismissAfterValue === 'true'){
+				$('#checkbox-dismiss-after').attr('checked',true);
+				$('label.dismiss-after').addClass('selected');
+				$('body').addClass('dismiss-after-selected');
+				resize.dismissAfter = true;
+			}
+
 			var singleTabValue = localStorage.getItem('singleTab');
 			if(singleTabValue && singleTabValue === 'true'){
 				$('#checkbox-single-tab').attr('checked',true);
@@ -239,7 +247,7 @@
 						}
 
 						var cb = function(){
-								return backJs.util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
+								return backJs.util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.dismissAfter, resize.currentTab.incognito, scaledOrientation);
 						};
 						if(resize.singleTab){
 							backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);

@@ -8,6 +8,23 @@
 	var options = {
 
 		/*
+		* dismiss after select layout option
+		*/
+
+		/**
+		* sets dismissAfter flag
+		* @param {boolean} The hex ID.
+		*/
+		processDismissAfterSelection: function(dismissAfter) {
+			console.log('dismiss after');
+			var _dismissAfter = dismissAfter ? true : false;
+			localStorage.setItem('dismissAfter',_dismissAfter);
+			resize.dismissAfter = _dismissAfter;
+			$('label.dismiss-after').toggleClass('selected');
+			$('body').toggleClass('dismiss-after-selected');
+		},
+
+		/*
 		* single tab option
 		*/
 

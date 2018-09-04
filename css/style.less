@@ -25,7 +25,7 @@ a {
 	text-decoration: none;
 }
 
-//** Load fonts from this directory.
+// ** Load fonts from this directory.
 @icon-font-path:          "../fonts/";
 @icon-font-name:          "glyphicons-halflings-regular";
 @icon-font-svg-id:        "glyphicons_halflingsregular";
@@ -373,12 +373,12 @@ button.disabled {
 			overflow: hidden;
 
 			&.button-wrap {
-				padding: 3px 0 0 2px;
+				padding: 9px 0 0 8px;
 			}
 
 			&.monitor-wrap {
 				float: left;
-				padding: 6px 12px 5px 8px;
+				padding: 10px 12px 11px 8px;
 				border-right: 3px solid silver;
 				cursor: pointer;
 				background: white;
@@ -424,13 +424,14 @@ button.disabled {
 			display: inline-block;
 			border-left: 3px solid silver;
 			float:right;
-			background: white;
+			background: @active-color-checkbox;
 
 			label {
-				font-size: 14px;
+				font-size: 12px;
 				display: block;
 				padding: 11px 7px 13px 10px;
 				cursor: pointer;
+				float: right;
 				&.selected {
 					background: @active-color-checkbox;
 				}
@@ -448,6 +449,7 @@ button.disabled {
 
 				span {
 					position: relative;
+					float:right;
 					top: 1px;
 					left: -2px;
 				}

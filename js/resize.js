@@ -24,6 +24,7 @@
 		maxSelectorContainerWidth: 156,
 		maxSelectorContainerHeight: 156,
 		singleTab: false,
+		dismissAfter: false,
 		main_view: {},
 		custom_view: {},
 		options: {},
@@ -33,5 +34,16 @@
 	};
 
 	window.resize = resize;
+
+	/*
+	* add listener for close request from background to close the foreground (default_popup)
+	*/
+	chrome.runtime.onMessage.addListener(
+		function(request, sender, sendResponse) {
+			if (request.close === "foreground") {
+				sendResponse({success: true});
+				window.close();
+			}
+	});
 
 })();
