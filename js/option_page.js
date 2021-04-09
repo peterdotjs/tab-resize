@@ -12,8 +12,8 @@
 	}).on('click', '#keyboard-shortcut-link', function(){
 		sendTracking('options-link','keyboard-shortcut');
 		chrome.tabs.create({url:'chrome://extensions/configureCommands'});
-	}).on('click', '#water-charity', function(){
-		sendTracking('options-link','water.org');
+	}).on('click', '#buy-coffee', function(){
+		sendTracking('options-link','buy-coffee');
 	}).on('click', '#other-charity', function(){
 		sendTracking('options-link','other-charity');
 	});
