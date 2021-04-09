@@ -14,8 +14,8 @@
 		chrome.tabs.create({url:'chrome://extensions/configureCommands'});
 	}).on('click', '#buy-coffee', function(){
 		sendTracking('options-link','buy-coffee');
-	}).on('click', '#other-charity', function(){
-		sendTracking('options-link','other-charity');
+	}).on('click', '#subscribing', function(){
+		sendTracking('options-link','subscribing');
 	});
 
 	function sendTracking(category, label) {
