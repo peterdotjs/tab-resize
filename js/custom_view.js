@@ -4,6 +4,16 @@
 */
 (function(){
 
+	function val(el) {
+		if (el.options && el.multiple) {
+		  return el.options
+			.filter((option) => option.selected)
+			.map((option) => option.value);
+		} else {
+		  return el.value;
+		}
+	}
+
 	var resize = window.resize;
 
 	var custom_view = {
@@ -12,8 +22,9 @@
 		* hides custom view menu
 		*/
 		hideCustomMenu: function() {
-			$('.custom-view').addClass('hidden');
-			$('.main-view').removeClass('inactive');
+			debugger;
+			document.querySelector('.custom-view').classList.add('hidden');
+			document.querySelector('.main-view').classList.remove('inactive');
 			resize.util.clearCanvas();
 		},
 
@@ -21,32 +32,33 @@
 		* shows custom view menu
 		*/
 		showCustomMenu: function() {
+			debugger;;
 			this.clearCustomValues();
-			$('.layout-option #fixed').trigger('click');
-			$('.main-view').addClass('inactive');
-			$('.custom-view').removeClass('hidden').trigger('show');
-			$('.custom-view input.row').focus();
+			document.querySelector('.layout-option #fixed').click();
+			document.querySelector('.main-view').classList.add('inactive');
+			document.querySelector('.custom-view').classList.remove('hidden');//.trigger('show');
+			// document.querySelector('.custom-view input.row').focus();
 		},
 
 		/**
 		* clears custom row and col values from input fields
 		*/
 		clearCustomValues: function(){
-			$('#numRows').val('');
-			$('#numCols').val('');
-			$('#input-save').addClass('disabled');
+			document.querySelector('#numRows').value = '';
+			document.querySelector('#numCols').value = '';
+			document.querySelector('#input-save').classList.add('disabled');
 		},
 
 		/**
 		* performs save of new layout
 		*/
 		handleCustomSave: function(){
-			var option = $('.custom-view').hasClass('scaled') ? 'scaled' : 'fixed',
+			var option = document.querySelector('.custom-view').classList.contains('scaled') ? 'scaled' : 'fixed',
 				layoutType;
 
 			if(option === 'fixed'){
-				var customRows = $('#numRows').val(),
-					customCols = $('#numCols').val();
+				var customRows = document.querySelector('#numRows').value,
+					customCols = document.querySelector('#numCols').value;
 
 				this.clearCustomValues();
 
@@ -55,7 +67,7 @@
 				} else {
 					layoutType = customRows + 'x' + customCols;
 					resize.layout.addLayout(layoutType);
-					resize.layout.processTabInfo($('.layout-' + layoutType));
+					resize.layout.processTabInfo(document.querySelector('.layout-' + layoutType));
 					this.hideCustomMenu();
 				}				
 			} else {
@@ -64,7 +76,7 @@
 				
 				layoutType = scaledOption[0] + 'x' + scaledOption[1] + '-scale-' + orientation;
 				resize.layout.addLayout(layoutType);
-				resize.layout.processTabInfo($('.layout-' + layoutType));
+				resize.layout.processTabInfo(document.querySelector('.layout-' + layoutType));
 				this.hideCustomMenu();
 			}
 
@@ -87,11 +99,11 @@
 	};
 
 	function getScaledOrientation(){
-		return $('#horizontal-scaled').attr('checked') ? 'horizontal' : 'vertical';
+		return document.querySelector('#horizontal-scaled').checked ? 'horizontal' : 'vertical';
 	}
 
 	function getScaledOption(){
-		return $('.scaled-input.selected').text().split(':');
+		return document.querySelector('.scaled-input.selected').textContent.split(':');
 	}
 
 	window.resize.custom_view = custom_view;

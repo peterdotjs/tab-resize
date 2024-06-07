@@ -1,5 +1,18 @@
 //background.js - background process for tab resize
 
+var localStorage = {
+	getAllItems: function() {
+		chrome.storage.local.get();
+	},
+	getItem: async key => (await chrome.storage.local.get(key))[key],
+	setItem: function(key, val) {
+		chrome.storage.local.set({[key]: val});
+	},
+	removeItems: function() {
+		chrome.storage.local.remove(keys);
+	}
+};
+
 //update when available rather than needing to wait for chrome to restart
 chrome.runtime.onUpdateAvailable.addListener(function(details){
 	var curVersion = localStorage.getItem('version');
@@ -44,13 +57,35 @@ if(!curVersion){
 //is new install or hasen't seen latest update
 if(!localStorage.getItem('updateBadge') || isOldVersion ){
 	localStorage.setItem('updateBadge',0);
-	chrome.browserAction.setBadgeText({text:'NEW'});
-	chrome.browserAction.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
+	chrome.action.setBadgeText({text:'NEW'});
+	chrome.action.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
 }
 
 if(isOldVersion){
 	localStorage.removeItem('update-seen');
 }
+
+chrome.runtime.onMessage.addListener(async (msg) => {
+	switch (msg.type) {
+		case "createNewWindow":
+			break;
+		case "processTabs":
+            util.processTabs(msg.resize, msg.tabsArray, msg.startIndex, msg.windowId, msg.singleTab, msg.incog, msg.scaledOrientation);
+			break;
+		case "setUndoStorage":
+			debugger;
+            util.setUndoStorage(msg.resize, msg.tabIndex, msg.windowId, msg.tabsArray)
+			break;
+		case "updateUndoStorage":
+			break;
+		case "undoResize":
+			break;
+		case "recombineTabs":
+			break;
+		case "displayInfoFormatter":
+			break;
+	}
+  });
 
 var util = {
 
@@ -74,14 +109,14 @@ var util = {
 		};
 
 		if(tabId){
-			if($.isArray(tabId)){
+			if(Array.isArray(tabId)){
 				objectInfo.tabId = tabId[0];
 			} else {
 				objectInfo.tabId = tabId;
 			}
 		}
 
-		window.chrome.windows.create(objectInfo,
+		chrome.windows.create(objectInfo,
 								function(_windowCb){
 									callback(_windowCb, tabId);
 								}
@@ -115,7 +150,7 @@ var util = {
 					if(emptyWindowLimit === numEmptyWindows){
 						that.updateUndoStorage(resize, _tabsArray);
 					}
-				} else if(_tabId && $.isArray(_tabId)){ //moving tabs to last window
+				} else if(_tabId && Array.isArray(_tabId)){ //moving tabs to last window
 					chrome.tabs.move(_tabId.slice(1),{
 						windowId: _windowCb.id,
 						index: 1
@@ -133,11 +168,11 @@ var util = {
 					leftValue = resize.fullWidth - ((x+1)*resize.width) + resize.offsetX;
 				}
 
-				topValue = (y*resize.height) + resize.offsetY;
+				var topValue = (y*resize.height) + resize.offsetY;
 
 				// base case we update the current window
 				if(x === 0 && y === 0){
-					window.chrome.windows.update(_tabsArray[index].windowId,{ left: leftValue,
+					chrome.windows.update(_tabsArray[index].windowId,{ left: leftValue,
 												top: topValue,
 												width: resize.width,
 												height: resize.height,
@@ -194,7 +229,7 @@ var util = {
 	* @param {array} tabsArray Array of tab objects to be moved back to the previous window
 	*/
 	setUndoStorage: function(resize, tabIndex, windowId, tabsArray, cb) {
-		window.chrome.windows.get(windowId,{},function(_windowCb){
+		chrome.windows.get(windowId,{},function(_windowCb){
 			var updateInfo = {	left: _windowCb.left,
 								top: _windowCb.top,
 								width: _windowCb.width,
@@ -214,7 +249,7 @@ var util = {
 			lastTab.lastTabsArray = tabsStore;
 			localStorage.setItem('lastTab',JSON.stringify(lastTab));
 			chrome.runtime.sendMessage('enable-undo');
-			cb();
+			//cb();
 		});
 	},
 
@@ -224,16 +259,18 @@ var util = {
 	* @param {array} tabsArray Array of tab objects to be moved back to the previous window
 	*/
 	updateUndoStorage: function(resize, tabsArray) {
-		var currentLastTab = JSON.parse(localStorage.getItem('lastTab'));
-		var tabsStore = [];
-		for(var x=0; x<tabsArray.length; x++){
-			tabsStore.push(tabsArray[x].id);
-		}
-		if(currentLastTab){
-			currentLastTab.lastTabsArray = tabsStore;
-			localStorage.setItem('lastTab',JSON.stringify(currentLastTab));
-			chrome.runtime.sendMessage('enable-undo');
-		}
+        localStorage.getItem('lastTab').then((data) => {
+            var currentLastTab = JSON.parse(data);
+            var tabsStore = [];
+            for(var x=0; x<tabsArray.length; x++){
+                tabsStore.push(tabsArray[x].id);
+            }
+            if(currentLastTab){
+                currentLastTab.lastTabsArray = tabsStore;
+                localStorage.setItem('lastTab',JSON.stringify(currentLastTab));
+                chrome.runtime.sendMessage('enable-undo');
+            }
+        });
 	},
 
 
@@ -258,7 +295,7 @@ var util = {
 		var windowId = resize.lastTab.lastWindowId;
 		var tabsArray = resize.lastTab.lastTabsArray;
 
-		window.chrome.windows.get(windowId, {}, function(window){
+		chrome.windows.get(windowId, {}, function(window){
 			if(window){
 				that.recombineTabs(resize,tabIndex,windowId,tabsArray,callback);
 			} else {
@@ -299,11 +336,11 @@ var util = {
 	*/
 	recombineTabs: function(resize,tabIndex, windowId, tabsArray, callback) {
 		var indexCounter = tabIndex;
-		window.chrome.tabs.move(tabsArray,{windowId: windowId, index: indexCounter});
+		chrome.tabs.move(tabsArray,{windowId: windowId, index: indexCounter});
 		var updateInfo = resize.lastTab.lastWindowInfo;
 		var updateInfoForUpdate = $.extend(true, {}, updateInfo);
 		delete updateInfoForUpdate.incognito;
-		window.chrome.windows.update(windowId,updateInfoForUpdate);
+		chrome.windows.update(windowId,updateInfoForUpdate);
 		if(callback){
 			callback();
 		}
@@ -397,7 +434,7 @@ function resizeScaledTabs(screenInfo, primaryRatio, secondaryRatio, orientation)
 }
 
 function setScaledResizeWidthHeight(resize, screenInfo, primaryRatio, secondaryRatio, orientation){
-	if(!$.isEmptyObject(screenInfo)){
+	if(!isEmpty(screenInfo)){
 		resize.width = (orientation === 'horizontal') ? Math.round(screenInfo.width*0.1*primaryRatio) : screenInfo.width;
 		resize.height = (orientation === 'horizontal') ? screenInfo.height : Math.round(screenInfo.height*0.1*primaryRatio);
 	} else {
@@ -407,7 +444,7 @@ function setScaledResizeWidthHeight(resize, screenInfo, primaryRatio, secondaryR
 }
 
 function setResizeWidthHeight(resize, screenInfo, rows, cols){
-	if(!$.isEmptyObject(screenInfo)){
+	if(!isEmpty(screenInfo)){
 		resize.width = Math.round(screenInfo.width/cols);
 		resize.height = Math.round(screenInfo.height/rows);
 	} else {
@@ -418,7 +455,7 @@ function setResizeWidthHeight(resize, screenInfo, rows, cols){
 
 function resizeTabHelper(resize, screenInfo, scaledOrientation){
 
-	if(!$.isEmptyObject(screenInfo)){
+	if(!isEmpty(screenInfo)){
 		resize.offsetX = screenInfo.left;
 		resize.offsetY = screenInfo.top;
 		resize.fullWidth = screenInfo.width;
@@ -430,10 +467,10 @@ function resizeTabHelper(resize, screenInfo, scaledOrientation){
 		resize.fullHeight = window.screen.availHeight;
 	}
 
-	window.chrome.tabs.query({currentWindow: true},
+	chrome.tabs.query({currentWindow: true},
 		function (tabs) {
 			resize.tabsArray = tabs;
-			window.chrome.tabs.query({currentWindow: true, highlighted: true},
+			chrome.tabs.query({currentWindow: true, highlighted: true},
 				function (tab) {
 					resize.currentTab = tab[0];
 					var index = resize.currentTab.index;
@@ -443,7 +480,7 @@ function resizeTabHelper(resize, screenInfo, scaledOrientation){
 					}
 
 					var cb = function(){
-							return util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
+						return util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
 					};
 					if(resize.singleTab){
 						util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
@@ -489,21 +526,21 @@ function sendTracking(category, label) {
 		deferTracking = true;
 	}
 
-	if(!deferTracking && ga) {
-		ga('send','event', category, 'clicked', label || "na");
-	}
+	// if(!deferTracking && ga) {
+	// 	ga('send','event', category, 'clicked', label || "na");
+	// }
 }
 
 // Standard Google Universal Analytics code
 /* jshint ignore:start */
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-})(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); // Note: https protocol here
-/* jshint ignore:end */
-ga('create', 'UA-34217520-2', 'auto');
-ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
-ga('require', 'displayfeatures');
+// (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+// (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+// m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+// })(window,document,'script','https://www.google-analytics.com/analytics.js','ga'); // Note: https protocol here
+// /* jshint ignore:end */
+// ga('create', 'UA-34217520-2', 'auto');
+// ga('set', 'checkProtocolTask', function(){}); // Removes failing protocol check. @see: http://stackoverflow.com/a/22152353/1958200
+// ga('require', 'displayfeatures');
 
 chrome.commands.onCommand.addListener(function callback(command) {
 

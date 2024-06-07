@@ -2,6 +2,8 @@
 * options.js
 * handles resize options (single tab, undo resize, default config)
 */
+
+// TODO update local storage
 (function(){
 
 	var resize = window.resize;
@@ -19,8 +21,8 @@
 			var _singleTab = singleTab ? true : false;
 			localStorage.setItem('singleTab',_singleTab);
 			resize.singleTab = _singleTab;
-			$('label.single-tab').toggleClass('selected');
-			$('body').toggleClass('single-tab-selected');
+			document.querySelector('label.single-tab').classList.toggle('selected');
+			document.querySelector('body').classList.toggle('single-tab-selected');
 		},
 
 		/*
@@ -35,8 +37,8 @@
 			var _emptyTab = emptyTab ? true : false;
 			localStorage.setItem('emptyTab',_emptyTab);
 			resize.emptyTab = _emptyTab;
-			$('label.empty-tab').toggleClass('selected');
-			$('body').toggleClass('empty-tab-not-selected');
+			document.querySelector('label.empty-tab').classList.toggle('selected');
+			document.querySelector('body').classList.toggle('empty-tab-not-selected');
 		},
 
 		/**
@@ -57,9 +59,9 @@
 			localStorage.setItem('alignment',alignment);
 			resize.alignment = alignment;
 			if(alignment === 'right'){
-				$('body').addClass('align-right');
+				document.querySelector('body').classList.add('align-right');
 			} else {
-				$('body').removeClass('align-right');
+				document.querySelector('body').classList.remove('align-right');
 			}
 		},
 
@@ -69,14 +71,14 @@
 		disableUndoButton: function() {
 			resize.lastTab = null;
 			localStorage.removeItem('lastTab');
-			$('#undo-layout').addClass('disabled');
+			document.querySelector('#undo-layout').classList.add('disabled');
 		},
 
 		/**
 		* disabled undo button from user input
 		*/
 		enableUndoButton: function() {
-			$('#undo-layout').removeClass('disabled');
+			document.querySelector('#undo-layout').classList.remove('disabled');
 		},
 
 		/*
@@ -87,24 +89,27 @@
 		* hides the default layout confirmation modal box
 		*/
 		hideConfirmationModal: function() {
-			$('.main-view').removeClass('inactive');
-			$('.confirmation-modal').addClass('hidden');
+			document.querySelector('.main-view').classList.remove('inactive');
+			document.querySelector('.confirmation-modal').classList.add('hidden');
+			document.querySelector('.confirmation-modal').style.display = 'none';
 		},
 
 		/**
 		* shows the default layout confirmation modal box
 		*/
 		showConfirmationModal: function() {
-			$('.confirmation-modal').removeClass('hidden').trigger('show');
-			$('.main-view').addClass('inactive');
+			document.querySelector('.confirmation-modal').classList.remove('hidden');
+			document.querySelector('.confirmation-modal').style.display = 'block';
+			document.querySelector('.main-view').classList.add('inactive');
 		},
 
 		/**
 		* hides the update modal box
 		*/
 		hideUpdateModal: function() {
-			$('body').removeClass('update');
-			$('.main-view').removeClass('inactive');
+			document.querySelector('body').classList.remove('update');
+			document.querySelector('.main-view').classList.remove('inactive');
+			document.querySelector('#update-modal').style.display = 'none';
 			localStorage.setItem('update-seen',true);
 			localStorage.setItem('version','2.3.4');
 		},
@@ -113,16 +118,17 @@
 		* shows the update modal box
 		*/
 		showUpdateModal: function() {
-			$('#update-modal').trigger('show');
-			$('.main-view').addClass('inactive');
+			document.querySelector('#update-modal').style.display = 'block';
+			document.querySelector('.main-view').classList.add('inactive');
 		},
 
 		/**
 		* hides the promo modal box
 		*/
 		hidePromoModal: function() {
-			$('body').removeClass('promo');
-			$('.main-view').removeClass('inactive');
+			document.querySelector('body').classList.remove('promo');
+			document.querySelector('.main-view').classList.remove('inactive');
+			document.querySelector('#promo-modal').style.display = 'none';
 			localStorage.setItem('promo-seen',true);
 		},
 
@@ -130,15 +136,15 @@
 		* shows the promo modal box
 		*/
 		showPromoModal: function() {
-			$('#promo-modal').trigger('show');
-			$('.main-view').addClass('inactive');
+			document.querySelector('#promo-modal').style.display = 'block';
+			document.querySelector('.main-view').classList.add('inactive');
 		},
 
 		/**
 		* hides the warning modal box
 		*/
 		hideWarningModal: function() {
-			$('body').removeClass('warning');
+			document.querySelector('body').classList.remove('warning');
 			localStorage.setItem('warning-seen',true);
 		},
 
@@ -146,8 +152,8 @@
 		* shows the warning modal box
 		*/
 		showWarningModal: function() {
-			$('#warning-modal').trigger('show');
-			$('.main-view').addClass('inactive');
+			document.querySelector('#warning-modal').style.display = 'block'; // .trigger('show');
+			document.querySelector('.main-view').classList.add('inactive');
 		}
 
 

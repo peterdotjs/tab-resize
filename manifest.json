@@ -1,28 +1,36 @@
 {
   "name": "Tab Resize - split screen layouts",
   "short_name": "Tab Resize",
-  "version": "2.3.5",
-  "manifest_version": 2,
-  "minimum_chrome_version": "30",
+  "version": "2.4",
+  "manifest_version": 3,
+  "minimum_chrome_version": "88",
   "description": "Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate windows. w/ Multi Monitor Support.",
-  "browser_action": {
+  "action": {
     "default_icon": "images/icons/icon128.png",
-	"default_popup": "index.html",
-	"default_title": "Tab Resize split screen layouts"
+	  "default_popup": "index.html",
+	  "default_title": "Tab Resize split screen layouts"
   },
   "icons": { "16": "images/icons/icon16.png",
            "48": "images/icons/icon48.png",
           "128": "images/icons/icon128.png" },
-  "permissions": ["tabs", "system.display"],
+  "permissions": ["tabs", "system.display", "storage", "offscreen","favicon"],
+  "web_accessible_resources": [{ 
+        "resources": ["_favicon/*"], 
+        "matches": ["<all_urls>"], 
+        "extension_ids": ["*"] 
+  }],
   "background": {
-    "scripts": ["js/lib/jquery.min.js","public/tabResize_background.min.js"]
+    "service_worker": "service-worker.js",
+    "type": "module"
   },
   "offline_enabled": true,
-  "content_security_policy": "script-src 'self' https://www.google-analytics.com; object-src 'self'",
+  "content_security_policy": {
+    "extension_pages": "default-src 'self'"
+  },
   "options_page": "options.html",
   "options_ui": {
     "page": "options.html",
-    "chrome_style": true
+    "browser_style": true
   },
   "commands": {
     "tab-resize-0-undo": {

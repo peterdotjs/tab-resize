@@ -15,26 +15,12 @@ var localStorage = {
 
 //update when available rather than needing to wait for chrome to restart
 chrome.runtime.onUpdateAvailable.addListener(function(details){
-	var curVersion = localStorage.getItem('version');
-	if(curVersion < details.version){
-		chrome.runtime.reload();
-	}
+	localStorage.getItem('version').then((version) => {
+		if(curVersion < details.version){
+			chrome.runtime.reload();
+		}
+	});
 });
-
-// var SECONDS_IN_DAY = 86400000;
-//
-// //run once a day to check for updates
-// setInterval(function(){
-// 	chrome.runtime.requestUpdateCheck(function(status) {
-// 	  if (status === "update_available") {
-// 	    console.log("update pending...");
-// 	  } else if (status === "no_update") {
-// 	    console.log("no update found");
-// 	  } else if (status === "throttled") {
-// 	    console.log("Oops, I'm asking too frequently - I need to back off.");
-// 	  }
-// 	});
-// },SECONDS_IN_DAY);
 
 chrome.runtime.onInstalled.addListener(function(details){
 	if(details){
@@ -55,30 +41,28 @@ if(!curVersion){
 }
 
 //is new install or hasen't seen latest update
-if(!localStorage.getItem('updateBadge') || isOldVersion ){
-	localStorage.setItem('updateBadge',0);
-	chrome.action.setBadgeText({text:'NEW'});
-	chrome.action.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
-}
+localStorage.getItem('updateBadge').then((updateBadge) => {
+	if (!updateBadge || isOldVersion) {
+		localStorage.setItem('updateBadge',0);
+		chrome.action.setBadgeText({text:'NEW'});
+		chrome.action.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
+	}
+});
 
 if(isOldVersion){
 	localStorage.removeItem('update-seen');
 }
 
-chrome.runtime.onMessage.addListener(async (msg) => {
+chrome.runtime.onMessage.addListener(async (msg, callback) => {
 	switch (msg.type) {
-		case "createNewWindow":
-			break;
 		case "processTabs":
             util.processTabs(msg.resize, msg.tabsArray, msg.startIndex, msg.windowId, msg.singleTab, msg.incog, msg.scaledOrientation);
 			break;
 		case "setUndoStorage":
-			debugger;
-            util.setUndoStorage(msg.resize, msg.tabIndex, msg.windowId, msg.tabsArray)
-			break;
-		case "updateUndoStorage":
+            util.setUndoStorage(msg.resize, msg.tabIndex, msg.windowId, msg.tabsArray);
 			break;
 		case "undoResize":
+			util.undoResize(msg.resize, callback);
 			break;
 		case "recombineTabs":
 			break;
@@ -117,9 +101,9 @@ var util = {
 		}
 
 		chrome.windows.create(objectInfo,
-								function(_windowCb){
-									callback(_windowCb, tabId);
-								}
+			function(_windowCb){
+				callback(_windowCb, tabId);
+			}
 		);
 	},
 
@@ -229,6 +213,7 @@ var util = {
 	* @param {array} tabsArray Array of tab objects to be moved back to the previous window
 	*/
 	setUndoStorage: function(resize, tabIndex, windowId, tabsArray, cb) {
+		debugger;
 		chrome.windows.get(windowId,{},function(_windowCb){
 			var updateInfo = {	left: _windowCb.left,
 								top: _windowCb.top,
@@ -273,7 +258,6 @@ var util = {
         });
 	},
 
-
 	/*
 	* undo previous resize option
 	*/
@@ -282,48 +266,49 @@ var util = {
 	* undo the previous resize that was selected
 	*/
 	undoResize: function(resize,callback) {
-		var that = this,
-			lastTab = localStorage.getItem('lastTab');
+		var that = this;
 
-		//undo not available
-		if(!lastTab){
-			return;
-		}
-
-		resize.lastTab = JSON.parse(lastTab);
-		var tabIndex = resize.lastTab.lastTabIndex;
-		var windowId = resize.lastTab.lastWindowId;
-		var tabsArray = resize.lastTab.lastTabsArray;
-
-		chrome.windows.get(windowId, {}, function(window){
-			if(window){
-				that.recombineTabs(resize,tabIndex,windowId,tabsArray,callback);
-			} else {
-				chrome.tabs.query({status: "complete"}, function(tabs){
-					var currentExistingTabs = {};
-					var newTabsArray = [];
-					for(var i=0; i< tabs.length; i++){
-						currentExistingTabs[tabs[i].id] = true;
-					}
-					for(var j = 0; j< tabsArray.length; j++){
-						if(currentExistingTabs[tabsArray[j]]){
-							newTabsArray.push(tabsArray[j]);
-						}
-					}
-					if(newTabsArray.length !==0){
-						chrome.windows.create({tabId: newTabsArray[0]},function(window){
-							that.recombineTabs(resize,1,window.id,newTabsArray.slice(1),callback);
-						});
-					} else {
-						if(!resize.isMac){
-							alert("Previous tabs were closed.");
-						}
-						if(callback){
-							callback();
-						}
-					}
-				});
+		localStorage.getItem('lastTab').then((lastTab)=> {
+			//undo not available
+			if(!lastTab){
+				return;
 			}
+
+			resize.lastTab = JSON.parse(lastTab);
+			var tabIndex = resize.lastTab.lastTabIndex;
+			var windowId = resize.lastTab.lastWindowId;
+			var tabsArray = resize.lastTab.lastTabsArray;
+	
+			chrome.windows.get(windowId, {}, function(window){
+				if(window){
+					that.recombineTabs(resize,tabIndex,windowId,tabsArray,callback);
+				} else {
+					chrome.tabs.query({status: "complete"}, function(tabs){
+						var currentExistingTabs = {};
+						var newTabsArray = [];
+						for(var i=0; i< tabs.length; i++){
+							currentExistingTabs[tabs[i].id] = true;
+						}
+						for(var j = 0; j< tabsArray.length; j++){
+							if(currentExistingTabs[tabsArray[j]]){
+								newTabsArray.push(tabsArray[j]);
+							}
+						}
+						if(newTabsArray.length !==0){
+							chrome.windows.create({tabId: newTabsArray[0]},function(window){
+								that.recombineTabs(resize,1,window.id,newTabsArray.slice(1),callback);
+							});
+						} else {
+							if(!resize.isMac){
+								alert("Previous tabs were closed.");
+							}
+							if(callback){
+								callback();
+							}
+						}
+					});
+				}
+			});
 		});
 	},
 
@@ -338,14 +323,13 @@ var util = {
 		var indexCounter = tabIndex;
 		chrome.tabs.move(tabsArray,{windowId: windowId, index: indexCounter});
 		var updateInfo = resize.lastTab.lastWindowInfo;
-		var updateInfoForUpdate = $.extend(true, {}, updateInfo);
+		var updateInfoForUpdate = Object.assign({}, updateInfo);;
 		delete updateInfoForUpdate.incognito;
 		chrome.windows.update(windowId,updateInfoForUpdate);
 		if(callback){
 			callback();
 		}
 	},
-
 
 	//format the displayInfo
 	displayInfoFormatter: function(displayInfo,currentWindowInfo){
@@ -495,22 +479,25 @@ function resizeTabHelper(resize, screenInfo, scaledOrientation){
 }
 
 function initResizePreferences(resize){
-	var singleTabValue = localStorage.getItem('singleTab');
-	if(singleTabValue && singleTabValue === 'true'){
-		resize.singleTab = true;
-	}
+	localStorage.getItem('singleTab').then((singleTabValue) => {
+		if(singleTabValue && singleTabValue === 'true'){
+			resize.singleTab = true;
+		}
+	});
 
-	var emptyTabValue = localStorage.getItem('emptyTab');
-	if(!emptyTabValue || emptyTabValue === 'true'){
-		resize.emptyTab = true;
-	}
+	localStorage.getItem('emptyTab').then((emptyTabValue)=> {
+		if(!emptyTabValue || emptyTabValue === 'true'){
+			resize.emptyTab = true;
+		}
+	});
 
-	var alignmentValue = localStorage.getItem('alignment');
-	if(!alignmentValue){
-		resize.alignment = 'left';
-	} else {
-		resize.alignment = alignmentValue;
-	}
+	localStorage.getItem('alignment').then((alignmentValue)=> {
+		if(!alignmentValue){
+			resize.alignment = 'left';
+		} else {
+			resize.alignment = alignmentValue;
+		}		
+	});
 }
 
 function disableUndoButton(resize){
@@ -522,9 +509,11 @@ function sendTracking(category, label) {
 	var optOut = localStorage.getItem("tracking-opt-out"),
 		deferTracking = false;
 
-	if(optOut && optOut === 'true'){
-		deferTracking = true;
-	}
+	localStorage.getItem("tracking-opt-out").then((optOut)=> {
+		if(optOut && optOut === 'true'){
+			deferTracking = true;
+		}
+	});
 
 	// if(!deferTracking && ga) {
 	// 	ga('send','event', category, 'clicked', label || "na");

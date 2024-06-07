@@ -6,6 +6,10 @@
 
 	var resize = window.resize;
 
+	function isEmpty(obj) {
+		return Object.keys(obj).length === 0;
+	}
+
 	var main_view = {
 
 		/**
@@ -16,32 +20,33 @@
 			resize.currentLayouts = JSON.parse(localStorage.getItem('layoutItems'));
 			if(!resize.currentLayouts){
 				localStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
-				resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
+				// resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
+				resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
 			}
 
 			this.populateMainView();
 
 			var singleTabValue = localStorage.getItem('singleTab');
 			if(singleTabValue && singleTabValue === 'true'){
-				$('#checkbox-single-tab').attr('checked',true);
-				$('label.single-tab').addClass('selected');
-				$('body').addClass('single-tab-selected');
+				document.querySelector('#checkbox-single-tab').checked = true;
+				document.querySelector('label.single-tab').classList.add('selected');
+				document.querySelector('body').classList.add('single-tab-selected');
 				resize.singleTab = true;
 			}
 
 			//by default empty tab is checked to avoid any confusion
 			var emptyTabValue = localStorage.getItem('emptyTab');
 			if(!emptyTabValue || emptyTabValue === 'true'){
-				$('#checkbox-empty-tab').attr('checked',true);
-				$('label.empty-tab').addClass('selected');
+				document.querySelector('#checkbox-empty-tab').checked = true;
+				document.querySelector('label.empty-tab').classList.add('selected');
 				resize.emptyTab = true;
 			} else {
-				$('body').addClass('empty-tab-not-selected');
+				document.querySelector('body').classList.add('empty-tab-not-selected');
 			}
 
 			var displayLayerValue = localStorage.getItem('displayLayer');
 			if(!displayLayerValue || displayLayerValue === 'true'){
-				$('.main-view').addClass('display-selected');
+				document.querySelector('.main-view').classList.add('display-selected');
 				resize.displayLayer = true;
 			}
 
@@ -51,21 +56,22 @@
 			} else {
 				resize.alignment = alignmentValue;
 				if(resize.alignment !== 'left'){
-					$('body').addClass('align-right');
+					document.querySelector('body').classList.add('align-right');
 				}
 			}
-			$('#' + resize.alignment).trigger('click',['defer-tracking']);
+
+			const resizeAlignmentEvent = new CustomEvent('click', {detail: ['defer-tracking']});
+			document.querySelector('#' + resize.alignment).dispatchEvent(resizeAlignmentEvent);
 
 
 			resize.displayUtil.initialize();
 
 			if(localStorage.getItem('lastTab')){
-				$('#undo-layout').removeClass('disabled');
+				document.querySelector('#undo-layout').classList.remove('disabled');
 			}
 
-			window.backJs = chrome.extension.getBackgroundPage();
-
 			chrome.runtime.onMessage.addListener(function(message){
+				debugger;
 				if(message === 'enable-undo'){
 					resize.options.enableUndoButton();
 				}
@@ -79,28 +85,28 @@
 			if(!updateCount || isOldVersion){
 				updateCount = 0;
 				localStorage.setItem('updateBadge',0);
-				chrome.browserAction.setBadgeText({text:'NEW'});
-				chrome.browserAction.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
+				chrome.action.setBadgeText({text:'NEW'});
+				chrome.action.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
 			}
 
 			if(updateCount < resize.badgeLimit){
 				localStorage.setItem('updateBadge',++updateCount);
 				if(updateCount === resize.badgeLimit){
-					chrome.browserAction.setBadgeText({text:''});
+					chrome.action.setBadgeText({text:''});
 				}
 			} else {
-				chrome.browserAction.setBadgeText({text:''});
+				chrome.action.setBadgeText({text:''});
 			}
 
-			var $body = $('body');
+			var $body = document.querySelector('body');
 
 			//user has never seen update
 			if(!localStorage.getItem('update-seen') || isOldVersion){
-				$body.addClass('update');
+				$body.classList.add('update');
 				if(isOldVersion){
 					localStorage.removeItem('update-seen');
 					if (!localStorage.getItem('warning-seen')) {
-						$body.addClass('warning');
+						$body.classList.add('warning');
 						resize.options.showWarningModal();
 					}
 				}
@@ -108,13 +114,13 @@
 			}
 
 			// if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
-			// 	$body.addClass('promo');
+			// 	$body.classList.add('promo');
 			// 	resize.options.showPromoModal();
 			// }
 
-			$(function(){
-				resize.util.initSortable();
-			});
+			// $(function(){
+			// 	resize.util.initSortable();
+			// });
 		},
 
 		/**
@@ -132,9 +138,9 @@
 		initWindowWidth: function() {
 			var numSelectors = resize.currentLayouts.layoutItems.length;
 			if(numSelectors < resize.maxSelectorsPerLine){
-				$('body').width(numSelectors * resize.maxSelectorContainerWidth );
+				document.querySelector('body').width(numSelectors * resize.maxSelectorContainerWidth );
 			} else {
-				$('body').width(resize.maxSelectorsPerLine * resize.maxSelectorContainerWidth );
+				document.querySelector('body').width(resize.maxSelectorsPerLine * resize.maxSelectorContainerWidth );
 			}
 		},
 
@@ -146,8 +152,9 @@
 			var numSelectors = resize.currentLayouts.layoutItems.length;
 			var removedRow = numSelectors % resize.maxSelectorsPerLine;
 			if(numSelectors >=5 && removedRow === 0){
-				$('body').height($('body').height() - resize.maxSelectorContainerHeight);
-				$('html').height($('html').height() - resize.maxSelectorContainerHeight);
+				// need to update
+				document.querySelector('body').style.height = (document.querySelector('body').getBoundingClientRect().height - resize.maxSelectorContainerHeight) + 'px';
+				document.querySelector('html').style.height = (document.querySelector('html').getBoundingClientRect().height - resize.maxSelectorContainerHeight) + 'px';
 			}
 		},
 
@@ -166,7 +173,7 @@
 			* create new window unable to take non integers for width and height
 			*/
 
-			var screenInfo = $('.display-entry.selected').data();
+			var screenInfo = document.querySelector('.display-entry.selected').dataset;
 			setResizeWidthHeight(screenInfo,resize.numRows,resize.numCols);
 			resizeTabHelper(screenInfo);
 		},
@@ -186,14 +193,14 @@
 			* split width of screen based on the primary and secondary ratios
 			*/
 
-			var screenInfo = $('.display-entry.selected').data();
+			var screenInfo = document.querySelector('.display-entry.selected').dataset;
 			setScaledResizeWidthHeight(screenInfo,primaryRatio, secondaryRatio, orientation);
 			resizeTabHelper(screenInfo,orientation);
 		}
 	};
 
 	function setScaledResizeWidthHeight(screenInfo, primaryRatio, secondaryRatio, orientation){
-		if(!$.isEmptyObject(screenInfo)){
+		if(!isEmpty(screenInfo)){
 			resize.width = (orientation === 'horizontal') ? Math.round(screenInfo.width*0.1*primaryRatio) : screenInfo.width;
 			resize.height = (orientation === 'horizontal') ? screenInfo.height : Math.round(screenInfo.height*0.1*primaryRatio);
 		} else {
@@ -203,7 +210,7 @@
 	}
 
 	function setResizeWidthHeight(screenInfo, rows, cols){
-		if(!$.isEmptyObject(screenInfo)){
+		if(!isEmpty(screenInfo)){
 			resize.width = Math.round(screenInfo.width/cols);
 			resize.height = Math.round(screenInfo.height/rows);
 		} else {
@@ -214,7 +221,7 @@
 
 	function resizeTabHelper(screenInfo, scaledOrientation){
 
-		if(!$.isEmptyObject(screenInfo)){
+		if(!isEmpty(screenInfo)){
 			resize.offsetX = screenInfo.left;
 			resize.offsetY = screenInfo.top;
 			resize.fullWidth = screenInfo.width;
@@ -230,7 +237,7 @@
 			function (tabs) {
 				resize.tabsArray = tabs;
 				window.chrome.tabs.query({currentWindow: true, highlighted: true},
-					function (tab) {
+					async function (tab) {
 						resize.currentTab = tab[0];
 						var index = resize.currentTab.index;
 						if(tab.length > 1){
@@ -238,13 +245,41 @@
 							index = 0;
 						}
 
-						var cb = function(){
-								return backJs.util.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
+						var cb = async function(){
+							await chrome.runtime.sendMessage({
+								type: "processTabs",
+								resize: resize,
+								tabsArray: resize.tabsArray,
+								startIndex: index,
+								windowId: resize.currentTab.windowId,
+								singleTab: resize.singleTab,
+								incog: resize.currentTab.incognito,
+								scaledOrientation: scaledOrientation,
+							  });
+							// return resize.backgroundUtil.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
 						};
 						if(resize.singleTab){
-							backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
+							// resize.backgroundUtil.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
+
+							await chrome.runtime.sendMessage({
+								type: "setUndoStorage",
+								resize: resize,
+								tabIndex: resize.currentTab.index,
+								windowId: resize.currentTab.windowId,
+								tabsArray: resize.tabsArray.slice(index,index + 1)
+							  }, cb);
+
+
 						} else {
-							backJs.util.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index), cb);
+							debugger;
+							// resize.backgroundUtil.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index), cb);
+							await chrome.runtime.sendMessage({
+								type: "setUndoStorage",
+								resize: resize,
+								tabIndex: resize.currentTab.index,
+								windowId: resize.currentTab.windowId,
+								tabsArray: resize.tabsArray.slice(index)
+							  }, cb);
 						}
 
 					}
