@@ -14,7 +14,7 @@
 		removeItems: keys => chrome.storage.local.remove(keys),
 	};
 
-	// window.chromeLocalStorage = localStorage;
+	window.chromeLocalStorage = localStorage;
 
 })();
 

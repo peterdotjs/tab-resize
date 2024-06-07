@@ -175,21 +175,11 @@
 			'left: ' + Number(info.left*scale + offsetX) + 'px; ' +
 			'width: ' + Number(info.width*scale) + 'px; ' +
 			'height: ' + Number(info.height*scale) + 'px';		
-		
-		// $template.style = Object.assign($template.style, {
-		// 	top: info.top*scale + offsetY,
-		// 	left: info.left*scale + offsetX,
-		// 	width: info.width*scale,
-		// 	height: info.height*scale
-		// });
-
-		console.log($template.style);
 
 		$template.dataset = {
 			id,
 			...info,
 		};
-		// data($.extend({id:id},info));
 
 		$template.querySelector('.display-meta').textContent = info.width + 'x' + info.height;
 

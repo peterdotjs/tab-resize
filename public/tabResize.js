@@ -1,9 +1,32 @@
-var optOut = localStorage.getItem("tracking-opt-out"),
-	deferTracking = false;
+/*
+* local_storage.js
+* localStorage API mirror
+*/
+(function(){
+	/*
+	* localStorage object
+	* @constructor
+	*/
+	var localStorage = {
+		getAllItems: () => chrome.storage.local.get(),
+		getItem: async key => (await chrome.storage.local.get(key))[key],
+		setItem: (key, val) => chrome.storage.local.set({[key]: val}),
+		removeItems: keys => chrome.storage.local.remove(keys),
+	};
 
-if(optOut && optOut === 'true'){
-	deferTracking = true;
-}
+	window.chromeLocalStorage = localStorage;
+
+})();
+
+
+
+var deferTracking = false;
+
+chromeLocalStorage.getItem("tracking-opt-out").then((optOut)=> {
+	if(optOut && optOut === 'true'){
+		deferTracking = true;
+	}
+});
 
 function sendTracking(category, label) {
 	// if(!deferTracking && ga) {
@@ -62,28 +85,6 @@ function sendTracking(category, label) {
 
 })();
 
-/*
-* local_storage.js
-* localStorage API mirror
-*/
-(function(){
-	/*
-	* localStorage object
-	* @constructor
-	*/
-	var localStorage = {
-		getAllItems: () => chrome.storage.local.get(),
-		getItem: async key => (await chrome.storage.local.get(key))[key],
-		setItem: (key, val) => chrome.storage.local.set({[key]: val}),
-		removeItems: keys => chrome.storage.local.remove(keys),
-	};
-
-	// window.chromeLocalStorage = localStorage;
-
-})();
-
-
-
 /**
 * main_view.js
 * handles main view - bulk of resize functionality
@@ -103,106 +104,122 @@ function sendTracking(category, label) {
 		* populates the menu with list of layouts
 		*/
 		initialize: function() {
-			resize.currentLayouts = JSON.parse(localStorage.getItem('layoutItems'));
-			if(!resize.currentLayouts){
-				localStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
-				// resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
-				resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
-			}
 
-			this.populateMainView();
-
-			var singleTabValue = localStorage.getItem('singleTab');
-			if(singleTabValue && singleTabValue === 'true'){
-				document.querySelector('#checkbox-single-tab').checked = true;
-				document.querySelector('label.single-tab').classList.add('selected');
-				document.querySelector('body').classList.add('single-tab-selected');
-				resize.singleTab = true;
-			}
-
-			//by default empty tab is checked to avoid any confusion
-			var emptyTabValue = localStorage.getItem('emptyTab');
-			if(!emptyTabValue || emptyTabValue === 'true'){
-				document.querySelector('#checkbox-empty-tab').checked = true;
-				document.querySelector('label.empty-tab').classList.add('selected');
-				resize.emptyTab = true;
-			} else {
-				document.querySelector('body').classList.add('empty-tab-not-selected');
-			}
-
-			var displayLayerValue = localStorage.getItem('displayLayer');
-			if(!displayLayerValue || displayLayerValue === 'true'){
-				document.querySelector('.main-view').classList.add('display-selected');
-				resize.displayLayer = true;
-			}
-
-			var alignmentValue = localStorage.getItem('alignment');
-			if(!alignmentValue){
-				resize.alignment = 'left';
-			} else {
-				resize.alignment = alignmentValue;
-				if(resize.alignment !== 'left'){
-					document.querySelector('body').classList.add('align-right');
+			chromeLocalStorage.getItem('layoutItems').then((currentLayouts) => {
+				resize.currentLayouts = currentLayouts ? JSON.parse(currentLayouts) : null;
+				if(!resize.currentLayouts){
+					chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
+					resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
 				}
-			}
+	
+				this.populateMainView();
+			});
 
-			const resizeAlignmentEvent = new CustomEvent('click', {detail: ['defer-tracking']});
-			document.querySelector('#' + resize.alignment).dispatchEvent(resizeAlignmentEvent);
+			chromeLocalStorage.getItem('singleTab').then((singleTabValue) => {
+				if(singleTabValue && singleTabValue === true){
+					document.querySelector('#checkbox-single-tab').checked = true;
+					document.querySelector('label.single-tab').classList.add('selected');
+					document.querySelector('body').classList.add('single-tab-selected');
+					resize.singleTab = true;
+				}
+			});
+			
+			//by default empty tab is checked to avoid any confusion
+			chromeLocalStorage.getItem('emptyTab').then((emptyTabValue) => {
+				if(emptyTabValue === undefined || emptyTabValue === true){
+					document.querySelector('#checkbox-empty-tab').checked = true;
+					document.querySelector('label.empty-tab').classList.add('selected');
+					resize.emptyTab = true;
+				} else {
+					document.querySelector('body').classList.add('empty-tab-not-selected');
+				}
+			});
 
+			chromeLocalStorage.getItem('displayLayer').then((displayLayerValue) => {
+				if(!displayLayerValue || displayLayerValue === true){
+					document.querySelector('.main-view').classList.add('display-selected');
+					resize.displayLayer = true;
+				}
+			});
+			
+			chromeLocalStorage.getItem('alignment').then((alignmentValue) => {
+				if(!alignmentValue){
+					resize.alignment = 'left';
+				} else {
+					resize.alignment = alignmentValue;
+					if(resize.alignment !== 'left'){
+						document.querySelector('body').classList.add('align-right');
+					}
+				}
+
+				// const resizeAlignmentEvent = new CustomEvent('click', {detail: ['defer-tracking']});
+				// document.querySelector('#' + resize.alignment).dispatchEvent(resizeAlignmentEvent);
+				document.querySelector('#' + resize.alignment).checked = true;
+			});
 
 			resize.displayUtil.initialize();
 
-			if(localStorage.getItem('lastTab')){
-				document.querySelector('#undo-layout').classList.remove('disabled');
-			}
+			chromeLocalStorage.getItem('lastTab').then((lastTab) => {
+				if(lastTab){
+					document.querySelector('#undo-layout').classList.remove('disabled');
+				}
+			});
 
 			chrome.runtime.onMessage.addListener(function(message){
-				debugger;
 				if(message === 'enable-undo'){
 					resize.options.enableUndoButton();
 				}
 			});
 
-			var updateCount = Number(localStorage.getItem('updateBadge'));
-
-			var curVersion = localStorage.getItem('version') || '',
+			chromeLocalStorage.getItem('updateBadge').then((updateBadge) => {
+				var updateCount = Number(updateBadge);
+				chromeLocalStorage.getItem('version').then((version) => {
+					var curVersion = version || '',
 					isOldVersion = (curVersion < '2.3.4' && curVersion !== '');
 
-			if(!updateCount || isOldVersion){
-				updateCount = 0;
-				localStorage.setItem('updateBadge',0);
-				chrome.action.setBadgeText({text:'NEW'});
-				chrome.action.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
-			}
-
-			if(updateCount < resize.badgeLimit){
-				localStorage.setItem('updateBadge',++updateCount);
-				if(updateCount === resize.badgeLimit){
-					chrome.action.setBadgeText({text:''});
-				}
-			} else {
-				chrome.action.setBadgeText({text:''});
-			}
-
-			var $body = document.querySelector('body');
-
-			//user has never seen update
-			if(!localStorage.getItem('update-seen') || isOldVersion){
-				$body.classList.add('update');
-				if(isOldVersion){
-					localStorage.removeItem('update-seen');
-					if (!localStorage.getItem('warning-seen')) {
-						$body.classList.add('warning');
-						resize.options.showWarningModal();
+					if(!updateCount || isOldVersion){
+						updateCount = 0;
+						chromeLocalStorage.setItem('updateBadge',0);
+						chrome.action.setBadgeText({text:'NEW'});
+						chrome.action.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
 					}
-				}
-				resize.options.showUpdateModal();
-			}
 
-			// if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
-			// 	$body.classList.add('promo');
-			// 	resize.options.showPromoModal();
-			// }
+					if(updateCount < resize.badgeLimit){
+						chromeLocalStorage.setItem('updateBadge',++updateCount);
+						if(updateCount === resize.badgeLimit){
+							chrome.action.setBadgeText({text:''});
+						}
+					} else {
+						chrome.action.setBadgeText({text:''});
+					}
+
+					var $body = document.querySelector('body');
+
+					//user has never seen update
+					chromeLocalStorage.getItem('update-seen').then((updateSeen) => {
+						if(!updateSeen || isOldVersion){
+							$body.classList.add('update');
+							if(isOldVersion){
+								chromeLocalStorage.removeItem('update-seen');
+								chromeLocalStorage.getItem('warning-seen').then((warningSeen) => {
+									if (!warningSeen) {
+										$body.classList.add('warning');
+										resize.options.showWarningModal();
+									}
+								});
+							}
+							resize.options.showUpdateModal();
+						}
+
+						// chromeLocalStorage.getItem('promo-seen').then((promoSeen) => {
+						// 	if(updateSeen && updateCount === resize.badgeLimit && !promoSeen){
+						// 		$body.classList.add('promo');
+						// 		resize.options.showPromoModal();
+						// 	}
+						// });
+					});
+				});
+			});
 
 			// $(function(){
 			// 	resize.util.initSortable();
@@ -494,7 +511,6 @@ function sendTracking(category, label) {
 * handles resize options (single tab, undo resize, default config)
 */
 
-// TODO update local storage
 (function(){
 
 	var resize = window.resize;
@@ -510,7 +526,7 @@ function sendTracking(category, label) {
 		*/
 		processSingleTabSelection: function(singleTab) {
 			var _singleTab = singleTab ? true : false;
-			localStorage.setItem('singleTab',_singleTab);
+			chromeLocalStorage.setItem('singleTab',_singleTab);
 			resize.singleTab = _singleTab;
 			document.querySelector('label.single-tab').classList.toggle('selected');
 			document.querySelector('body').classList.toggle('single-tab-selected');
@@ -526,7 +542,7 @@ function sendTracking(category, label) {
 		*/
 		processEmptyTabSelection: function(emptyTab) {
 			var _emptyTab = emptyTab ? true : false;
-			localStorage.setItem('emptyTab',_emptyTab);
+			chromeLocalStorage.setItem('emptyTab',_emptyTab);
 			resize.emptyTab = _emptyTab;
 			document.querySelector('label.empty-tab').classList.toggle('selected');
 			document.querySelector('body').classList.toggle('empty-tab-not-selected');
@@ -538,7 +554,7 @@ function sendTracking(category, label) {
 		*/
 		processDisplayLayerSelection: function(displayLayer) {
 			var _displayLayer = displayLayer ? true : false;
-			localStorage.setItem('displayLayer',_displayLayer);
+			chromeLocalStorage.setItem('displayLayer',_displayLayer);
 			resize.displayLayer = _displayLayer;
 		},
 
@@ -547,7 +563,7 @@ function sendTracking(category, label) {
 		* @param {String enum} left or right.
 		*/
 		processAlignmentSelection: function(alignment) {
-			localStorage.setItem('alignment',alignment);
+			chromeLocalStorage.setItem('alignment',alignment);
 			resize.alignment = alignment;
 			if(alignment === 'right'){
 				document.querySelector('body').classList.add('align-right');
@@ -561,7 +577,7 @@ function sendTracking(category, label) {
 		*/
 		disableUndoButton: function() {
 			resize.lastTab = null;
-			localStorage.removeItem('lastTab');
+			chromeLocalStorage.removeItem('lastTab');
 			document.querySelector('#undo-layout').classList.add('disabled');
 		},
 
@@ -601,8 +617,8 @@ function sendTracking(category, label) {
 			document.querySelector('body').classList.remove('update');
 			document.querySelector('.main-view').classList.remove('inactive');
 			document.querySelector('#update-modal').style.display = 'none';
-			localStorage.setItem('update-seen',true);
-			localStorage.setItem('version','2.3.4');
+			chromeLocalStorage.setItem('update-seen',true);
+			chromeLocalStorage.setItem('version','2.3.4');
 		},
 
 		/**
@@ -620,7 +636,7 @@ function sendTracking(category, label) {
 			document.querySelector('body').classList.remove('promo');
 			document.querySelector('.main-view').classList.remove('inactive');
 			document.querySelector('#promo-modal').style.display = 'none';
-			localStorage.setItem('promo-seen',true);
+			chromeLocalStorage.setItem('promo-seen',true);
 		},
 
 		/**
@@ -636,7 +652,7 @@ function sendTracking(category, label) {
 		*/
 		hideWarningModal: function() {
 			document.querySelector('body').classList.remove('warning');
-			localStorage.setItem('warning-seen',true);
+			chromeLocalStorage.setItem('warning-seen',true);
 		},
 
 		/**
@@ -682,7 +698,7 @@ function sendTracking(category, label) {
 			}
 
 			resize.currentLayouts.layoutItems = currentLayouts;
-			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 		},
 
 		/**
@@ -699,7 +715,7 @@ function sendTracking(category, label) {
 			}
 
 			resize.currentLayouts.layoutItems.unshift(layoutType);
-			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 			this.addLayoutMarkup(layoutType,true);
 			resize.util.resetSortable();
 		},
@@ -744,7 +760,7 @@ function sendTracking(category, label) {
 				layoutIndex = layoutList.indexOf(layoutType);
 
 			layoutList.splice(layoutIndex,1);
-			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 			this._removeLayoutMarkup(layoutType);
 		},
 
@@ -762,7 +778,7 @@ function sendTracking(category, label) {
 		*/
 		resetLayout: function() {
 			this._removeAllLayouts();
-			localStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
 			// resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
 			resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
 			resize.main_view.populateMainView();
@@ -1159,21 +1175,11 @@ function addEventListener(el, eventName, selector, eventHandler) {
 			'left: ' + Number(info.left*scale + offsetX) + 'px; ' +
 			'width: ' + Number(info.width*scale) + 'px; ' +
 			'height: ' + Number(info.height*scale) + 'px';		
-		
-		// $template.style = Object.assign($template.style, {
-		// 	top: info.top*scale + offsetY,
-		// 	left: info.left*scale + offsetX,
-		// 	width: info.width*scale,
-		// 	height: info.height*scale
-		// });
-
-		console.log($template.style);
 
 		$template.dataset = {
 			id,
 			...info,
 		};
-		// data($.extend({id:id},info));
 
 		$template.querySelector('.display-meta').textContent = info.width + 'x' + info.height;
 
@@ -1414,10 +1420,10 @@ function addEventListener(el, eventName, selector, eventHandler) {
 		options.hideUpdateModal();
 	});
 
-	document.querySelector('#promo-apply').addEventListener('click', (evt) => {
-		evt.stopPropagation();
-		options.hidePromoModal();
-	});
+	// document.querySelector('#promo-apply').addEventListener('click', (evt) => {
+	// 	evt.stopPropagation();
+	// 	options.hidePromoModal();
+	// });
 
 	document.querySelector('#warning-apply').addEventListener('click', (evt) => {
 		evt.stopPropagation();

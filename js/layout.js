@@ -26,7 +26,7 @@
 			}
 
 			resize.currentLayouts.layoutItems = currentLayouts;
-			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 		},
 
 		/**
@@ -43,7 +43,7 @@
 			}
 
 			resize.currentLayouts.layoutItems.unshift(layoutType);
-			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 			this.addLayoutMarkup(layoutType,true);
 			resize.util.resetSortable();
 		},
@@ -88,7 +88,7 @@
 				layoutIndex = layoutList.indexOf(layoutType);
 
 			layoutList.splice(layoutIndex,1);
-			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 			this._removeLayoutMarkup(layoutType);
 		},
 
@@ -106,7 +106,7 @@
 		*/
 		resetLayout: function() {
 			this._removeAllLayouts();
-			localStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
 			// resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
 			resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
 			resize.main_view.populateMainView();

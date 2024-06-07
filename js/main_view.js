@@ -17,106 +17,122 @@
 		* populates the menu with list of layouts
 		*/
 		initialize: function() {
-			resize.currentLayouts = JSON.parse(localStorage.getItem('layoutItems'));
-			if(!resize.currentLayouts){
-				localStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
-				// resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
-				resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
-			}
 
-			this.populateMainView();
-
-			var singleTabValue = localStorage.getItem('singleTab');
-			if(singleTabValue && singleTabValue === 'true'){
-				document.querySelector('#checkbox-single-tab').checked = true;
-				document.querySelector('label.single-tab').classList.add('selected');
-				document.querySelector('body').classList.add('single-tab-selected');
-				resize.singleTab = true;
-			}
-
-			//by default empty tab is checked to avoid any confusion
-			var emptyTabValue = localStorage.getItem('emptyTab');
-			if(!emptyTabValue || emptyTabValue === 'true'){
-				document.querySelector('#checkbox-empty-tab').checked = true;
-				document.querySelector('label.empty-tab').classList.add('selected');
-				resize.emptyTab = true;
-			} else {
-				document.querySelector('body').classList.add('empty-tab-not-selected');
-			}
-
-			var displayLayerValue = localStorage.getItem('displayLayer');
-			if(!displayLayerValue || displayLayerValue === 'true'){
-				document.querySelector('.main-view').classList.add('display-selected');
-				resize.displayLayer = true;
-			}
-
-			var alignmentValue = localStorage.getItem('alignment');
-			if(!alignmentValue){
-				resize.alignment = 'left';
-			} else {
-				resize.alignment = alignmentValue;
-				if(resize.alignment !== 'left'){
-					document.querySelector('body').classList.add('align-right');
+			chromeLocalStorage.getItem('layoutItems').then((currentLayouts) => {
+				resize.currentLayouts = currentLayouts ? JSON.parse(currentLayouts) : null;
+				if(!resize.currentLayouts){
+					chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
+					resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
 				}
-			}
+	
+				this.populateMainView();
+			});
 
-			const resizeAlignmentEvent = new CustomEvent('click', {detail: ['defer-tracking']});
-			document.querySelector('#' + resize.alignment).dispatchEvent(resizeAlignmentEvent);
+			chromeLocalStorage.getItem('singleTab').then((singleTabValue) => {
+				if(singleTabValue && singleTabValue === true){
+					document.querySelector('#checkbox-single-tab').checked = true;
+					document.querySelector('label.single-tab').classList.add('selected');
+					document.querySelector('body').classList.add('single-tab-selected');
+					resize.singleTab = true;
+				}
+			});
+			
+			//by default empty tab is checked to avoid any confusion
+			chromeLocalStorage.getItem('emptyTab').then((emptyTabValue) => {
+				if(emptyTabValue === undefined || emptyTabValue === true){
+					document.querySelector('#checkbox-empty-tab').checked = true;
+					document.querySelector('label.empty-tab').classList.add('selected');
+					resize.emptyTab = true;
+				} else {
+					document.querySelector('body').classList.add('empty-tab-not-selected');
+				}
+			});
 
+			chromeLocalStorage.getItem('displayLayer').then((displayLayerValue) => {
+				if(!displayLayerValue || displayLayerValue === true){
+					document.querySelector('.main-view').classList.add('display-selected');
+					resize.displayLayer = true;
+				}
+			});
+			
+			chromeLocalStorage.getItem('alignment').then((alignmentValue) => {
+				if(!alignmentValue){
+					resize.alignment = 'left';
+				} else {
+					resize.alignment = alignmentValue;
+					if(resize.alignment !== 'left'){
+						document.querySelector('body').classList.add('align-right');
+					}
+				}
+
+				// const resizeAlignmentEvent = new CustomEvent('click', {detail: ['defer-tracking']});
+				// document.querySelector('#' + resize.alignment).dispatchEvent(resizeAlignmentEvent);
+				document.querySelector('#' + resize.alignment).checked = true;
+			});
 
 			resize.displayUtil.initialize();
 
-			if(localStorage.getItem('lastTab')){
-				document.querySelector('#undo-layout').classList.remove('disabled');
-			}
+			chromeLocalStorage.getItem('lastTab').then((lastTab) => {
+				if(lastTab){
+					document.querySelector('#undo-layout').classList.remove('disabled');
+				}
+			});
 
 			chrome.runtime.onMessage.addListener(function(message){
-				debugger;
 				if(message === 'enable-undo'){
 					resize.options.enableUndoButton();
 				}
 			});
 
-			var updateCount = Number(localStorage.getItem('updateBadge'));
-
-			var curVersion = localStorage.getItem('version') || '',
+			chromeLocalStorage.getItem('updateBadge').then((updateBadge) => {
+				var updateCount = Number(updateBadge);
+				chromeLocalStorage.getItem('version').then((version) => {
+					var curVersion = version || '',
 					isOldVersion = (curVersion < '2.3.4' && curVersion !== '');
 
-			if(!updateCount || isOldVersion){
-				updateCount = 0;
-				localStorage.setItem('updateBadge',0);
-				chrome.action.setBadgeText({text:'NEW'});
-				chrome.action.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
-			}
-
-			if(updateCount < resize.badgeLimit){
-				localStorage.setItem('updateBadge',++updateCount);
-				if(updateCount === resize.badgeLimit){
-					chrome.action.setBadgeText({text:''});
-				}
-			} else {
-				chrome.action.setBadgeText({text:''});
-			}
-
-			var $body = document.querySelector('body');
-
-			//user has never seen update
-			if(!localStorage.getItem('update-seen') || isOldVersion){
-				$body.classList.add('update');
-				if(isOldVersion){
-					localStorage.removeItem('update-seen');
-					if (!localStorage.getItem('warning-seen')) {
-						$body.classList.add('warning');
-						resize.options.showWarningModal();
+					if(!updateCount || isOldVersion){
+						updateCount = 0;
+						chromeLocalStorage.setItem('updateBadge',0);
+						chrome.action.setBadgeText({text:'NEW'});
+						chrome.action.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
 					}
-				}
-				resize.options.showUpdateModal();
-			}
 
-			// if(localStorage.getItem('update-seen') && updateCount === resize.badgeLimit && !localStorage.getItem('promo-seen')){
-			// 	$body.classList.add('promo');
-			// 	resize.options.showPromoModal();
-			// }
+					if(updateCount < resize.badgeLimit){
+						chromeLocalStorage.setItem('updateBadge',++updateCount);
+						if(updateCount === resize.badgeLimit){
+							chrome.action.setBadgeText({text:''});
+						}
+					} else {
+						chrome.action.setBadgeText({text:''});
+					}
+
+					var $body = document.querySelector('body');
+
+					//user has never seen update
+					chromeLocalStorage.getItem('update-seen').then((updateSeen) => {
+						if(!updateSeen || isOldVersion){
+							$body.classList.add('update');
+							if(isOldVersion){
+								chromeLocalStorage.removeItem('update-seen');
+								chromeLocalStorage.getItem('warning-seen').then((warningSeen) => {
+									if (!warningSeen) {
+										$body.classList.add('warning');
+										resize.options.showWarningModal();
+									}
+								});
+							}
+							resize.options.showUpdateModal();
+						}
+
+						// chromeLocalStorage.getItem('promo-seen').then((promoSeen) => {
+						// 	if(updateSeen && updateCount === resize.badgeLimit && !promoSeen){
+						// 		$body.classList.add('promo');
+						// 		resize.options.showPromoModal();
+						// 	}
+						// });
+					});
+				});
+			});
 
 			// $(function(){
 			// 	resize.util.initSortable();

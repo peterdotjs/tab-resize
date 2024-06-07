@@ -3,7 +3,6 @@
 * handles resize options (single tab, undo resize, default config)
 */
 
-// TODO update local storage
 (function(){
 
 	var resize = window.resize;
@@ -19,7 +18,7 @@
 		*/
 		processSingleTabSelection: function(singleTab) {
 			var _singleTab = singleTab ? true : false;
-			localStorage.setItem('singleTab',_singleTab);
+			chromeLocalStorage.setItem('singleTab',_singleTab);
 			resize.singleTab = _singleTab;
 			document.querySelector('label.single-tab').classList.toggle('selected');
 			document.querySelector('body').classList.toggle('single-tab-selected');
@@ -35,7 +34,7 @@
 		*/
 		processEmptyTabSelection: function(emptyTab) {
 			var _emptyTab = emptyTab ? true : false;
-			localStorage.setItem('emptyTab',_emptyTab);
+			chromeLocalStorage.setItem('emptyTab',_emptyTab);
 			resize.emptyTab = _emptyTab;
 			document.querySelector('label.empty-tab').classList.toggle('selected');
 			document.querySelector('body').classList.toggle('empty-tab-not-selected');
@@ -47,7 +46,7 @@
 		*/
 		processDisplayLayerSelection: function(displayLayer) {
 			var _displayLayer = displayLayer ? true : false;
-			localStorage.setItem('displayLayer',_displayLayer);
+			chromeLocalStorage.setItem('displayLayer',_displayLayer);
 			resize.displayLayer = _displayLayer;
 		},
 
@@ -56,7 +55,7 @@
 		* @param {String enum} left or right.
 		*/
 		processAlignmentSelection: function(alignment) {
-			localStorage.setItem('alignment',alignment);
+			chromeLocalStorage.setItem('alignment',alignment);
 			resize.alignment = alignment;
 			if(alignment === 'right'){
 				document.querySelector('body').classList.add('align-right');
@@ -70,7 +69,7 @@
 		*/
 		disableUndoButton: function() {
 			resize.lastTab = null;
-			localStorage.removeItem('lastTab');
+			chromeLocalStorage.removeItem('lastTab');
 			document.querySelector('#undo-layout').classList.add('disabled');
 		},
 
@@ -110,8 +109,8 @@
 			document.querySelector('body').classList.remove('update');
 			document.querySelector('.main-view').classList.remove('inactive');
 			document.querySelector('#update-modal').style.display = 'none';
-			localStorage.setItem('update-seen',true);
-			localStorage.setItem('version','2.3.4');
+			chromeLocalStorage.setItem('update-seen',true);
+			chromeLocalStorage.setItem('version','2.3.4');
 		},
 
 		/**
@@ -129,7 +128,7 @@
 			document.querySelector('body').classList.remove('promo');
 			document.querySelector('.main-view').classList.remove('inactive');
 			document.querySelector('#promo-modal').style.display = 'none';
-			localStorage.setItem('promo-seen',true);
+			chromeLocalStorage.setItem('promo-seen',true);
 		},
 
 		/**
@@ -145,7 +144,7 @@
 		*/
 		hideWarningModal: function() {
 			document.querySelector('body').classList.remove('warning');
-			localStorage.setItem('warning-seen',true);
+			chromeLocalStorage.setItem('warning-seen',true);
 		},
 
 		/**

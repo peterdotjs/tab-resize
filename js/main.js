@@ -227,10 +227,10 @@
 		options.hideUpdateModal();
 	});
 
-	document.querySelector('#promo-apply').addEventListener('click', (evt) => {
-		evt.stopPropagation();
-		options.hidePromoModal();
-	});
+	// document.querySelector('#promo-apply').addEventListener('click', (evt) => {
+	// 	evt.stopPropagation();
+	// 	options.hidePromoModal();
+	// });
 
 	document.querySelector('#warning-apply').addEventListener('click', (evt) => {
 		evt.stopPropagation();

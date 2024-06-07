@@ -1,9 +1,9 @@
 (function(){
-	var currentOptOut = localStorage.getItem("tracking-opt-out");
-
-	if(currentOptOut && currentOptOut === 'true'){
-		document.querySelector('#tracking-opt-out').setAttribute('checked',true);
-	}
+	chromeLocalStorage.getItem("tracking-opt-out").then((currentOptOut)=> {
+		if(currentOptOut && currentOptOut === 'true'){
+			document.querySelector('#tracking-opt-out').setAttribute('checked',true);
+		}
+	});
 
 	function addEventListener(el, eventName, selector, eventHandler) {
 		if (selector) {
@@ -31,7 +31,7 @@
 	addEventListener(body,'click','#tracking-opt-out',function(){
 		var checked = $(this).getAttribute('checked');
 		sendTracking('options-link', checked ? "opt-out-true" : "opt-out-false");
-		localStorage.setItem("tracking-opt-out",checked ? "true" : "false");
+		chromeLocalStorage.setItem("tracking-opt-out",checked ? "true" : "false");
 	});
 	
 	addEventListener(body,'click', '#keyboard-shortcut-link', function(){
