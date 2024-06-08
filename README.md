@@ -1,8 +1,6 @@
 Tab-Resize
 ==========
 
-[![Join the chat at https://gitter.im/peterdotjs/Tab-Resize](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/peterdotjs/Tab-Resize?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate Windows. w/ Multi Monitor Support.
 
 ![Tab Resize Screenshot](https://raw.githubusercontent.com/peterdotjs/resources/master/tab-resize/ss4v4.png)
@@ -40,6 +38,13 @@ https://github.com/peterdotjs/Tab-Resize/issues?state=open
 
 # Change Log
 -------
+### 3.0.0
+- Added support for Manifest V3 (https://developer.chrome.com/docs/extensions/develop/migrate)
+- Moved towards chrome.storage from localStorage. Won't be making it backwards compatible (no migration from previous localStorage settings)
+- Fixed resize bug when tabId doesn't exist
+- Disabled sortable functionality (temporarily)
+- Disabled google analytics (temporarily)
+
 ### 2.3.0
 - Added default shortcut keys:
 - **Ctrl + Shift + Z**: Undo Last Resize 

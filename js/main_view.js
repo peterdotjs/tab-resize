@@ -99,10 +99,9 @@
 			chromeLocalStorage.getItem('updateBadge').then((updateBadge) => {
 				var updateCount = Number(updateBadge);
 				chromeLocalStorage.getItem('version').then((version) => {
-					var curVersion = version || '',
-					isOldVersion = (curVersion < '2.3.4' && curVersion !== '');
+					var curVersion = version || '';
 
-					if(!updateCount || isOldVersion){
+					if(!updateCount){
 						updateCount = 0;
 						chromeLocalStorage.setItem('updateBadge',0);
 						chrome.action.setBadgeText({text:'NEW'});
@@ -122,17 +121,15 @@
 
 					//user has never seen update
 					chromeLocalStorage.getItem('update-seen').then((updateSeen) => {
-						if(!updateSeen || isOldVersion){
+						if(!updateSeen){
 							$body.classList.add('update');
-							if(isOldVersion){
-								chromeLocalStorage.removeItem('update-seen');
-								chromeLocalStorage.getItem('warning-seen').then((warningSeen) => {
-									if (!warningSeen) {
-										$body.classList.add('warning');
-										resize.options.showWarningModal();
-									}
-								});
-							}
+							chromeLocalStorage.removeItem('update-seen');
+							chromeLocalStorage.getItem('warning-seen').then((warningSeen) => {
+								if (!warningSeen) {
+									$body.classList.add('warning');
+									resize.options.showWarningModal();
+								}
+							});
 							resize.options.showUpdateModal();
 						}
 
@@ -284,7 +281,7 @@
 								scaledOrientation: scaledOrientation,
 							  });
 						};
-						
+
 						if(resize.singleTab){
 							await chrome.runtime.sendMessage({
 								type: "setUndoStorage",

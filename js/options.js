@@ -110,7 +110,7 @@
 			document.querySelector('.main-view').classList.remove('inactive');
 			document.querySelector('#update-modal').style.display = 'none';
 			chromeLocalStorage.setItem('update-seen',true);
-			chromeLocalStorage.setItem('version','2.3.4');
+			chromeLocalStorage.setItem('version','3.0.0');
 		},
 
 		/**
@@ -144,6 +144,7 @@
 		*/
 		hideWarningModal: function() {
 			document.querySelector('body').classList.remove('warning');
+			document.querySelector('#warning-modal').style.display = 'none';
 			chromeLocalStorage.setItem('warning-seen',true);
 		},
 
@@ -151,7 +152,7 @@
 		* shows the warning modal box
 		*/
 		showWarningModal: function() {
-			document.querySelector('#warning-modal').style.display = 'block'; // .trigger('show');
+			document.querySelector('#warning-modal').style.display = 'block';
 			document.querySelector('.main-view').classList.add('inactive');
 		}
 

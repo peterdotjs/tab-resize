@@ -37,25 +37,20 @@ chrome.runtime.onInstalled.addListener(function(details){
 	}
 });
 
-var curVersion = localStorage.getItem('version') || '',
-		isOldVersion = (curVersion < '2.3.4' && curVersion !== '');
+var curVersion = localStorage.getItem('version') || '';
 
 if(!curVersion){
-	localStorage.setItem('version','2.2.0');
+	localStorage.setItem('version','3.0.0');
 }
 
 //is new install or hasen't seen latest update
 localStorage.getItem('updateBadge').then((updateBadge) => {
-	if (!updateBadge || isOldVersion) {
+	if (!updateBadge) {
 		localStorage.setItem('updateBadge',0);
 		chrome.action.setBadgeText({text:'NEW'});
 		chrome.action.setBadgeBackgroundColor({color:[221, 129, 39, 255]});
 	}
 });
-
-if(isOldVersion){
-	localStorage.removeItem('update-seen');
-}
 
 chrome.runtime.onMessage.addListener(async (msg, sender, callback) => {
 	switch (msg.type) {

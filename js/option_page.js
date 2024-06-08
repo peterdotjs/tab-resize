@@ -1,9 +1,9 @@
 (function(){
-	chromeLocalStorage.getItem("tracking-opt-out").then((currentOptOut)=> {
-		if(currentOptOut && currentOptOut === 'true'){
-			document.querySelector('#tracking-opt-out').setAttribute('checked',true);
-		}
-	});
+	// chromeLocalStorage.getItem("tracking-opt-out").then((currentOptOut)=> {
+	// 	if(currentOptOut && currentOptOut === 'true'){
+	// 		document.querySelector('#tracking-opt-out').setAttribute('checked',true);
+	// 	}
+	// });
 
 	function addEventListener(el, eventName, selector, eventHandler) {
 		if (selector) {
@@ -28,10 +28,10 @@
 
 	var $body = document.querySelector('body');
 
-	addEventListener(body,'click','#tracking-opt-out',function(){
+	addEventListener($body,'click','#tracking-opt-out',function(){
 		var checked = $(this).getAttribute('checked');
 		sendTracking('options-link', checked ? "opt-out-true" : "opt-out-false");
-		chromeLocalStorage.setItem("tracking-opt-out",checked ? "true" : "false");
+		// chromeLocalStorage.setItem("tracking-opt-out",checked ? "true" : "false");
 	});
 	
 	addEventListener(body,'click', '#keyboard-shortcut-link', function(){
@@ -48,9 +48,9 @@
 	});
 
 	function sendTracking(category, label) {
-		if((!currentOptOut || currentOptOut === 'false') && ga) {
-			ga('send','event', category, 'clicked', label || "na");
-		}
+		// if((!currentOptOut || currentOptOut === 'false') && ga) {
+		// 	ga('send','event', category, 'clicked', label || "na");
+		// }
 	}
 
 	// if(!currentOptOut || currentOptOut === 'false') {

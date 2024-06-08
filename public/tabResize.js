@@ -186,10 +186,9 @@ function sendTracking(category, label) {
 			chromeLocalStorage.getItem('updateBadge').then((updateBadge) => {
 				var updateCount = Number(updateBadge);
 				chromeLocalStorage.getItem('version').then((version) => {
-					var curVersion = version || '',
-					isOldVersion = (curVersion < '2.3.4' && curVersion !== '');
+					var curVersion = version || '';
 
-					if(!updateCount || isOldVersion){
+					if(!updateCount){
 						updateCount = 0;
 						chromeLocalStorage.setItem('updateBadge',0);
 						chrome.action.setBadgeText({text:'NEW'});
@@ -209,17 +208,15 @@ function sendTracking(category, label) {
 
 					//user has never seen update
 					chromeLocalStorage.getItem('update-seen').then((updateSeen) => {
-						if(!updateSeen || isOldVersion){
+						if(!updateSeen){
 							$body.classList.add('update');
-							if(isOldVersion){
-								chromeLocalStorage.removeItem('update-seen');
-								chromeLocalStorage.getItem('warning-seen').then((warningSeen) => {
-									if (!warningSeen) {
-										$body.classList.add('warning');
-										resize.options.showWarningModal();
-									}
-								});
-							}
+							chromeLocalStorage.removeItem('update-seen');
+							chromeLocalStorage.getItem('warning-seen').then((warningSeen) => {
+								if (!warningSeen) {
+									$body.classList.add('warning');
+									resize.options.showWarningModal();
+								}
+							});
 							resize.options.showUpdateModal();
 						}
 
@@ -371,7 +368,7 @@ function sendTracking(category, label) {
 								scaledOrientation: scaledOrientation,
 							  });
 						};
-						
+
 						if(resize.singleTab){
 							await chrome.runtime.sendMessage({
 								type: "setUndoStorage",
@@ -623,7 +620,7 @@ function sendTracking(category, label) {
 			document.querySelector('.main-view').classList.remove('inactive');
 			document.querySelector('#update-modal').style.display = 'none';
 			chromeLocalStorage.setItem('update-seen',true);
-			chromeLocalStorage.setItem('version','2.3.4');
+			chromeLocalStorage.setItem('version','3.0.0');
 		},
 
 		/**
@@ -657,6 +654,7 @@ function sendTracking(category, label) {
 		*/
 		hideWarningModal: function() {
 			document.querySelector('body').classList.remove('warning');
+			document.querySelector('#warning-modal').style.display = 'none';
 			chromeLocalStorage.setItem('warning-seen',true);
 		},
 
@@ -664,7 +662,7 @@ function sendTracking(category, label) {
 		* shows the warning modal box
 		*/
 		showWarningModal: function() {
-			document.querySelector('#warning-modal').style.display = 'block'; // .trigger('show');
+			document.querySelector('#warning-modal').style.display = 'block';
 			document.querySelector('.main-view').classList.add('inactive');
 		}
 
@@ -1470,7 +1468,9 @@ function addEventListener(el, eventName, selector, eventHandler) {
 	
 	addEventListener(document,'click', '.custom-view .scaled-input', function(evt){
 		var $this = evt.target;
-		document.querySelector('.custom-view .scaled-input').classList.remove('selected');
+		document.querySelectorAll('.custom-view .scaled-input').forEach((input) => {
+			input.classList.remove('selected');
+		});
 		$this.classList.add('selected');
 		custom_view.showScaledMenu();
 		sendTracking('custom-layout',$this.value);

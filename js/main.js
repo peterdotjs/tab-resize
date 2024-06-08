@@ -279,7 +279,9 @@
 	
 	addEventListener(document,'click', '.custom-view .scaled-input', function(evt){
 		var $this = evt.target;
-		document.querySelector('.custom-view .scaled-input').classList.remove('selected');
+		document.querySelectorAll('.custom-view .scaled-input').forEach((input) => {
+			input.classList.remove('selected');
+		});
 		$this.classList.add('selected');
 		custom_view.showScaledMenu();
 		sendTracking('custom-layout',$this.value);
