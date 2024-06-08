@@ -320,9 +320,22 @@ var util = {
 	* @param {number} windowId Id of final window holding recombined tabs
 	* @param {array} tabsArray Array of tab objects to be moved back to the previous window
 	*/
-	recombineTabs: function(resize,tabIndex, windowId, tabsArray, callback) {
+	recombineTabs: async function(resize,tabIndex, windowId, tabsArray, callback) {
 		var indexCounter = tabIndex;
-		chrome.tabs.move(tabsArray,{windowId: windowId, index: indexCounter});
+		
+		// check if tabs still exist
+		// pass in updated tabsArray
+
+		var verifiedTabsArray = [];
+		for (const tab of tabsArray) {
+			try {
+				await chrome.tabs.get(tab);
+				verifiedTabsArray.push(tab);
+			} catch (error) {}
+		}
+
+		chrome.tabs.move(verifiedTabsArray,{windowId: windowId, index: indexCounter});
+
 		var updateInfo = resize.lastTab.lastWindowInfo;
 		var updateInfoForUpdate = Object.assign({}, updateInfo);;
 		delete updateInfoForUpdate.incognito;
