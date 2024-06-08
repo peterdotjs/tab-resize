@@ -2,7 +2,7 @@
 * display.js
 * handling display event handling and logic
 */
-(function($){
+(function(){
 
 	var resize = window.resize,
 		scale = 0.15,
@@ -54,7 +54,7 @@
 			resize.util.addEventListener($el,'click','.display-entry',function(evt){
 				var $this = evt.target,
 					data = {},
-					id = $this.dataset.id;
+					id = Number($this.dataset.id);
 					sz = $this.querySelector('.display-meta').textContent;
 
 				data[id] = true;
@@ -176,10 +176,11 @@
 			'width: ' + Number(info.width*scale) + 'px; ' +
 			'height: ' + Number(info.height*scale) + 'px';		
 
-		$template.dataset = {
-			id,
-			...info,
-		};
+		for (const property in info) {
+			$template.dataset[property] = info[property];
+		}
+
+		$template.dataset.id = id;
 
 		$template.querySelector('.display-meta').textContent = info.width + 'x' + info.height;
 
@@ -190,4 +191,4 @@
 		return $template;
 	}
 
-})(window.jQuery);
+})();

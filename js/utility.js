@@ -28,14 +28,6 @@ function addEventListener(el, eventName, selector, eventHandler) {
 	var util = {
 
 		/**
-		* Centers modal on page
-		* @param {jQuery object} modal
-		*/
-		centerModal: function(modal) {
-			modal.css({'margin-top':(modal.outerHeight()/2)*-1, 'margin-left':(modal.outerWidth()/2)*-1});
-		},
-
-		/**
 		* draws a table using canvas
 		* @param {Number} width - width of table
 		* @param {Number} height - height of table

@@ -10,6 +10,18 @@
 		return Object.keys(obj).length === 0;
 	}
 
+	// convert dataset DOMMapString into Object with converted number values
+	function processDataSet(dataSet) {
+		var newDataSet = Object.assign({}, dataSet);
+		for (const property in newDataSet) {
+			var propValue = newDataSet[property];
+			if (!isNaN(propValue)) {
+				newDataSet[property] = Number(propValue);
+			}
+		}
+		return newDataSet;
+	}
+
 	var main_view = {
 
 		/**
@@ -49,7 +61,7 @@
 			});
 
 			chromeLocalStorage.getItem('displayLayer').then((displayLayerValue) => {
-				if(!displayLayerValue || displayLayerValue === true){
+				if(displayLayerValue === undefined || displayLayerValue === true){
 					document.querySelector('.main-view').classList.add('display-selected');
 					resize.displayLayer = true;
 				}
@@ -188,8 +200,7 @@
 			* split width of screen equally depending on number of cells
 			* create new window unable to take non integers for width and height
 			*/
-
-			var screenInfo = document.querySelector('.display-entry.selected').dataset;
+			var screenInfo =  processDataSet(document.querySelector('.display-entry.selected').dataset);
 			setResizeWidthHeight(screenInfo,resize.numRows,resize.numCols);
 			resizeTabHelper(screenInfo);
 		},
@@ -209,7 +220,7 @@
 			* split width of screen based on the primary and secondary ratios
 			*/
 
-			var screenInfo = document.querySelector('.display-entry.selected').dataset;
+			var screenInfo =  processDataSet(document.querySelector('.display-entry.selected').dataset);
 			setScaledResizeWidthHeight(screenInfo,primaryRatio, secondaryRatio, orientation);
 			resizeTabHelper(screenInfo,orientation);
 		}
@@ -272,11 +283,9 @@
 								incog: resize.currentTab.incognito,
 								scaledOrientation: scaledOrientation,
 							  });
-							// return resize.backgroundUtil.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
 						};
+						
 						if(resize.singleTab){
-							// resize.backgroundUtil.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
-
 							await chrome.runtime.sendMessage({
 								type: "setUndoStorage",
 								resize: resize,
@@ -287,15 +296,13 @@
 
 
 						} else {
-							debugger;
-							// resize.backgroundUtil.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index), cb);
 							await chrome.runtime.sendMessage({
 								type: "setUndoStorage",
 								resize: resize,
 								tabIndex: resize.currentTab.index,
 								windowId: resize.currentTab.windowId,
 								tabsArray: resize.tabsArray.slice(index)
-							  }, cb);
+							  }, null, cb);
 						}
 
 					}

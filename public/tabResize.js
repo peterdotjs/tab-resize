@@ -11,7 +11,7 @@
 		getAllItems: () => chrome.storage.local.get(),
 		getItem: async key => (await chrome.storage.local.get(key))[key],
 		setItem: (key, val) => chrome.storage.local.set({[key]: val}),
-		removeItems: keys => chrome.storage.local.remove(keys),
+		removeItem: keys => chrome.storage.local.remove(keys),
 	};
 
 	window.chromeLocalStorage = localStorage;
@@ -97,6 +97,18 @@ function sendTracking(category, label) {
 		return Object.keys(obj).length === 0;
 	}
 
+	// convert dataset DOMMapString into Object with converted number values
+	function processDataSet(dataSet) {
+		var newDataSet = Object.assign({}, dataSet);
+		for (const property in newDataSet) {
+			var propValue = newDataSet[property];
+			if (!isNaN(propValue)) {
+				newDataSet[property] = Number(propValue);
+			}
+		}
+		return newDataSet;
+	}
+
 	var main_view = {
 
 		/**
@@ -136,7 +148,7 @@ function sendTracking(category, label) {
 			});
 
 			chromeLocalStorage.getItem('displayLayer').then((displayLayerValue) => {
-				if(!displayLayerValue || displayLayerValue === true){
+				if(displayLayerValue === undefined || displayLayerValue === true){
 					document.querySelector('.main-view').classList.add('display-selected');
 					resize.displayLayer = true;
 				}
@@ -275,8 +287,7 @@ function sendTracking(category, label) {
 			* split width of screen equally depending on number of cells
 			* create new window unable to take non integers for width and height
 			*/
-
-			var screenInfo = document.querySelector('.display-entry.selected').dataset;
+			var screenInfo =  processDataSet(document.querySelector('.display-entry.selected').dataset);
 			setResizeWidthHeight(screenInfo,resize.numRows,resize.numCols);
 			resizeTabHelper(screenInfo);
 		},
@@ -296,7 +307,7 @@ function sendTracking(category, label) {
 			* split width of screen based on the primary and secondary ratios
 			*/
 
-			var screenInfo = document.querySelector('.display-entry.selected').dataset;
+			var screenInfo =  processDataSet(document.querySelector('.display-entry.selected').dataset);
 			setScaledResizeWidthHeight(screenInfo,primaryRatio, secondaryRatio, orientation);
 			resizeTabHelper(screenInfo,orientation);
 		}
@@ -359,11 +370,9 @@ function sendTracking(category, label) {
 								incog: resize.currentTab.incognito,
 								scaledOrientation: scaledOrientation,
 							  });
-							// return resize.backgroundUtil.processTabs(resize, resize.tabsArray, index, resize.currentTab.windowId, resize.singleTab, resize.currentTab.incognito, scaledOrientation);
 						};
+						
 						if(resize.singleTab){
-							// resize.backgroundUtil.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index,index + 1), cb);
-
 							await chrome.runtime.sendMessage({
 								type: "setUndoStorage",
 								resize: resize,
@@ -374,15 +383,13 @@ function sendTracking(category, label) {
 
 
 						} else {
-							debugger;
-							// resize.backgroundUtil.setUndoStorage(resize,resize.currentTab.index,resize.currentTab.windowId, resize.tabsArray.slice(index), cb);
 							await chrome.runtime.sendMessage({
 								type: "setUndoStorage",
 								resize: resize,
 								tabIndex: resize.currentTab.index,
 								windowId: resize.currentTab.windowId,
 								tabsArray: resize.tabsArray.slice(index)
-							  }, cb);
+							  }, null, cb);
 						}
 
 					}
@@ -419,7 +426,6 @@ function sendTracking(category, label) {
 		* hides custom view menu
 		*/
 		hideCustomMenu: function() {
-			debugger;
 			document.querySelector('.custom-view').classList.add('hidden');
 			document.querySelector('.main-view').classList.remove('inactive');
 			resize.util.clearCanvas();
@@ -429,7 +435,6 @@ function sendTracking(category, label) {
 		* shows custom view menu
 		*/
 		showCustomMenu: function() {
-			debugger;;
 			this.clearCustomValues();
 			document.querySelector('.layout-option #fixed').click();
 			document.querySelector('.main-view').classList.add('inactive');
@@ -553,6 +558,7 @@ function sendTracking(category, label) {
 		* @param {boolean} The hex ID.
 		*/
 		processDisplayLayerSelection: function(displayLayer) {
+			debugger;
 			var _displayLayer = displayLayer ? true : false;
 			chromeLocalStorage.setItem('displayLayer',_displayLayer);
 			resize.displayLayer = _displayLayer;
@@ -770,7 +776,7 @@ function sendTracking(category, label) {
 		*/
 		_removeLayoutMarkup: function(layoutType){
 			var layoutSelector = '[data-selector-type="' + layoutType + '"]';
-			$(layoutSelector).parent().remove();
+			document.querySelector(layoutSelector).parentNode.remove();
 		},
 
 		/**
@@ -781,6 +787,7 @@ function sendTracking(category, label) {
 			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
 			// resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
 			resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
+			debugger;
 			resize.main_view.populateMainView();
 			this.processTabInfo();
 			resize.util.resetSortable();
@@ -790,7 +797,7 @@ function sendTracking(category, label) {
 		* removes all current layouts
 		*/
 		_removeAllLayouts: function() {
-			document.querySelector('.resize-container').children().remove();
+			document.querySelector('.resize-container').replaceChildren();
 		},
 
 		processTabInfo: function($layout){
@@ -899,14 +906,6 @@ function addEventListener(el, eventName, selector, eventHandler) {
 	var util = {
 
 		/**
-		* Centers modal on page
-		* @param {jQuery object} modal
-		*/
-		centerModal: function(modal) {
-			modal.css({'margin-top':(modal.outerHeight()/2)*-1, 'margin-left':(modal.outerWidth()/2)*-1});
-		},
-
-		/**
 		* draws a table using canvas
 		* @param {Number} width - width of table
 		* @param {Number} height - height of table
@@ -1002,7 +1001,7 @@ function addEventListener(el, eventName, selector, eventHandler) {
 * display.js
 * handling display event handling and logic
 */
-(function($){
+(function(){
 
 	var resize = window.resize,
 		scale = 0.15,
@@ -1054,7 +1053,7 @@ function addEventListener(el, eventName, selector, eventHandler) {
 			resize.util.addEventListener($el,'click','.display-entry',function(evt){
 				var $this = evt.target,
 					data = {},
-					id = $this.dataset.id;
+					id = Number($this.dataset.id);
 					sz = $this.querySelector('.display-meta').textContent;
 
 				data[id] = true;
@@ -1176,10 +1175,11 @@ function addEventListener(el, eventName, selector, eventHandler) {
 			'width: ' + Number(info.width*scale) + 'px; ' +
 			'height: ' + Number(info.height*scale) + 'px';		
 
-		$template.dataset = {
-			id,
-			...info,
-		};
+		for (const property in info) {
+			$template.dataset[property] = info[property];
+		}
+
+		$template.dataset.id = id;
 
 		$template.querySelector('.display-meta').textContent = info.width + 'x' + info.height;
 
@@ -1190,7 +1190,7 @@ function addEventListener(el, eventName, selector, eventHandler) {
 		return $template;
 	}
 
-})(window.jQuery);
+})();
 /**
 * main.js
 * initialization and event handlers
@@ -1250,25 +1250,27 @@ function addEventListener(el, eventName, selector, eventHandler) {
             resizeType = (isScaled ? scaledResizeType[0]: resizeTypeStr.split('x')),
             orientation = (isScaled ? scaledResizeType[2] : null);
 
+		debugger;
+
         main_view[isScaled ? 'resizeScaledTabs' : 'resizeTabs'](Number(resizeType[0]),Number(resizeType[1]), orientation);
 		sendTracking('resize',resizeTypeStr);
 
 	});
-	
-	addEventListener(document,'show','.modal-box', function(evt){
-		evt.stopPropagation();
-		util.centerModal(evt.target); //may be redundant with transform
-	});
-	
+
 	addEventListener(document,'click','.modal-box', function(evt){
 		evt.stopPropagation();
 	});
 
-	addEventListener(document,'click','.close-button',function(evt){
+	// fixme
+	addEventListener(document.querySelector('.resize-container'),'click','.close-button',function(evt){
 		evt.stopPropagation();
-		var resizeType = evt.target.siblings('.resize-selector').getAttribute('data-selector-type');
-		layout.removeLayout(resizeType);
-		sendTracking('resize-delete',resizeType);
+		debugger;
+		var closeButton = evt.target.closest('.close-button');
+		if (closeButton) {
+			var resizeType = closeButton.parentNode.querySelector('.resize-selector').getAttribute('data-selector-type');
+			layout.removeLayout(resizeType);
+			sendTracking('resize-delete',resizeType);
+		}
 	});
 	
 	addEventListener(document,'click','#undo-layout', async function(){
@@ -1276,7 +1278,7 @@ function addEventListener(el, eventName, selector, eventHandler) {
 		await chrome.runtime.sendMessage({
 			type: "undoResize",
 			resize: resize,
-		  }, options.disableUndoButton);
+		  }, null, options.disableUndoButton.bind(this));
 		sendTracking('undo','undo');
 	});
 
@@ -1398,6 +1400,7 @@ function addEventListener(el, eventName, selector, eventHandler) {
 
 		$display.classList.toggle('display-selected');
 		isDisplayed = $display.classList.contains('display-selected');
+		debugger;
 		options.processDisplayLayerSelection(isDisplayed);
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
 	});
@@ -1472,16 +1475,14 @@ function addEventListener(el, eventName, selector, eventHandler) {
 	});
 	
 	addEventListener(document,'click', '.custom-view .scaled-input', function(evt){
-		debugger;
 		var $this = evt.target;
 		document.querySelector('.custom-view .scaled-input').classList.remove('selected');
 		$this.classList.add('selected');
 		custom_view.showScaledMenu();
-		sendTracking('custom-layout',$this.text());
+		sendTracking('custom-layout',$this.value);
 	});
 	
 	addEventListener(document,'click','.custom-view .switch-toggle.scaled-layout-orientation input', function(evt){
-		debugger;
 		custom_view.showScaledMenu();
 		sendTracking('custom-layout',evt.target.getAttribute('id'));
 	});

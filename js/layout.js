@@ -98,7 +98,7 @@
 		*/
 		_removeLayoutMarkup: function(layoutType){
 			var layoutSelector = '[data-selector-type="' + layoutType + '"]';
-			$(layoutSelector).parent().remove();
+			document.querySelector(layoutSelector).parentNode.remove();
 		},
 
 		/**
@@ -109,6 +109,7 @@
 			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
 			// resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
 			resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
+			debugger;
 			resize.main_view.populateMainView();
 			this.processTabInfo();
 			resize.util.resetSortable();
@@ -118,7 +119,7 @@
 		* removes all current layouts
 		*/
 		_removeAllLayouts: function() {
-			document.querySelector('.resize-container').children().remove();
+			document.querySelector('.resize-container').replaceChildren();
 		},
 
 		processTabInfo: function($layout){

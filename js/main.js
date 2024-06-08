@@ -57,25 +57,27 @@
             resizeType = (isScaled ? scaledResizeType[0]: resizeTypeStr.split('x')),
             orientation = (isScaled ? scaledResizeType[2] : null);
 
+		debugger;
+
         main_view[isScaled ? 'resizeScaledTabs' : 'resizeTabs'](Number(resizeType[0]),Number(resizeType[1]), orientation);
 		sendTracking('resize',resizeTypeStr);
 
 	});
-	
-	addEventListener(document,'show','.modal-box', function(evt){
-		evt.stopPropagation();
-		util.centerModal(evt.target); //may be redundant with transform
-	});
-	
+
 	addEventListener(document,'click','.modal-box', function(evt){
 		evt.stopPropagation();
 	});
 
-	addEventListener(document,'click','.close-button',function(evt){
+	// fixme
+	addEventListener(document.querySelector('.resize-container'),'click','.close-button',function(evt){
 		evt.stopPropagation();
-		var resizeType = evt.target.siblings('.resize-selector').getAttribute('data-selector-type');
-		layout.removeLayout(resizeType);
-		sendTracking('resize-delete',resizeType);
+		debugger;
+		var closeButton = evt.target.closest('.close-button');
+		if (closeButton) {
+			var resizeType = closeButton.parentNode.querySelector('.resize-selector').getAttribute('data-selector-type');
+			layout.removeLayout(resizeType);
+			sendTracking('resize-delete',resizeType);
+		}
 	});
 	
 	addEventListener(document,'click','#undo-layout', async function(){
@@ -83,7 +85,7 @@
 		await chrome.runtime.sendMessage({
 			type: "undoResize",
 			resize: resize,
-		  }, options.disableUndoButton);
+		  }, null, options.disableUndoButton.bind(this));
 		sendTracking('undo','undo');
 	});
 
@@ -205,6 +207,7 @@
 
 		$display.classList.toggle('display-selected');
 		isDisplayed = $display.classList.contains('display-selected');
+		debugger;
 		options.processDisplayLayerSelection(isDisplayed);
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
 	});
@@ -279,16 +282,14 @@
 	});
 	
 	addEventListener(document,'click', '.custom-view .scaled-input', function(evt){
-		debugger;
 		var $this = evt.target;
 		document.querySelector('.custom-view .scaled-input').classList.remove('selected');
 		$this.classList.add('selected');
 		custom_view.showScaledMenu();
-		sendTracking('custom-layout',$this.text());
+		sendTracking('custom-layout',$this.value);
 	});
 	
 	addEventListener(document,'click','.custom-view .switch-toggle.scaled-layout-orientation input', function(evt){
-		debugger;
 		custom_view.showScaledMenu();
 		sendTracking('custom-layout',evt.target.getAttribute('id'));
 	});

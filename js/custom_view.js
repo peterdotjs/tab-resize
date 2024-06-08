@@ -22,7 +22,6 @@
 		* hides custom view menu
 		*/
 		hideCustomMenu: function() {
-			debugger;
 			document.querySelector('.custom-view').classList.add('hidden');
 			document.querySelector('.main-view').classList.remove('inactive');
 			resize.util.clearCanvas();
@@ -32,7 +31,6 @@
 		* shows custom view menu
 		*/
 		showCustomMenu: function() {
-			debugger;;
 			this.clearCustomValues();
 			document.querySelector('.layout-option #fixed').click();
 			document.querySelector('.main-view').classList.add('inactive');
