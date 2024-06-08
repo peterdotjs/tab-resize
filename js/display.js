@@ -2,7 +2,7 @@
 * display.js
 * handling display event handling and logic
 */
-(function($){
+(function(){
 
 	var resize = window.resize,
 		scale = 0.15,
@@ -11,6 +11,34 @@
 		defaultWidth = 530,
 		defaultHeight = 250,
 		$el;
+
+
+	function displayInfoFormatter(displayInfo,currentWindowInfo){
+		var index = 0,
+			length = displayInfo.length,
+			info,
+			displayJSON = { //may need to check for some mirroring property, currently only one monitor is display when mirroring
+				displays: [],
+				primaryIndex: 0
+			};
+
+		for(;index<length;index++){
+			info = displayInfo[index];
+			info.id = String(index); //setting index of display
+			displayJSON.displays.push({
+				workArea: info.workArea,
+				isEnabled: info.isEnabled,
+				id: info.id
+			});
+
+			if(currentWindowInfo.left > info.workArea.left && currentWindowInfo.left < info.workArea.left + info.workArea.width && currentWindowInfo.top > info.workArea.top && currentWindowInfo.top < info.workArea.top + info.workArea.height){
+				displayJSON.primaryIndex = index;
+			}
+
+		}
+		return displayJSON;
+	};
+
 
 	var displayUtil = {
 
@@ -21,17 +49,19 @@
 				return;
 			}
 
-			$el = $('#display-setting-layer');
+			$el = document.querySelector('#display-setting-layer');
 
-			$el.on('click','.display-entry',function(evt){
-				var $this = $(this),
+			resize.util.addEventListener($el,'click','.display-entry',function(evt){
+				var $this = evt.target,
 					data = {},
-					id = $this.data('id'),
-					sz = $this.find('.display-meta').text();
+					id = Number($this.dataset.id);
+					sz = $this.querySelector('.display-meta').textContent;
 
 				data[id] = true;
-				$el.find('.display-entry').removeClass('selected');
-				$this.addClass('selected');
+				$el.querySelectorAll('.display-entry').forEach((entry) => {
+					entry.classList.remove('selected');
+				});
+				$this.classList.add('selected');
 				sendTracking('display-select',sz);
 			});
 
@@ -43,7 +73,7 @@
 						top: windowInfo.top + 100
 					};
 
-					var displayJSON = backJs.util.displayInfoFormatter(displayInfo,currentWindowInfo),
+					var displayJSON = displayInfoFormatter(displayInfo,currentWindowInfo),
 						template,
 						currentDisplay;
 
@@ -122,7 +152,7 @@
 	}
 
 	function getAvailableArea(){
-		var $displayLayer = $('#display-setting-layer');
+		var $displayLayer = document.querySelector('#display-setting-layer');
 		return {
 			width: defaultWidth,
 			height: defaultHeight
@@ -130,26 +160,35 @@
 	}
 
 	function setDisplayHeight(scale,height){
-		var $displayLayer = $('#display-setting-layer');
-		$displayLayer.height(scale*height);
+		var $displayLayer = document.querySelector('#display-setting-layer');
+		$displayLayer.style.height = scale*height + 'px';
 	}
 
 	function renderDisplayTemplate(info, id, isPrimary){
-		var $template = $('<div class="display-entry" title="Please select display to use."><div class="display-meta"></div></div>');
-			$template.css({
-				top: info.top*scale + offsetY,
-				left: info.left*scale + offsetX,
-				width: info.width*scale,
-				height: info.height*scale
-			}).data($.extend({id:id},info));
+		var $template = document.createElement('div');
+		$template.classList.add('display-entry');
+		$template.setAttribute('title', 'Please select display to use.');
+		$template.innerHTML = '<div class="display-meta"></div></div>';
+		
+		$template.style.cssText = 
+			'top: ' + Number(info.top*scale + offsetY) + 'px; ' +
+			'left: ' + Number(info.left*scale + offsetX) + 'px; ' +
+			'width: ' + Number(info.width*scale) + 'px; ' +
+			'height: ' + Number(info.height*scale) + 'px';		
 
-			$template.find('.display-meta').text(info.width + 'x' + info.height);
+		for (const property in info) {
+			$template.dataset[property] = info[property];
+		}
+
+		$template.dataset.id = id;
+
+		$template.querySelector('.display-meta').textContent = info.width + 'x' + info.height;
 
 		if(isPrimary){
-			$template.addClass('selected');
+			$template.classList.add('selected');
 		}
 
 		return $template;
 	}
 
-})(window.jQuery);
+})();

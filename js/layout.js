@@ -6,20 +6,27 @@
 
 	var resize = window.resize;
 
+	function faviconURL(u) {
+		const url = new URL(chrome.runtime.getURL("/_favicon/"));
+		url.searchParams.set("pageUrl", u);
+		url.searchParams.set("size", "32");
+		return url.toString();
+	}
+	  
 	var layout = {
 
 		updateLayoutStore: function(){
-			var $layouts = $('.resize-selector'),
+			var $layouts = document.querySelector('.resize-selector'),
 				length = $layouts.length,
 				index = 0,
 				currentLayouts = [];	
 
 			for(;index<length;index++){
-				currentLayouts.push($layouts.eq(index).attr('data-selector-type'));
+				currentLayouts.push($layouts.eq(index).getAttribute('data-selector-type'));
 			}
 
 			resize.currentLayouts.layoutItems = currentLayouts;
-			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 		},
 
 		/**
@@ -36,7 +43,7 @@
 			}
 
 			resize.currentLayouts.layoutItems.unshift(layoutType);
-			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 			this.addLayoutMarkup(layoutType,true);
 			resize.util.resetSortable();
 		},
@@ -60,13 +67,15 @@
 				layoutText = layoutType.split('-')[0].split('x').join(':');
 			}
 
-			var container = $('.resize-container');
+			var container = document.querySelector('.resize-container');
 			var selectorTemplate = '<li class="resize-selector-container"><div class="close-button"></div><div class="layout-title">' + (layoutText || layoutType)  + '</div><div class="resize-selector ' + defaultSprite + '\" ' + 'data-selector-type=' + '\"'+ layoutType + '\"></div></li>';
+			var divWrapper = document.createElement('div');
+			divWrapper.innerHTML = selectorTemplate;
 
 			if(prepend){
-				container.prepend(selectorTemplate);
+				container.prepend(divWrapper);
 			} else {
-				container.append(selectorTemplate);
+				container.append(divWrapper);
 			}
 		},
 
@@ -79,7 +88,7 @@
 				layoutIndex = layoutList.indexOf(layoutType);
 
 			layoutList.splice(layoutIndex,1);
-			localStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.currentLayouts));
 			this._removeLayoutMarkup(layoutType);
 		},
 
@@ -89,7 +98,7 @@
 		*/
 		_removeLayoutMarkup: function(layoutType){
 			var layoutSelector = '[data-selector-type="' + layoutType + '"]';
-			$(layoutSelector).parent().remove();
+			document.querySelector(layoutSelector).parentNode.remove();
 		},
 
 		/**
@@ -97,8 +106,9 @@
 		*/
 		resetLayout: function() {
 			this._removeAllLayouts();
-			localStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
-			resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
+			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
+			// resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
+			resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
 			resize.main_view.populateMainView();
 			this.processTabInfo();
 			resize.util.resetSortable();
@@ -108,12 +118,12 @@
 		* removes all current layouts
 		*/
 		_removeAllLayouts: function() {
-			$('.resize-container').children().remove();
+			document.querySelector('.resize-container').replaceChildren();
 		},
 
 		processTabInfo: function($layout){
 			var tabs = resize.currentWindowTabs;
-			var layoutList = $layout || $('.resize-container').find('.resize-selector-container .resize-selector'),
+			var layoutList = Array.from ($layout || document.querySelectorAll('.resize-container .resize-selector-container .resize-selector')),
 				length = 0,
 				index = 0,
 				$curLayout,
@@ -124,8 +134,8 @@
 				curTab,
 				tabNumber;
 
-			layoutList = layoutList.filter(function(){
-				return !$(this).hasClass('layout-default');
+			layoutList = layoutList.filter(function($){
+				return !$.classList.contains('layout-default');
 			});
 
 			length = layoutList.length;
@@ -134,10 +144,10 @@
 				//iterate through the current list of layout options
 				for(;index<length;index++){
 					innerHtml = '';
-					$curLayout = layoutList.eq(index);
+					$curLayout = layoutList[index];
 
-					if($curLayout.attr('data-selector-type').indexOf('scale') === -1){
-						layoutType = $curLayout.attr('data-selector-type').split('x');
+					if($curLayout.getAttribute('data-selector-type').indexOf('scale') === -1){
+						layoutType = $curLayout.getAttribute('data-selector-type').split('x');
 						rows = layoutType[0];
 						cols = layoutType[1];
 						tabNumber = 1;
@@ -151,7 +161,7 @@
 						innerHtml += '<div title="New Tab" class="tab-layer tab-layer-1"><div class="fav-icon"></div></div>' + '<div title="New Tab" class="tab-layer tab-layer-2"><div class="fav-icon"></div></div>';
 					}
 
-					$curLayout.html(innerHtml);
+					$curLayout.innerHTML = innerHtml;
 				}
 
 				//find the selected and add the urls
@@ -169,13 +179,17 @@
 	function processSelectedTab(curTab,index,tabs){
 		for(var i=1;index<tabs.length && i<5;index++,i++){
 			curTab = tabs[index];
-			var tabLayers = $('.resize-container').find('.tab-layer-' + i);
-			tabLayers.addClass('valid-tab');
+			var tabLayers = document.querySelectorAll('.resize-container .tab-layer-' + i);
+			tabLayers.forEach((tabLayer) => {
+				tabLayer.classList.add('valid-tab');
+			})
+		
 			for(var j=0;j<tabLayers.length; j++){
 				if(curTab.favIconUrl && curTab.favIconUrl.indexOf('chrome://') !== 0){
-					tabLayers.eq(j).find('.fav-icon').css('background-image','url("' + curTab.favIconUrl + '")');
+					var favIcon = tabLayers[j].querySelector('.fav-icon');
+					favIcon.style.backgroundImage = 'url("' + faviconURL(curTab.url) + '")';
 				}
-				tabLayers.eq(j).attr('title',curTab.title);
+				tabLayers[j].setAttribute('title',curTab.title);
 			}
 		}
 	}

@@ -2,17 +2,30 @@
 * utility.js
 * general utility functions used for modal, canvas, etc.
 */
+
+function addEventListener(el, eventName, selector, eventHandler) {
+	if (selector) {
+	  const wrappedHandler = (e) => {
+		if (!e.target) return;
+		const el = e.target.closest(selector);
+		if (el) {
+		  eventHandler.call(el, e);
+		}
+	  };
+	  el.addEventListener(eventName, wrappedHandler);
+	  return wrappedHandler;
+	} else {
+	  const wrappedHandler = (e) => {
+		eventHandler.call(el, e);
+	  };
+	  el.addEventListener(eventName, wrappedHandler);
+	  return wrappedHandler;
+	}
+  }
+
 (function(){
 
 	var util = {
-
-		/**
-		* Centers modal on page
-		* @param {jQuery object} modal
-		*/
-		centerModal: function(modal) {
-			modal.css({'margin-top':(modal.outerHeight()/2)*-1, 'margin-left':(modal.outerWidth()/2)*-1});
-		},
 
 		/**
 		* draws a table using canvas
@@ -75,14 +88,14 @@
 		* clears the canvas of previous drawing
 		*/
 		clearCanvas: function() {
-			var canvas = $('canvas')[0];
+			var canvas = document.querySelector('canvas');
 			var context=canvas.getContext("2d");
 			context.clearRect(0,0,context.canvas.width,context.canvas.height);
 		},
 
 
 		initSortable: function(){
-			$('.sortable').sortable().on('sortupdate',function(){
+			document.querySelector('.sortable').sortable().on('sortupdate',function(){
 				resize.layout.updateLayoutStore();
 				sendTracking('dnd-event','dnd-label');
 			});
@@ -91,12 +104,14 @@
 
 		resetSortable: function(){
 			if(sortableInitialized){
-				var $sortable = $('.sortable');
+				var $sortable = document.querySelector('.sortable');
 				$sortable.sortable('destroy');
 				$sortable.sortable();
 			}
-		}
+		},
 
+		addEventListener: addEventListener,
+		
 	};
 
 	var sortableInitialized = false;

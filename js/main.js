@@ -10,18 +10,48 @@
 		util = resize.util,
 		layout = resize.layout,
 		options = resize.options,
-		displayUtil = resize.displayUtil,
-		$doc = $(document);
+		displayUtil = resize.displayUtil;
 
 	/*
 	* events handlers
 	*/
 
-	$doc.ready(function(){
+	function ready(fn) {
+		if (document.readyState !== 'loading') {
+		  fn();
+		} else {
+		  document.addEventListener('DOMContentLoaded', fn);
+		}
+	}
+
+	function addEventListener(el, eventName, selector, eventHandler) {
+		if (selector) {
+		  const wrappedHandler = (e) => {
+			if (!e.target) return;
+			const el = e.target.closest(selector);
+			if (el) {
+			  eventHandler.call(el, e);
+			}
+		  };
+		  el.addEventListener(eventName, wrappedHandler);
+		  return wrappedHandler;
+		} else {
+		  const wrappedHandler = (e) => {
+			eventHandler.call(el, e);
+		  };
+		  el.addEventListener(eventName, wrappedHandler);
+		  return wrappedHandler;
+		}
+	  }
+
+	ready(function(){
 		main_view.initialize();
-	}).on('click','.resize-selector-container',function(){
-		var resizeSelector = $(this).children('.resize-selector'),
-			resizeTypeStr = resizeSelector.attr('data-selector-type'),
+	});
+	
+	addEventListener(document,'click','.resize-selector-container',function(evt){
+		evt.stopPropagation();
+		var resizeSelector = evt.target.closest('.resize-selector-container').querySelector('.resize-selector'),
+			resizeTypeStr = resizeSelector.getAttribute('data-selector-type'),
             isScaled = (resizeTypeStr.indexOf('scale') !== -1),
             scaledResizeType = resizeTypeStr.split('-'),
             resizeType = (isScaled ? scaledResizeType[0]: resizeTypeStr.split('x')),
@@ -30,61 +60,103 @@
         main_view[isScaled ? 'resizeScaledTabs' : 'resizeTabs'](Number(resizeType[0]),Number(resizeType[1]), orientation);
 		sendTracking('resize',resizeTypeStr);
 
-	}).on('show','.modal-box', function(evt){
+	});
+
+	addEventListener(document,'click','.modal-box', function(evt){
 		evt.stopPropagation();
-		util.centerModal($(this));
-	}).on('click','.modal-box', function(evt){
+	});
+
+	// fixme
+	addEventListener(document.querySelector('.resize-container'),'click','.close-button',function(evt){
 		evt.stopPropagation();
-	}).on('click','.close-button',function(evt){
-		evt.stopPropagation();
-		var resizeType = $(this).siblings('.resize-selector').attr('data-selector-type');
-		layout.removeLayout(resizeType);
-		sendTracking('resize-delete',resizeType);
-	}).on('click','#undo-layout',function(){
-		backJs.util.undoResize(resize,options.disableUndoButton);
+		var closeButton = evt.target.closest('.close-button');
+		if (closeButton) {
+			var resizeType = closeButton.parentNode.querySelector('.resize-selector').getAttribute('data-selector-type');
+			layout.removeLayout(resizeType);
+			sendTracking('resize-delete',resizeType);
+		}
+	});
+	
+	addEventListener(document,'click','#undo-layout', async function(){
+		// backJs.util.undoResize(resize,options.disableUndoButton);
+		await chrome.runtime.sendMessage({
+			type: "undoResize",
+			resize: resize,
+		  }, null, options.disableUndoButton.bind(this));
 		sendTracking('undo','undo');
-	}).on('click','#custom-layout',function(evt){
+	});
+
+	document.querySelector('#custom-layout').addEventListener('click', (evt) => {
 		evt.stopPropagation();
 		custom_view.showCustomMenu();
 		sendTracking('custom-layout','open');
-	}).on('click','#default-configuration',function(evt){
+	});
+
+	document.querySelector('#default-configuration').addEventListener('click', (evt) => {
 		evt.stopPropagation();
 		options.showConfirmationModal();
 		sendTracking('default-layout','open');
-	}).on('click','#confirmation-cancel',function(){
+	});
+	
+	document.querySelector('#confirmation-cancel').addEventListener('click', (evt) => {
+		evt.stopPropagation();
 		options.hideConfirmationModal();
 		sendTracking('default-layout','cancel');
-	}).on('click','#confirmation-apply',function(){
+	});
+	
+	document.querySelector('#confirmation-apply').addEventListener('click', (evt) => {
+		evt.stopPropagation();
 		layout.resetLayout();
 		options.hideConfirmationModal();
 		sendTracking('default-layout','apply');
-	}).on('click','#input-cancel,.main-view',function(){
-		if(!$('.custom-view').hasClass('hidden')){
+	});
+	
+	document.querySelector('#input-cancel').addEventListener('click', (evt) => {
+		if(!document.querySelector('.custom-view').classList.contains('hidden')){
 			custom_view.clearCustomValues();
 			custom_view.hideCustomMenu();
 			sendTracking('custom-layout','cancel');
 		}
-	}).on('click','#input-save',function(){
+	});
+
+	// addEventListener(document,'click','#input-cancel,.main-view',function(evt){
+	// 	evt.stopPropagation();
+	// 	if(!document.querySelector('.custom-view').classList.contains('hidden')){
+	// 		custom_view.clearCustomValues();
+	// 		custom_view.hideCustomMenu();
+	// 		sendTracking('custom-layout','cancel');
+	// 	}
+	// });
+
+	document.querySelector('#input-save').addEventListener('click', (evt) => {
+		evt.stopPropagation();
 		custom_view.handleCustomSave();
 		sendTracking('custom-layout','apply');
-	}).on('click','body',function(){
-		if(!$('.custom-view').hasClass('hidden')){
+	});
+
+	addEventListener(document,'click','body',function(evt){
+		if(evt.target.closest('.custom-view')) {
+			return;
+		}
+
+		if(!document.querySelector('.custom-view').classList.contains('hidden')){
 			util.clearCanvas();
 			custom_view.hideCustomMenu();
 			sendTracking('custom-layout','cancel-layer');
 		}
-		if(!$('.confirmation-modal').hasClass('hidden')){
+		if(!document.querySelector('.confirmation-modal').classList.contains('hidden')){
 			options.hideConfirmationModal();
 			sendTracking('default-layout','cancel-layer');
 		}
-	}).on('keyup','#numRows, #numCols',function(evt){
-		evt.stopPropagation();
+	});
+	
+	addEventListener(document,'keyup','#numRows, #numCols',function(evt){
 
 		var canvas=document.getElementById("myCanvas");
 		var context=canvas.getContext("2d");
 
-		var numRows = Number($('#numRows').attr('value'));
-		var numCols = Number($('#numCols').attr('value'));
+		var numRows = Number(document.querySelector('#numRows').value);
+		var numCols = Number(document.querySelector('#numCols').value);
 
 		util.clearCanvas();
 
@@ -99,68 +171,100 @@
 			}
 
 			util.drawTable(resize.canvasWidth, resize.canvasHeight, numRows, numCols, context);
-			$('#input-save').removeClass('disabled');
+			document.querySelector('#input-save').classList.remove('disabled');
 		} else {
-			var $this = $(this),
-				val = Number($this.attr('value'));
+			var $this = evt.target,
+				val = Number($this.value);
 
 			if(val === 0 || isNaN(val)){
-				$this.attr('value','');
-				$('#input-save').addClass('disabled');
+				$this.value = '';
+				document.querySelector('#input-save').classList.add('disabled');
 			}
 		}
-	}).on('change','#checkbox-single-tab', function(){
-		var checked = $(this).attr('checked');
+	});
+
+	document.querySelector('#checkbox-single-tab').addEventListener('change', (evt) => {
+		evt.stopPropagation();
+		var checked = evt.target.checked;
 		options.processSingleTabSelection(checked);
 		sendTracking('single-tab',checked ? "checked" : "unchecked");
-	}).on('change','#checkbox-empty-tab', function(){
-		var checked = $(this).attr('checked');
+	});
+	
+	document.querySelector('#checkbox-empty-tab').addEventListener('change', (evt) => {
+		evt.stopPropagation();
+		var checked = evt.target.checked;
 		options.processEmptyTabSelection(checked);
 		sendTracking('empty-tab',checked ? "checked" : "unchecked");
-	}).on('click','#display-setting', function(){
-		var $display = $('.main-view'),
+	});
+	
+	document.querySelector('#display-setting').addEventListener('click', (evt) => {
+		evt.stopPropagation();
+		var $display = document.querySelector('.main-view'),
 			isDisplayed;
 
-		$display.toggleClass('display-selected');
-		isDisplayed = $display.hasClass('display-selected');
+		$display.classList.toggle('display-selected');
+		isDisplayed = $display.classList.contains('display-selected');
 		options.processDisplayLayerSelection(isDisplayed);
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
-	}).on('click','#display-setting-layer .switch-toggle input',function(evt,deferTracking){
-		var alignment = $(this).attr('id');
-		$('#display-setting-layer .switch-toggle').removeClass('right-align left-align').addClass(alignment + '-align');
-		options.processAlignmentSelection(alignment);
-		if(!deferTracking){
-			sendTracking('alignment',alignment);
-		}
-	}).on('click','#update-apply',function(){
+	});
+	
+	document.querySelectorAll('#display-setting-layer .switch-toggle input').forEach((input)=> {
+		input.addEventListener('click', (evt, deferTracking) => {
+			evt.stopPropagation();
+			var alignment = evt.target.getAttribute('id');
+			var $toggle = document.querySelector('#display-setting-layer .switch-toggle')
+			$toggle.classList.remove('right-align','left-align');
+			$toggle.classList.add(alignment + '-align');
+			options.processAlignmentSelection(alignment);
+			if(!deferTracking){
+				sendTracking('alignment',alignment);
+			}
+		});
+	})
+
+	document.querySelector('#update-apply').addEventListener('click', (evt) => {
 		options.hideUpdateModal();
-	}).on('click','#promo-apply',function(){
-		options.hidePromoModal();
-	}).on('click','#warning-apply',function(){
+	});
+
+	// document.querySelector('#promo-apply').addEventListener('click', (evt) => {
+	// 	evt.stopPropagation();
+	// 	options.hidePromoModal();
+	// });
+
+	document.querySelector('#warning-apply').addEventListener('click', (evt) => {
+		evt.stopPropagation();
 		options.hideWarningModal();
-	}).on('click','.track-me a',function(){
-		var $this = $(this);
-		if($this.hasClass('rate-it')){
+	});
+	
+	addEventListener(document,'click','.track-me a',function(evt){
+		evt.stopPropagation();
+		var $this = evt.target;
+		if($this.classList.contains('rate-it')){
 			sendTracking('info-links','rate-it');
-		} else if ($this.hasClass('options')) {
+		} else if ($this.classList.contains('options')) {
 			sendTracking('info-links','options');
-		} else if ($this.hasClass('author')) {
+		} else if ($this.classList.contains('author')) {
 			sendTracking('info-links','author');
 		} else {
 			sendTracking('info-links','keyboard-shortcuts');
 		}
-	}).on('click','a.keyboard-shortcuts', function(){
+	});
+	
+	addEventListener(document,'click','a.keyboard-shortcuts', function(){
 		chrome.tabs.create({url:'chrome://extensions/configureCommands'});
-	}).on('click','.custom-view .switch-toggle.layout-option input', function(){
-		var option = $(this).attr('id'),
+	});
+	
+	addEventListener(document,'click','.custom-view .switch-toggle.layout-option input', function(evt){
+		evt.stopPropagation();
+		var option = evt.target.getAttribute('id'),
 			changed = false,
-			$customView = $('.custom-view');
+			$customView = document.querySelector('.custom-view');
 
-		if(option === 'scaled' && !$customView.hasClass('scaled') || option !== 'scaled' && $customView.hasClass('scaled')){
+		if(option === 'scaled' && !$customView.classList.contains('scaled') || option !== 'scaled' && $customView.classList.contains('scaled')){
 			changed = true;
 		}
 
-		$customView[(option === 'scaled') ? 'addClass' : 'removeClass']('scaled');
+		$customView.classList[(option === 'scaled') ? 'add' : 'remove']('scaled');
 
 		if(changed){
 			util.clearCanvas();
@@ -171,15 +275,21 @@
 			sendTracking('custom-layout',option);
 		}
 
-	}).on('click', '.custom-view .scaled-input', function(){
-		var $this = $(this);
-		$('.custom-view .scaled-input').removeClass('selected');
-		$this.addClass('selected');
+	});
+	
+	addEventListener(document,'click', '.custom-view .scaled-input', function(evt){
+		var $this = evt.target;
+		document.querySelectorAll('.custom-view .scaled-input').forEach((input) => {
+			input.classList.remove('selected');
+		});
+		$this.classList.add('selected');
 		custom_view.showScaledMenu();
-		sendTracking('custom-layout',$this.text());
-	}).on('click','.custom-view .switch-toggle.scaled-layout-orientation input', function(){
+		sendTracking('custom-layout',$this.value);
+	});
+	
+	addEventListener(document,'click','.custom-view .switch-toggle.scaled-layout-orientation input', function(evt){
 		custom_view.showScaledMenu();
-		sendTracking('custom-layout',$(this).attr('id'));
+		sendTracking('custom-layout',evt.target.getAttribute('id'));
 	});
 
 })();

@@ -3,8 +3,6 @@
 	<head>
 		<title>Resize</title>
 		<link rel="stylesheet" href="public/style.css" type="text/css">
-		<script type="text/javascript" src="js/lib/jquery.min.js"></script>
-		<script type="text/javascript" src="public/tabResize.min.js"></script>
 	</head>
 	<body>
 		<div class="main-view">
@@ -156,28 +154,25 @@
 				<div class="header-title-wrap">
 					<div class="icon-48"></div>
 					<div class="header-title">
-						Tab Resize 2.3.0 Updates
+						Tab Resize 3.0.0 Updates
 					</div>
 				</div>
 				<div class="update-list-header">What's New:</div>
 				<ul class="update-list">
 					<li class="update-entry">
-						<strong>Default Keyboard Shortcut/Hotkeys Added:</strong>
+						<strong>Manifest V3 support added</strong>
 					</li>
 					<li class="update-entry no-decoration">
-						<strong>CTRL + SHIFT + Z</strong>: Undo Last Resize
+						Major extension overhaul to support manifest guidelines with minimum product changes. 
 					</li>
 					<li class="update-entry no-decoration">
-						<strong>CTRL + SHIFT + 1</strong>: 1x1 Resize
+						Preferences now stored in chrome storage. Old preferences won't be migrated over.
 					</li>
 					<li class="update-entry no-decoration">
-						<strong>CTRL + SHIFT + 2</strong>: 1x2 Resize
+						Bug fix for UNDO to support when tabs were closed.
 					</li>
 					<li class="update-entry no-decoration">
-						<strong>CTRL + SHIFT + 4</strong>: 2x2 Resize
-					</li>
-					<li class="update-entry">
-						You can <strong>use tab resize directly with keyboard shortcuts</strong> rather than opening up the extension from the icon. Add your own shortcuts by clicking here: <a class="keyboard-shortcuts" href="javascript:;" target="_blank">Keyboard shortcuts/hotkeys</a>
+						Drag and drop functionality has been temporarily disabled. 
 					</li>
 				</ul>
 
@@ -189,14 +184,14 @@
 					You can checkout the <a target="_blank" href="https://www.youtube.com/watch?v=GFHl98nAV04" title="https://www.youtube.com/watch?v=GFHl98nAV04">video demo</a> for a more detailed description of how to use the extension.
 				</div>
 
-				<div class="additional-message bold">If you like the extension and find it useful please show your support by rating it in the <a target="_blank" href="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc/reviews" title="https://chrome.google.com/webstore/detail/tab-resize-split-screen-l/bkpenclhmiealbebdopglffmfdiilejc/reviews">web store</a>. Thanks! -Peter</div>
+				<div class="additional-message bold">If you like the extension and find it useful please show your support by rating it in the <a target="_blank" href="https://chromewebstore.google.com/detail/bkpenclhmiealbebdopglffmfdiilejc" title="https://chromewebstore.google.com/detail/bkpenclhmiealbebdopglffmfdiilejc">web store</a>. Thanks! -Peter</div>
 			</div>
 			<div class="modal-footer">
 				<button class="button primary" id="update-apply">Lets go!</button>
 			</div>
 		</div>
 
-		<div id="promo-modal" class="modal-box info-modal">
+		<!-- <div id="promo-modal" class="modal-box info-modal">
 			<div class="modal-body">
 				<div class="header-title-wrap">
 					<div class="icon-48"></div>
@@ -225,7 +220,8 @@
 			<div class="modal-footer">
 				<button class="button primary" id="promo-apply">Close</button>
 			</div>
-		</div>
-		<script type="text/javascript" src="js/lib/sortable.js"></script>
+		</div> -->
+		<script src="public/tabResize.js"></script>
+		<!-- <script type="text/javascript" src="js/lib/sortable.js"></script> -->
 	</body>
 </html>

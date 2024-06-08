@@ -4,9 +4,10 @@ module.exports = function(grunt) {
 		concat: {
 			basic: {
 			  src: [
-			  		'js/tracking.js',
+					'js/local_storage.js',
+					'js/tracking.js',
 			  		'js/resize.js', 
-			  		'js/main_view.js', 
+					'js/main_view.js', 
 			  		'js/custom_view.js',
 			  		'js/options.js',
 			  		'js/layout.js',
@@ -25,7 +26,8 @@ module.exports = function(grunt) {
 		},
 		jshint: {
 		    beforeconcat: [
-			  		'js/tracking.js',
+					'js/local_storage.js',
+					'js/tracking.js',
 			  		'js/resize.js', 
 			  		'js/main_view.js', 
 			  		'js/custom_view.js',
