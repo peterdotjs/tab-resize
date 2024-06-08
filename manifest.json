@@ -1,10 +1,10 @@
 {
   "name": "Tab Resize - split screen layouts",
   "short_name": "Tab Resize",
-  "version": "2.4.0",
+  "version": "3.0.0",
   "manifest_version": 3,
   "minimum_chrome_version": "104",
-  "description": "The ORIGINAL Tab Resize. Don't be fooled by imitators. Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate windows. w/ Multi Monitor Support.",
+  "description": "The ORIGINAL Tab Resize. Split Screen made easy. Resize the CURRENT tab and tabs to the RIGHT into layouts on separate windows.",
   "action": {
     "default_icon": "images/icons/icon128.png",
 	  "default_popup": "index.html",
