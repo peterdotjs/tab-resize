@@ -45,7 +45,6 @@
 		* @param {boolean} The hex ID.
 		*/
 		processDisplayLayerSelection: function(displayLayer) {
-			debugger;
 			var _displayLayer = displayLayer ? true : false;
 			chromeLocalStorage.setItem('displayLayer',_displayLayer);
 			resize.displayLayer = _displayLayer;

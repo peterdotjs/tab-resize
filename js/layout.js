@@ -109,7 +109,6 @@
 			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
 			// resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
 			resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
-			debugger;
 			resize.main_view.populateMainView();
 			this.processTabInfo();
 			resize.util.resetSortable();

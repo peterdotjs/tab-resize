@@ -68,10 +68,6 @@ chrome.runtime.onMessage.addListener(async (msg, sender, callback) => {
 		case "undoResize":
 			util.undoResize(msg.resize, callback);
 			break;
-		case "recombineTabs":
-			break;
-		case "displayInfoFormatter":
-			break;
 	}
   });
 
@@ -387,7 +383,7 @@ function getResizeParams(command){
 * @param {number} rows number of rows in resize layout
 * @param {number} cols number of columns in resize layout
 */
-function resizeTabs(screenInfo,rows,cols) {
+function resizeTabs(screenInfo,rows,cols, windowId) {
 
 	var resize = {};
 
@@ -399,12 +395,13 @@ function resizeTabs(screenInfo,rows,cols) {
 	* create new window unable to take non integers for width and height
 	*/
 
-	initResizePreferences(resize);
-	setResizeWidthHeight(resize, screenInfo,resize.numRows,resize.numCols);
-	resizeTabHelper(resize, screenInfo);
+	initResizePreferences(resize).then(() => {
+		setResizeWidthHeight(resize, screenInfo,resize.numRows,resize.numCols);
+		resizeTabHelper(resize, screenInfo, null, windowId);
+	});
 }
 
-function resizeScaledTabs(screenInfo, primaryRatio, secondaryRatio, orientation){
+function resizeScaledTabs(screenInfo, primaryRatio, secondaryRatio, orientation, windowId){
 
 	var resize = {};
 
@@ -416,10 +413,10 @@ function resizeScaledTabs(screenInfo, primaryRatio, secondaryRatio, orientation)
 	* create new window unable to take non integers for width and height
 	*/
 
-	initResizePreferences(resize);
-	setScaledResizeWidthHeight(resize, screenInfo, primaryRatio, secondaryRatio, orientation);
-	resizeTabHelper(resize, screenInfo, orientation);
-
+	initResizePreferences(resize).then(() => {
+		setScaledResizeWidthHeight(resize, screenInfo, primaryRatio, secondaryRatio, orientation);
+		resizeTabHelper(resize, screenInfo, orientation, windowId);
+	});
 }
 
 function setScaledResizeWidthHeight(resize, screenInfo, primaryRatio, secondaryRatio, orientation){
@@ -442,7 +439,7 @@ function setResizeWidthHeight(resize, screenInfo, rows, cols){
 	}
 }
 
-function resizeTabHelper(resize, screenInfo, scaledOrientation){
+function resizeTabHelper(resize, screenInfo, scaledOrientation, windowId){
 
 	if(!isEmpty(screenInfo)){
 		resize.offsetX = screenInfo.left;
@@ -456,10 +453,10 @@ function resizeTabHelper(resize, screenInfo, scaledOrientation){
 		resize.fullHeight = window.screen.availHeight;
 	}
 
-	chrome.tabs.query({lastFocusedWindow: true},
+	chrome.tabs.query({windowId: windowId},
 		function (tabs) {
 			resize.tabsArray = tabs;
-			chrome.tabs.query({highlighted: true},
+			chrome.tabs.query({highlighted: true, windowId: windowId},
 				function (tab) {
 					resize.currentTab = tab[0];
 					var index = resize.currentTab.index;
@@ -484,24 +481,24 @@ function resizeTabHelper(resize, screenInfo, scaledOrientation){
 }
 
 function initResizePreferences(resize){
-	localStorage.getItem('singleTab').then((singleTabValue) => {
-		if(singleTabValue && singleTabValue === 'true'){
+	return localStorage.getItem('singleTab').then((singleTabValue) => {
+		if(singleTabValue && singleTabValue === true){
 			resize.singleTab = true;
 		}
-	});
-
-	localStorage.getItem('emptyTab').then((emptyTabValue)=> {
-		if(!emptyTabValue || emptyTabValue === 'true'){
-			resize.emptyTab = true;
-		}
-	});
-
-	localStorage.getItem('alignment').then((alignmentValue)=> {
-		if(!alignmentValue){
-			resize.alignment = 'left';
-		} else {
-			resize.alignment = alignmentValue;
-		}		
+	}).then(() => {
+		localStorage.getItem('emptyTab').then((emptyTabValue)=> {
+			if(!emptyTabValue || emptyTabValue === true){
+				resize.emptyTab = true;
+			}
+		});
+	}).then(() => {
+		localStorage.getItem('alignment').then((alignmentValue)=> {
+			if(!alignmentValue){
+				resize.alignment = 'left';
+			} else {
+				resize.alignment = alignmentValue;
+			}		
+		});
 	});
 }
 
@@ -511,14 +508,14 @@ function disableUndoButton(resize){
 }
 
 function sendTracking(category, label) {
-	var optOut = localStorage.getItem("tracking-opt-out"),
-		deferTracking = false;
+	// var optOut = localStorage.getItem("tracking-opt-out"),
+	// 	deferTracking = false;
 
-	localStorage.getItem("tracking-opt-out").then((optOut)=> {
-		if(optOut && optOut === 'true'){
-			deferTracking = true;
-		}
-	});
+	// localStorage.getItem("tracking-opt-out").then((optOut)=> {
+	// 	if(optOut && optOut === 'true'){
+	// 		deferTracking = true;
+	// 	}
+	// });
 
 	// if(!deferTracking && ga) {
 	// 	ga('send','event', category, 'clicked', label || "na");
@@ -554,11 +551,12 @@ chrome.commands.onCommand.addListener(async function callback(command) {
 	if(chrome.system && chrome.system.display){
 		chrome.system.display.getInfo(function(displayInfo){
 			chrome.windows.getCurrent(function(windowInfo){
-
 				var currentWindowInfo = {
 					left: windowInfo.left + windowInfo.width - 100,
 					top: windowInfo.top + 100
 				};
+
+				var windowId = windowInfo.id;
 
 				var displayJSON = util.displayInfoFormatter(displayInfo,currentWindowInfo),
 					isScaled = command.indexOf('scale') !== -1,
@@ -567,9 +565,9 @@ chrome.commands.onCommand.addListener(async function callback(command) {
 				sendTracking('keyboard-shortcut',command);
 
 				if(isScaled){
-					resizeScaledTabs(displayJSON.displays[displayJSON.primaryIndex].workArea, resizeParams.primaryRatio, resizeParams.secondaryRatio, resizeParams.orientation);
+					resizeScaledTabs(displayJSON.displays[displayJSON.primaryIndex].workArea, resizeParams.primaryRatio, resizeParams.secondaryRatio, resizeParams.orientation, windowId);
 				} else {
-					resizeTabs(displayJSON.displays[displayJSON.primaryIndex].workArea,resizeParams.rows,resizeParams.cols);
+					resizeTabs(displayJSON.displays[displayJSON.primaryIndex].workArea,resizeParams.rows,resizeParams.cols, windowId);
 				}
 			});
 		});

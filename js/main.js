@@ -57,8 +57,6 @@
             resizeType = (isScaled ? scaledResizeType[0]: resizeTypeStr.split('x')),
             orientation = (isScaled ? scaledResizeType[2] : null);
 
-		debugger;
-
         main_view[isScaled ? 'resizeScaledTabs' : 'resizeTabs'](Number(resizeType[0]),Number(resizeType[1]), orientation);
 		sendTracking('resize',resizeTypeStr);
 
@@ -71,7 +69,6 @@
 	// fixme
 	addEventListener(document.querySelector('.resize-container'),'click','.close-button',function(evt){
 		evt.stopPropagation();
-		debugger;
 		var closeButton = evt.target.closest('.close-button');
 		if (closeButton) {
 			var resizeType = closeButton.parentNode.querySelector('.resize-selector').getAttribute('data-selector-type');
@@ -207,7 +204,6 @@
 
 		$display.classList.toggle('display-selected');
 		isDisplayed = $display.classList.contains('display-selected');
-		debugger;
 		options.processDisplayLayerSelection(isDisplayed);
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
 	});

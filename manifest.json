@@ -20,7 +20,7 @@
         "extension_ids": ["*"] 
   }],
   "background": {
-    "service_worker": "service-worker.js",
+    "service_worker": "js/background.js",
     "type": "module"
   },
   "offline_enabled": true,

@@ -20,13 +20,13 @@
 
 
 
-var deferTracking = false;
+// var deferTracking = false;
 
-chromeLocalStorage.getItem("tracking-opt-out").then((optOut)=> {
-	if(optOut && optOut === 'true'){
-		deferTracking = true;
-	}
-});
+// chromeLocalStorage.getItem("tracking-opt-out").then((optOut)=> {
+// 	if(optOut && optOut === 'true'){
+// 		deferTracking = true;
+// 	}
+// });
 
 function sendTracking(category, label) {
 	// if(!deferTracking && ga) {
@@ -558,7 +558,6 @@ function sendTracking(category, label) {
 		* @param {boolean} The hex ID.
 		*/
 		processDisplayLayerSelection: function(displayLayer) {
-			debugger;
 			var _displayLayer = displayLayer ? true : false;
 			chromeLocalStorage.setItem('displayLayer',_displayLayer);
 			resize.displayLayer = _displayLayer;
@@ -787,7 +786,6 @@ function sendTracking(category, label) {
 			chromeLocalStorage.setItem('layoutItems',JSON.stringify(resize.defaultLayouts));
 			// resize.currentLayouts = $.extend(true,{},resize.defaultLayouts);
 			resize.currentLayouts = Object.assign({}, resize.defaultLayouts);
-			debugger;
 			resize.main_view.populateMainView();
 			this.processTabInfo();
 			resize.util.resetSortable();
@@ -1250,8 +1248,6 @@ function addEventListener(el, eventName, selector, eventHandler) {
             resizeType = (isScaled ? scaledResizeType[0]: resizeTypeStr.split('x')),
             orientation = (isScaled ? scaledResizeType[2] : null);
 
-		debugger;
-
         main_view[isScaled ? 'resizeScaledTabs' : 'resizeTabs'](Number(resizeType[0]),Number(resizeType[1]), orientation);
 		sendTracking('resize',resizeTypeStr);
 
@@ -1264,7 +1260,6 @@ function addEventListener(el, eventName, selector, eventHandler) {
 	// fixme
 	addEventListener(document.querySelector('.resize-container'),'click','.close-button',function(evt){
 		evt.stopPropagation();
-		debugger;
 		var closeButton = evt.target.closest('.close-button');
 		if (closeButton) {
 			var resizeType = closeButton.parentNode.querySelector('.resize-selector').getAttribute('data-selector-type');
@@ -1400,7 +1395,6 @@ function addEventListener(el, eventName, selector, eventHandler) {
 
 		$display.classList.toggle('display-selected');
 		isDisplayed = $display.classList.contains('display-selected');
-		debugger;
 		options.processDisplayLayerSelection(isDisplayed);
 		sendTracking('display-settings',isDisplayed ? "opened" : "closed");
 	});

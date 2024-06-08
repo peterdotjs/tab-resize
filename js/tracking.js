@@ -1,10 +1,10 @@
-var deferTracking = false;
+// var deferTracking = false;
 
-chromeLocalStorage.getItem("tracking-opt-out").then((optOut)=> {
-	if(optOut && optOut === 'true'){
-		deferTracking = true;
-	}
-});
+// chromeLocalStorage.getItem("tracking-opt-out").then((optOut)=> {
+// 	if(optOut && optOut === 'true'){
+// 		deferTracking = true;
+// 	}
+// });
 
 function sendTracking(category, label) {
 	// if(!deferTracking && ga) {
