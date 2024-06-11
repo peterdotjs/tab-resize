@@ -1333,10 +1333,7 @@ function addEventListener(el, eventName, selector, eventHandler) {
 			custom_view.hideCustomMenu();
 			sendTracking('custom-layout','cancel-layer');
 		}
-		if(!document.querySelector('.confirmation-modal').classList.contains('hidden')){
-			options.hideConfirmationModal();
-			sendTracking('default-layout','cancel-layer');
-		}
+
 	});
 	
 	addEventListener(document,'keyup','#numRows, #numCols',function(evt){
